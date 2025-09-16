@@ -299,86 +299,91 @@ return [
     */
 
     'menu' => [
-    // ...otros elementos del menú
-    [
-        'text' => 'Home',
-        'url'  => 'home',
-        'icon' => 'fas fa-fw fa-home',
-    ],
+        // ...otros elementos del menú
+        [
+            'text' => 'Home',
+            'url'  => 'home',
+            'icon' => 'fas fa-fw fa-home',
+        ],
 
-    // ====================================================================
-    // Divisor para el Módulo de Inventario
-    // ====================================================================
-    ['header' => 'Gestión de Inventario'],
-    [
-        'text'    => 'Inventario',
-        'icon'    => 'fas fa-fw fa-warehouse',
-        'submenu' => [
-            [
-                'text' => 'Stock Actual',
-                'url'  => 'inventory/stock',
-                'icon' => 'fas fa-fw fa-boxes',
+        // ====================================================================
+        // Divisor para el Módulo de Inventario
+        // ====================================================================
+        ['header' => 'Gestión de Inventario'],
+        [
+            'text'    => 'Inventario',
+            'icon'    => 'fas fa-fw fa-warehouse',
+            'submenu' => [
+                [
+                    'text' => 'Stock Actual',
+                    'url'  => 'inventory/stock',
+                    'icon' => 'fas fa-fw fa-boxes',
+                ],
+                [
+                    'text' => 'Historial de Movimientos',
+                    'url'  => 'inventory/movements',
+                    'icon' => 'fas fa-fw fa-history',
+                ],
+                [
+                    'text' => 'Historial de Salidas',
+                    'url'  => 'inventory/salidas',
+                    'icon' => 'fas fa-fw fa-sign-out-alt',
+                ],
+                [
+                    'text' => 'Registrar Salida',
+                    'url'  => 'inventory/out',
+                    'icon' => 'fas fa-fw fa-sign-out-alt',
+                ],
             ],
-            [
-                'text' => 'Historial de Movimientos',
-                'url'  => 'inventory/movements',
-                'icon' => 'fas fa-fw fa-history',
+        ],
+
+        // ====================================================================
+        // Divisor para el Módulo de Compras
+        // ====================================================================
+        ['header' => 'Gestión de Compras'],
+        [
+            'text'    => 'Compras',
+            'icon'    => 'fas fa-fw fa-shopping-cart',
+            'submenu' => [
+                [
+                    'text' => 'Registrar Compra',
+                    'url'  => 'purchases/create',
+                    'icon' => 'fas fa-fw fa-cart-plus',
+                ],
+                [
+                    'text' => 'Historial de Compras',
+                    'url'  => 'purchases',
+                    'icon' => 'fas fa-fw fa-list',
+                ],
             ],
-            [
-                'text' => 'Historial de Salidas',
-                'url'  => 'inventory/salidas',
-                'icon' => 'fas fa-fw fa-sign-out-alt',
-            ],
-            [
-                'text' => 'Registrar Salida',
-                'url'  => 'inventory/out',
-                'icon' => 'fas fa-fw fa-sign-out-alt',
+        ],
+
+        // ====================================================================
+        // Divisor para los Módulos de Maestros
+        // ====================================================================
+        ['header' => 'Maestros de Datos'],
+        [
+            'text'    => 'Maestros',
+            'icon'    => 'fas fa-fw fa-tools',
+            'submenu' => [
+                [
+                    'text' => 'Categorías',
+                    'url'  => 'categories',
+                    'icon' => 'fas fa-fw fa-tags',
+                ],
+                [
+                    'text' => 'Productos',
+                    'url'  => 'products',
+                    'icon' => 'fas fa-fw fa-box',
+                ],
+                [
+                    'text' => 'Proveedores',
+                    'url'  => 'suppliers',
+                    'icon' => 'fas fa-fw fa-truck',
+                ],
             ],
         ],
     ],
-
-    // ====================================================================
-    // Divisor para el Módulo de Compras
-    // ====================================================================
-    ['header' => 'Gestión de Compras'],
-    [
-        'text'    => 'Compras',
-        'icon'    => 'fas fa-fw fa-shopping-cart',
-        'submenu' => [
-            [
-                'text' => 'Registrar Compra',
-                'url'  => 'purchases/create',
-                'icon' => 'fas fa-fw fa-cart-plus',
-            ],
-            [
-                'text' => 'Historial de Compras',
-                'url'  => 'purchases',
-                'icon' => 'fas fa-fw fa-list',
-            ],
-        ],
-    ],
-
-    // ====================================================================
-    // Divisor para los Módulos de Maestros
-    // ====================================================================
-    ['header' => 'Maestros de Datos'],
-    [
-        'text'    => 'Maestros',
-        'icon'    => 'fas fa-fw fa-tools',
-        'submenu' => [
-            [
-                'text' => 'Productos',
-                'url'  => 'products',
-                'icon' => 'fas fa-fw fa-box',
-            ],
-            [
-                'text' => 'Proveedores',
-                'url'  => 'suppliers',
-                'icon' => 'fas fa-fw fa-truck',
-            ],
-        ],
-    ],
-],
 
     /*
     |--------------------------------------------------------------------------

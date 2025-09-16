@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Supplier;
+use App\Models\Category;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+
 
 class ProductController extends Controller
 {
@@ -29,8 +33,10 @@ class ProductController extends Controller
     public function create(): View
     {
         $product = new Product();
+        $categories = Category::pluck('name', 'id');
+        $suppliers = Supplier::pluck('name', 'id');
 
-        return view('product.create', compact('product'));
+        return view('product.create', compact('product', 'categories', 'suppliers'));
     }
 
     /**
@@ -60,8 +66,10 @@ class ProductController extends Controller
     public function edit($id): View
     {
         $product = Product::find($id);
+        $categories = Category::pluck('name', 'id');
+        $suppliers = Supplier::pluck('name', 'id');
 
-        return view('product.edit', compact('product'));
+        return view('product.edit', compact('product', 'categories', 'suppliers'));
     }
 
     /**

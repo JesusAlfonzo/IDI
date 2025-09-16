@@ -29,6 +29,10 @@
                         <p class="form-control-plaintext">{{ $product->sku }}</p>
                     </div>
                     <div class="form-group mb-3">
+                        <strong>{{ __('Categoría:') }}</strong>
+                        <p class="form-control-plaintext">{{ $product->category->name ?? 'Sin Categoría' }}</p>
+                    </div>
+                    <div class="form-group mb-3">
                         <strong>{{ __('Descripción:') }}</strong>
                         <p class="form-control-plaintext">{{ $product->description }}</p>
                     </div>

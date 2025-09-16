@@ -30,6 +30,7 @@
                             <th>ID</th>
                             <th>{{ __('Nombre') }}</th>
                             <th>{{ __('SKU') }}</th>
+                            <th>{{ __('Categoría') }}</th>
                             <th>{{ __('Descripción') }}</th>
                             <th>{{ __('Precio') }}</th>
                             <th>{{ __('Stock') }}</th>
@@ -43,6 +44,7 @@
                                 <td>{{ $product->id }}</td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->sku }}</td>
+                                <td>{{ $product->category->name ?? 'Sin Categoría' }}</td>
                                 <td>{{ $product->description }}</td>
                                 <td>{{ number_format($product->price, 2) }}</td>
                                 <td>{{ $product->currentStock() }}</td>

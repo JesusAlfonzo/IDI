@@ -4,6 +4,8 @@ use App\Http\Controllers\InventoryMovementController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CategoryController;
+
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
@@ -24,6 +26,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::resource('products', ProductController::class);
 Route::resource('suppliers', SupplierController::class);
+Route::resource('categories', CategoryController::class);
 
 // ====================================================================
 // Rutas de Compras (Lógica Específica)

@@ -16,7 +16,9 @@ class Product extends Model
         'sku',
         'description',
         'price',
-        'stock_alert_threshold'
+        'stock_alert_threshold',
+        'supplier_id',
+        'category_id'
     ];
 
     // Relación con las compras del producto
@@ -29,6 +31,16 @@ class Product extends Model
     public function inventoryMovements()
     {
         return $this->hasMany(InventoryMovement::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
     }
 
 
