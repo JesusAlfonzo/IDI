@@ -43,6 +43,11 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function purchasePrices()
+    {
+        return $this->hasMany(PurchasePrice::class);
+    }
+
 
     public function currentStock()
     {

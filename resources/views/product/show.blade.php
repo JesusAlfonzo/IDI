@@ -1,15 +1,15 @@
 @extends('adminlte::page')
 
-@section('title', $product->name)
+@section('title', 'Detalles de ' . $product->name)
 
 @section('content_header')
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="d-flex justify-content-between align-items-center">
         <h1 class="mb-0">
             {{ __('Detalles del Producto') }}
         </h1>
         <div class="float-right">
-            <a class="btn btn-primary btn-sm" href="{{ route('products.index') }}">
-                {{ __('Volver a la Lista') }}
+            <a class="btn btn-secondary btn-sm" href="{{ route('products.index') }}">
+                <i class="fas fa-arrow-left"></i> {{ __('Volver a la Lista') }}
             </a>
         </div>
     </div>
@@ -17,6 +17,14 @@
 
 @section('content')
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">{{ __('Información del Producto') }}</h3>
+            <div class="card-tools">
+                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-tool btn-sm">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </div>
+        </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
@@ -39,8 +47,8 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group mb-3">
-                        <strong>{{ __('Precio:') }}</strong>
-                        <p class="form-control-plaintext">{{ number_format($product->price, 2) }}</p>
+                        <strong>{{ __('Precio de Venta:') }}</strong>
+                        <p class="form-control-plaintext">${{ number_format($product->price, 2) }}</p>
                     </div>
                     <div class="form-group mb-3">
                         <strong>{{ __('Stock Actual:') }}</strong>
@@ -52,6 +60,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{{ route('products.show-purchase-prices', $product->id) }}" class="btn btn-outline-primary">
+                <i class="fas fa-money-bill-alt"></i> {{ __('Gestionar Precios de Compra') }}
+            </a>
+            <a href="{{ route('products.edit', $product->id) }}" class="btn btn-outline-success">
+                <i class="fas fa-edit"></i> {{ __('Editar Producto') }}
+            </a>
         </div>
     </div>
 @stop

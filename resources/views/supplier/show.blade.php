@@ -1,15 +1,15 @@
 @extends('adminlte::page')
 
-@section('title', $supplier->name)
+@section('title', 'Detalles de ' . $supplier->name)
 
 @section('content_header')
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="d-flex justify-content-between align-items-center">
         <h1 class="mb-0">
             {{ __('Detalles del Proveedor') }}
         </h1>
         <div class="float-right">
-            <a class="btn btn-primary btn-sm" href="{{ route('suppliers.index') }}">
-                {{ __('Volver a la Lista') }}
+            <a class="btn btn-secondary btn-sm" href="{{ route('suppliers.index') }}">
+                <i class="fas fa-arrow-left"></i> {{ __('Volver a la Lista') }}
             </a>
         </div>
     </div>
@@ -17,6 +17,14 @@
 
 @section('content')
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">{{ __('Información del Proveedor') }}</h3>
+            <div class="card-tools">
+                <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-tool btn-sm">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </div>
+        </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6">
@@ -44,6 +52,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-outline-success">
+                <i class="fas fa-edit"></i> {{ __('Editar Proveedor') }}
+            </a>
         </div>
     </div>
 @stop
