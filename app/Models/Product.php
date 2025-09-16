@@ -30,4 +30,13 @@ class Product extends Model
     {
         return $this->hasMany(InventoryMovement::class);
     }
+
+
+    public function currentStock()
+    {
+        $entradas = $this->inventoryMovements()->where('type', 'entrada')->sum('quantity');
+        $salidas = $this->inventoryMovements()->where('type', 'salida')->sum('quantity');
+
+        return $entradas - $salidas;
+    }
 }

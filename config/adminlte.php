@@ -299,100 +299,86 @@ return [
     */
 
     'menu' => [
-        // Navbar items:
-        [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
-        ],
-        [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
-        ],
+    // ...otros elementos del menú
+    [
+        'text' => 'Home',
+        'url'  => 'home',
+        'icon' => 'fas fa-fw fa-home',
+    ],
 
-        // Sidebar items:
-        [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
+    // ====================================================================
+    // Divisor para el Módulo de Inventario
+    // ====================================================================
+    ['header' => 'Gestión de Inventario'],
+    [
+        'text'    => 'Inventario',
+        'icon'    => 'fas fa-fw fa-warehouse',
+        'submenu' => [
+            [
+                'text' => 'Stock Actual',
+                'url'  => 'inventory/stock',
+                'icon' => 'fas fa-fw fa-boxes',
+            ],
+            [
+                'text' => 'Historial de Movimientos',
+                'url'  => 'inventory/movements',
+                'icon' => 'fas fa-fw fa-history',
+            ],
+            [
+                'text' => 'Historial de Salidas',
+                'url'  => 'inventory/salidas',
+                'icon' => 'fas fa-fw fa-sign-out-alt',
+            ],
+            [
+                'text' => 'Registrar Salida',
+                'url'  => 'inventory/out',
+                'icon' => 'fas fa-fw fa-sign-out-alt',
             ],
         ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
+    ],
+
+    // ====================================================================
+    // Divisor para el Módulo de Compras
+    // ====================================================================
+    ['header' => 'Gestión de Compras'],
+    [
+        'text'    => 'Compras',
+        'icon'    => 'fas fa-fw fa-shopping-cart',
+        'submenu' => [
+            [
+                'text' => 'Registrar Compra',
+                'url'  => 'purchases/create',
+                'icon' => 'fas fa-fw fa-cart-plus',
+            ],
+            [
+                'text' => 'Historial de Compras',
+                'url'  => 'purchases',
+                'icon' => 'fas fa-fw fa-list',
+            ],
         ],
     ],
+
+    // ====================================================================
+    // Divisor para los Módulos de Maestros
+    // ====================================================================
+    ['header' => 'Maestros de Datos'],
+    [
+        'text'    => 'Maestros',
+        'icon'    => 'fas fa-fw fa-tools',
+        'submenu' => [
+            [
+                'text' => 'Productos',
+                'url'  => 'products',
+                'icon' => 'fas fa-fw fa-box',
+            ],
+            [
+                'text' => 'Proveedores',
+                'url'  => 'suppliers',
+                'icon' => 'fas fa-fw fa-truck',
+            ],
+        ],
+    ],
+],
 
     /*
     |--------------------------------------------------------------------------
