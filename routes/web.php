@@ -31,7 +31,7 @@ Auth::routes();
 // ====================================================================
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome'); // Agregado nombre a la ruta welcome
 
 // ====================================================================
 // Rutas Protegidas (Requieren autenticación)
@@ -52,6 +52,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/purchases', 'index')->name('purchases.index');
         Route::get('/purchases/create', 'create')->name('purchases.create');
         Route::post('/purchases', 'store')->name('purchases.store');
+
+        // Ruta específica para buscar productos para Select2
+        Route::get('/purchases/search-products', 'searchProducts')->name('purchases.search-products');
     });
 
     // Rutas de Inventario
@@ -71,4 +74,27 @@ Route::middleware(['auth'])->group(function () {
 
     // Rutas de Inventario (métodos específicos del ProductController)
     Route::get('/inventory/stock', [ProductController::class, 'inventory'])->name('inventory.stock');
+
+    // Ruta para obtener datos específicos de un producto (si es necesario para la creación de compras)
+    Route::get('purchases/get-product-data/{productId}', [PurchaseController::class, 'getProductData'])->name('purchases.get-product-data');
+
+    // Rutas específicas para la búsqueda de proveedores mediante AJAX
+    // Se movió la ruta de búsqueda de proveedores a un controlador dedicado para mayor claridad.
+    // Si tienes un método 'searchSuppliers' en PurchaseController, debes moverlo a SupplierController
+    // o asegurarte de que PurchaseController tenga acceso a esa lógica.
+    // Para el Select2 en la vista de compras, la llamada AJAX apunta a 'purchases.search-products'.
+    // Para el Select2 de proveedores, la llamada AJAX en tu vista (en el @push('js')) debería apuntar
+    // a una ruta que llame a un método de búsqueda de proveedores.
+    // He añadido 'purchases.search-suppliers' pero asumo que el método 'searchSuppliers' existe en PurchaseController.
+    // Si el método está en SupplierController, debes ajustar la ruta y la llamada JS.
+
+    // Si la lógica de búsqueda de proveedores está en PurchaseController:
+    Route::get('/purchases/search-suppliers', [PurchaseController::class, 'searchSuppliers'])->name('purchases.search-suppliers');
+
+    // Si la lógica de búsqueda de proveedores está en SupplierController (esta ruta es más apropiada si la búsqueda
+    // se hace desde la vista de proveedores o de forma general):
+    Route::get('suppliers/search-suppliers', [SupplierController::class, 'searchSuppliers'])->name('suppliers.search-suppliers');
+    Route::get('/suppliers/search', [SupplierController::class, 'search'])->name('suppliers.search');
+
+
 });

@@ -12,12 +12,24 @@ use Illuminate\View\View;
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource with filters.
      */
     public function index(Request $request): View
     {
-        $categories = Category::paginate();
+        // Obtener el parámetro de búsqueda del request
+        $name = $request->get('name');
 
+        // Construir la consulta base
+        $query = Category::query();
+
+        // Aplicar el filtro si existe
+        if ($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        }
+
+        $categories = $query->paginate();
+
+        // Pasamos el valor del filtro a la vista para que se mantenga
         return view('category.index', compact('categories'))
             ->with('i', ($request->input('page', 1) - 1) * $categories->perPage());
     }

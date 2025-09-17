@@ -9,18 +9,46 @@ use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Http\JsonResponse;
 
 class SupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    /**
+     * Display a listing of the resource with filters.
+     */
     public function index(Request $request): View
     {
-        $suppliers = Supplier::paginate();
+        // Obtener los parámetros de búsqueda del request
+        $name = $request->get('name');
+        $address = $request->get('address');
+        $phone = $request->get('phone');
 
+        // Construir la consulta base
+        $query = Supplier::query();
+
+        // Aplicar filtros si existen
+        if ($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        }
+
+        if ($address) {
+            $query->where('address', 'like', '%' . $address . '%');
+        }
+
+        if ($phone) {
+            $query->where('phone', 'like', '%' . $phone . '%'); 
+        }
+
+
+        $suppliers = $query->paginate();
+
+        // Pasamos los valores de los filtros a la vista para que se mantengan
         return view('supplier.index', compact('suppliers'))
-            ->with('i', ($request->input('page', 1) - 1) * $suppliers->perPage());
+            ->with('i', ($request->input('page', 1) - 1) * $suppliers->perPage())
+            ->with('request', $request->all());
     }
 
     /**
@@ -82,4 +110,25 @@ class SupplierController extends Controller
         return Redirect::route('suppliers.index')
             ->with('success', 'Supplier deleted successfully');
     }
+
+    // public function searchSuppliers(Request $request): JsonResponse
+    // {
+    //     $search = $request->get('search');
+        
+    //     $suppliers = Supplier::where('name', 'like', '%' . $search . '%')
+    //                          ->orWhere('phone', 'like', '%' . $search . '%')
+    //                          ->limit(20) // Limita los resultados para optimizar
+    //                          ->get(['id', 'name']); // Devuelve solo los campos necesarios
+
+    //     $formattedSuppliers = $suppliers->map(function($supplier) {
+    //         return [
+    //             'id' => $supplier->id,
+    //             'text' => $supplier->name, // El texto que se mostrará en Select2
+    //         ];
+    //     });
+
+    //     return response()->json([
+    //         'results' => $formattedSuppliers,
+    //     ]);
+    // }
 }

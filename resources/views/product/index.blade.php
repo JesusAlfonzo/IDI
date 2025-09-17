@@ -89,7 +89,7 @@
                             <th>{{ __('SKU') }}</th>
                             <th>{{ __('Nombre') }}</th>
                             <th>{{ __('Categoría') }}</th>
-                            <th>{{ __('Proveedor') }}</th>
+                            <th>{{ __('Proveedor Principal') }}</th>
                             <th>{{ __('Stock') }}</th>
                             <th></th>
                         </tr>

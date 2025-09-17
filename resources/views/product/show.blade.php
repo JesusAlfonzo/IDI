@@ -58,6 +58,11 @@
                         <strong>{{ __('Umbral de Alerta:') }}</strong>
                         <p class="form-control-plaintext">{{ $product->stock_alert_threshold }}</p>
                     </div>
+                    {{-- Aquí está el proveedor --}}
+                    <div class="form-group mb-3">
+                        <strong>{{ __('Proveedor Principal:') }}</strong>
+                        <p class="form-control-plaintext">{{ $product->supplier->name ?? 'Sin Proveedor Asignado' }}</p>
+                    </div>
                 </div>
             </div>
         </div>

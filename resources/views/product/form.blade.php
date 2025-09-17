@@ -22,6 +22,22 @@
         </div>
 
         <div class="form-group mb-3">
+    <label for="supplier_id">{{ __('Proveedor Principal') }}</label>
+    <select name="supplier_id" id="supplier_id" class="form-control @error('supplier_id') is-invalid @enderror">
+        <option value="">{{ __('Selecciona un proveedor') }}</option>
+        @foreach($suppliers as $id => $name)
+            {{-- The key part is here: old('supplier_id', $product?->supplier_id) --}}
+            <option value="{{ $id }}" {{ old('supplier_id', $product?->supplier_id) == $id ? 'selected' : '' }}>
+                {{ $name }}
+            </option>
+        @endforeach
+    </select>
+    @error('supplier_id')
+        <span class="invalid-feedback">{{ $message }}</span>
+    @enderror
+</div>
+
+        <div class="form-group mb-3">
             <label for="category_id" class="form-label">{{ __('Categoría') }}</label>
             <select name="category_id" class="form-control @error('category_id') is-invalid @enderror" id="category_id">
                 <option value="">Selecciona una Categoría</option>
