@@ -20,9 +20,6 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
 /**
      * Display a listing of the resource with filters.
      */
@@ -38,32 +35,40 @@ class ProductController extends Controller
         $query = Product::with(['category', 'supplier']);
 
         // Aplicar filtros si existen
+        // Filtro por Nombre
         if ($name) {
-            $query->where('name', 'like', '%' . $name . '%');
+            $query->whereIn('name', (array) $name);
         }
 
+        // Filtro por SKU
         if ($sku) {
-            $query->where('sku', 'like', '%' . $sku . '%');
+            $query->whereIn('sku', (array) $sku);
         }
         
+        // Filtro por Categoría
         if ($categoryId) {
-            $query->where('category_id', $categoryId);
+            // El `whereIn` de Laravel es robusto y manejará el caso de que el array esté vacío si no se selecciona nada.
+            $query->whereIn('category_id', (array) $categoryId);
         }
 
+        // Filtro por Proveedor
         if ($supplierId) {
-            $query->where('supplier_id', $supplierId);
+            $query->whereIn('supplier_id', (array) $supplierId);
         }
 
         $products = $query->paginate();
 
+        // Para poblar las opciones de Select2 en la vista, necesitamos una lista completa de todos los productos.
+        // También los proveedores y categorías que ya pasas.
+        $allProducts = Product::all();
         $categories = Category::pluck('name', 'id');
         $suppliers = Supplier::pluck('name', 'id');
 
-        // Pasamos los valores de los filtros a la vista para que se mantengan
-        return view('product.index', compact('products', 'categories', 'suppliers'))
-            ->with('i', ($request->input('page', 1) - 1) * $products->perPage())
-            ->with('request', $request->all());
+        // Pasamos todos los datos necesarios a la vista
+        return view('product.index', compact('products', 'categories', 'suppliers', 'allProducts'))
+            ->with('i', ($request->input('page', 1) - 1) * $products->perPage());
     }
+        
 
 
     /**

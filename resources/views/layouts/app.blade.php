@@ -4,7 +4,9 @@
 
 @section('title')
     {{ config('adminlte.title') }}
-    @hasSection('subtitle') | @yield('subtitle') @endif
+    @hasSection('subtitle')
+        | @yield('subtitle')
+    @endif
 @stop
 
 {{-- Extend and customize the page content header --}}
@@ -48,28 +50,25 @@
 
 @push('js')
 <script>
-
     $(document).ready(function() {
-        // Add your common script logic here...
+        // Inicializa Select2
+        // $('.select2').select2();
     });
-
 </script>
 @endpush
 
 {{-- Add common CSS customizations --}}
 
 @push('css')
-<style type="text/css">
-
-    {{-- You can add AdminLTE customizations here --}}
-    /*
-    .card-header {
-        border-bottom: none;
-    }
-    .card-title {
-        font-weight: 600;
-    }
-    */
-
-</style>
+    <style type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+        /*
+            .card-header {
+                border-bottom: none;
+            }
+            .card-title {
+                font-weight: 600;
+            }
+            */
+    </style>
 @endpush

@@ -11,12 +11,10 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 
+
 class SupplierController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    /**
+ /**
      * Display a listing of the resource with filters.
      */
     public function index(Request $request): View
@@ -31,15 +29,30 @@ class SupplierController extends Controller
 
         // Aplicar filtros si existen
         if ($name) {
-            $query->where('name', 'like', '%' . $name . '%');
+            // Manejar 'name' como un array si es una selección múltiple
+            if (is_array($name)) {
+                $query->whereIn('name', $name);
+            } else {
+                $query->where('name', 'like', '%' . $name . '%');
+            }
         }
 
         if ($address) {
-            $query->where('address', 'like', '%' . $address . '%');
+            // Manejar 'address' como un array si es una selección múltiple
+            if (is_array($address)) {
+                $query->whereIn('address', $address);
+            } else {
+                $query->where('address', 'like', '%' . $address . '%');
+            }
         }
 
         if ($phone) {
-            $query->where('phone', 'like', '%' . $phone . '%'); 
+            // Manejar 'phone' como un array si es una selección múltiple
+            if (is_array($phone)) {
+                $query->whereIn('phone', $phone);
+            } else {
+                $query->where('phone', 'like', '%' . $phone . '%');
+            }
         }
 
 

@@ -11,7 +11,7 @@ use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    /**
+/**
      * Display a listing of the resource with filters.
      */
     public function index(Request $request): View
@@ -24,7 +24,13 @@ class CategoryController extends Controller
 
         // Aplicar el filtro si existe
         if ($name) {
-            $query->where('name', 'like', '%' . $name . '%');
+            // Verifica si $name es un array y usa whereIn()
+            if (is_array($name)) {
+                $query->whereIn('name', $name);
+            } else {
+                // Si no es un array, asume que es una cadena y usa 'like'
+                $query->where('name', 'like', '%' . $name . '%');
+            }
         }
 
         $categories = $query->paginate();
@@ -33,6 +39,7 @@ class CategoryController extends Controller
         return view('category.index', compact('categories'))
             ->with('i', ($request->input('page', 1) - 1) * $categories->perPage());
     }
+
 
     /**
      * Show the form for creating a new resource.

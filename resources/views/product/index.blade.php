@@ -10,12 +10,10 @@
 @stop
 
 @section('content')
-    {{-- Condición para expandir o colapsar la tarjeta --}}
     @php
         $isCollapsed = !request()->hasAny(['name', 'sku', 'category_id', 'supplier_id']);
     @endphp
 
-    {{-- Tarjeta de Filtros --}}
     <div class="card {{ $isCollapsed ? 'collapsed-card' : '' }}">
         <div class="card-header">
             <h3 class="card-title">{{ __('Filtros de Búsqueda') }}</h3>
@@ -28,36 +26,52 @@
         <div class="card-body" {{ $isCollapsed ? 'style=display:none;' : '' }}>
             <form action="{{ route('products.index') }}" method="GET">
                 <div class="row">
+                    {{-- Filtro de Nombre con Select2 --}}
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="name">{{ __('Nombre') }}</label>
-                            <input type="text" name="name" id="name" class="form-control" value="{{ request('name') }}">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="sku">{{ __('SKU') }}</label>
-                            <input type="text" name="sku" id="sku" class="form-control" value="{{ request('sku') }}">
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="category_id">{{ __('Categoría') }}</label>
-                            <select name="category_id" id="category_id" class="form-control">
-                                <option value="">{{ __('Todas') }}</option>
-                                @foreach($categories as $id => $name)
-                                    <option value="{{ $id }}" {{ request('category_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                            <select name="name[]" id="name" class="form-control select2" multiple style="width: 100%;">
+                                @foreach ($products as $product)
+                                    <option value="{{ $product->name }}" {{ in_array($product->name, (array) request('name')) ? 'selected' : '' }}>
+                                        {{ $product->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
+                    {{-- Filtro de SKU con Select2 --}}
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="sku">{{ __('SKU') }}</label>
+                            <select name="sku[]" id="sku" class="form-control select2" multiple style="width: 100%;">
+                                @foreach ($products as $product)
+                                    <option value="{{ $product->sku }}" {{ in_array($product->sku, (array) request('sku')) ? 'selected' : '' }}>
+                                        {{ $product->sku }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    {{-- Filtro de Categoría con Select2 --}}
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="category_id">{{ __('Categoría') }}</label>
+                            <select name="category_id[]" id="category_id" class="form-control select2" multiple style="width: 100%;">
+                                <option value="">{{ __('Todas') }}</option>
+                                @foreach($categories as $id => $name)
+                                    <option value="{{ $id }}" {{ in_array($id, (array) request('category_id')) ? 'selected' : '' }}>{{ $name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    {{-- Filtro de Proveedor con Select2 --}}
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="supplier_id">{{ __('Proveedor') }}</label>
-                            <select name="supplier_id" id="supplier_id" class="form-control">
+                            <select name="supplier_id[]" id="supplier_id" class="form-control select2" multiple style="width: 100%;">
                                 <option value="">{{ __('Todos') }}</option>
                                 @foreach($suppliers as $id => $name)
-                                    <option value="{{ $id }}" {{ request('supplier_id') == $id ? 'selected' : '' }}>{{ $name }}</option>
+                                    <option value="{{ $id }}" {{ in_array($id, (array) request('supplier_id')) ? 'selected' : '' }}>{{ $name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -125,3 +139,40 @@
         </div>
     </div>
 @stop
+
+@push('css')
+    {{-- Estilos de Select2 --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    {{-- Estilos para la integración con Bootstrap 4 --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.2.0/dist/select2-bootstrap4-theme.min.css">
+    {{-- CSS personalizado para corregir el ancho y la lista --}}
+    <style>
+        .select2-container--bootstrap4 .select2-selection--multiple .select2-selection__rendered {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .select2-container--bootstrap4 .select2-selection {
+            border: 1px solid #ced4da;
+            padding: .1rem .75rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            height: auto !important;
+        }
+        .select2-container .select2-dropdown {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+@endpush
+
+@push('js')
+    <script>
+        $(document).ready(function() {
+            $('.select2').select2({
+                theme: 'bootstrap4',
+                closeOnSelect: false,
+                maximumSelectionLength: 10,
+            });
+        });
+    </script>
+@endpush
