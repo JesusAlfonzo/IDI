@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { allExamenes } = Astro.props;
+
 // Convertimos la lista de exámenes en una cadena JSON para pasarla a JavaScript
 const examenesJson = JSON.stringify(allExamenes.map(examen => ({
     title: examen.data.title,
@@ -16,38 +17,155 @@ const examenesJson = JSON.stringify(allExamenes.map(examen => ({
     price: examen.data.price,
     slug: examen.slug
 })));
+
+// Obtener categorías únicas para los filtros
+const categories = [...new Set(allExamenes.map(examen => examen.data.category))].sort();
+const tiposExamen = [...new Set(allExamenes.map(examen => examen.data.tipoExamen))].sort();
+const minPrice = Math.min(...allExamenes.map(examen => examen.data.price));
+const maxPrice = Math.max(...allExamenes.map(examen => examen.data.price));
 ---
 
 <div id="search-container" class="mb-12">
-    <!-- Barra de búsqueda -->
-    <div class="relative max-w-2xl mx-auto mb-8">
+    <div class="relative max-w-4xl mx-auto mb-8">
+        <div class="relative">
         <input
             type="text"
             id="search-input"
-            placeholder="Buscar por nombre, descripción o categoría..."
-            class="w-full p-4 pl-12 text-lg border-2 border-indigo-300 rounded-xl focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition duration-150 shadow-md"
+                placeholder="Buscar por nombre, descripción, categoría o tipo de examen..."
+                class="w-full p-4 pl-12 pr-16 text-lg border-2 border-indigo-300 rounded-xl focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition duration-150 shadow-md"
+                autocomplete="off"
         />
         <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
+            
+            <button
+                id="clear-search"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400 hover:text-gray-600 transition duration-150 hidden"
+                title="Limpiar búsqueda"
+            >
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div id="search-loading" class="hidden mt-2 text-center">
+            <div class="inline-flex items-center text-indigo-600">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Buscando...
+            </div>
+        </div>
     </div>
 
-    <!-- Contenedor donde se mostrarán los resultados de la búsqueda -->
-    <div id="search-results" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
-        <!-- Los resultados se inyectarán aquí mediante JavaScript -->
+    <div id="advanced-filters" class="max-w-4xl mx-auto mb-8 bg-gray-50 rounded-xl p-6 border border-gray-200">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-700">Filtros Avanzados</h3>
+            <button id="toggle-filters" class="text-indigo-600 hover:text-indigo-800 transition duration-150">
+                <svg class="w-5 h-5 transform transition duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+        </div>
+        
+        <div id="filters-content" class="hidden">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
+                    <select id="category-filter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Todas las categorías</option>
+                        {categories.map(category => (
+                            <option value={category}>{category}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Examen</label>
+                    <select id="type-filter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Todos los tipos</option>
+                        {tiposExamen.map(tipo => (
+                            <option value={tipo}>{tipo}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Precio Máximo</label>
+                    <input
+                        type="range"
+                        id="price-filter"
+                        min={minPrice}
+                        max={maxPrice}
+                        value={maxPrice}
+                        class="w-full"
+                    />
+                    <div class="flex justify-between text-sm text-gray-600 mt-1">
+                        <span>${minPrice}</span>
+                        <span id="price-display">${maxPrice}</span>
+                    </div>
+                </div>
+
+                <div class="flex items-end">
+                    <button
+                        id="clear-filters"
+                        class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-150"
+                    >
+                        Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Mensaje de no resultados -->
-    <div id="no-results" class="hidden max-w-2xl mx-auto text-center p-8 bg-yellow-50 rounded-xl border border-yellow-200">
-        <p class="text-xl text-yellow-800 font-semibold">
-            🤷‍♂️ No se encontraron exámenes que coincidan con tu búsqueda.
+    <div id="search-history" class="max-w-4xl mx-auto mb-6 hidden">
+        <div class="flex items-center justify-between mb-2">
+            <h4 class="text-sm font-medium text-gray-600">Búsquedas recientes:</h4>
+            <button 
+                id="clear-history" 
+                class="text-xs text-red-600 hover:text-red-800 transition duration-150 flex items-center gap-1"
+                title="Limpiar historial de búsquedas"
+            >
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+                Limpiar historial
+            </button>
+        </div>
+        <div id="recent-searches" class="flex flex-wrap gap-2"></div>
+    </div>
+
+    <div id="search-stats" class="max-w-4xl mx-auto mb-6 hidden text-center">
+        <p class="text-sm text-gray-600">
+            <span id="results-count">0</span> resultados encontrados
         </p>
-        <p class="text-gray-600 mt-2">Intenta usar términos más generales o revisa la ortografía.</p>
+    </div>
+
+    <div id="search-results" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
+        </div>
+
+    <div id="no-results" class="hidden max-w-2xl mx-auto text-center p-8 bg-yellow-50 rounded-xl border border-yellow-200">
+        <div class="text-6xl mb-4">🔍</div>
+        <p class="text-xl text-yellow-800 font-semibold mb-2">
+            No se encontraron exámenes
+        </p>
+        <p class="text-gray-600 mb-4">Intenta usar términos más generales o ajusta los filtros.</p>
+        <button id="suggest-search" class="text-indigo-600 hover:text-indigo-800 underline">
+            Ver sugerencias
+        </button>
+    </div>
+
+    <div id="search-suggestions" class="hidden max-w-2xl mx-auto text-center p-6 bg-blue-50 rounded-xl border border-blue-200">
+        <h4 class="text-lg font-semibold text-blue-800 mb-3">Sugerencias de búsqueda:</h4>
+        <div id="suggestions-list" class="flex flex-wrap gap-2 justify-center"></div>
     </div>
 </div>
 
 
-<script define:vars={{ examenesJson }}>
+<script define:vars={{ examenesJson, categories, tiposExamen, minPrice, maxPrice }}>
     // Parsear los datos de Astro
     const allExamenes = JSON.parse(examenesJson);
     
@@ -55,77 +173,520 @@ const examenesJson = JSON.stringify(allExamenes.map(examen => ({
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
     const noResults = document.getElementById('no-results');
+    const searchSuggestions = document.getElementById('search-suggestions');
+    const suggestionsList = document.getElementById('suggestions-list');
     const categorySections = document.querySelectorAll('.category-section');
+    const clearSearchBtn = document.getElementById('clear-search');
+    const searchLoading = document.getElementById('search-loading');
+    const searchHistory = document.getElementById('search-history');
+    const recentSearches = document.getElementById('recent-searches');
+    const clearHistoryBtn = document.getElementById('clear-history');
+    const searchStats = document.getElementById('search-stats');
+    const resultsCount = document.getElementById('results-count');
+    const toggleFiltersBtn = document.getElementById('toggle-filters');
+    const filtersContent = document.getElementById('filters-content');
+    const categoryFilter = document.getElementById('category-filter');
+    const typeFilter = document.getElementById('type-filter');
+    const priceFilter = document.getElementById('price-filter');
+    const priceDisplay = document.getElementById('price-display');
+    const clearFiltersBtn = document.getElementById('clear-filters');
+    const suggestSearchBtn = document.getElementById('suggest-search');
+
+    // Estado de la aplicación
+    let searchTimeout;
+    let currentFilters = {
+        category: '',
+        type: '',
+        maxPrice: maxPrice
+    };
+
+    // Historial de búsquedas (almacenado en localStorage)
+    let searchHistoryList = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
     /**
-     * Función para crear el HTML de una tarjeta de examen.
-     * Es la misma estructura que usas en index.astro.
+     * Función para normalizar texto removiendo acentos y caracteres especiales
      */
-    function createExamenCard(examen) {
+    function normalizeText(text) {
+        return text
+            .toLowerCase()
+            .trim()
+            .normalize("NFD") // Descompone caracteres acentuados
+            .replace(/[\u0300-\u036f]/g, '') // Remueve marcas diacríticas
+            .replace(/[ñ]/g, 'n') // Convierte ñ a n
+            .replace(/[ç]/g, 'c'); // Convierte ç a c
+    }
+    
+    /**
+     * Función para obtener el tiempo de entrega basado en el tipo de examen.
+     * *** Lógica replicada de index.astro: 5 días para Citometría, 10 días para el resto. ***
+     */
+    function getDeliveryTime(tipoExamen) {
+        // Estandarizamos el tipo de examen a minúsculas y sin acentos/espacios para una comparación robusta
+        const normalizedType = normalizeText(tipoExamen);
+
+        // Citometria entrega en 5 días
+        if (normalizedType.includes('citometria')) {
+            return '5 Días Hábiles';
+        }
+        
+        // Todos los demás (Inmunodiagnostico, Inmunogenetica, Retrovirus, etc.) entregan en 10 días
+        return '10 Días Hábiles'; 
+    }
+
+    /**
+     * Función para limpiar historial de búsquedas
+     */
+    function clearSearchHistory() {
+        searchHistoryList = [];
+        localStorage.removeItem('searchHistory');
+        updateSearchHistoryUI();
+        
+        // Mostrar confirmación visual
+        const originalText = clearHistoryBtn.innerHTML;
+        clearHistoryBtn.innerHTML = `
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            ¡Limpiado!
+        `;
+        clearHistoryBtn.classList.remove('text-red-600', 'hover:text-red-800');
+        clearHistoryBtn.classList.add('text-green-600');
+        
+        setTimeout(() => {
+            clearHistoryBtn.innerHTML = originalText;
+            clearHistoryBtn.classList.remove('text-green-600');
+            clearHistoryBtn.classList.add('text-red-600', 'hover:text-red-800');
+        }, 2000);
+    }
+
+    /**
+     * Función de debounce para optimizar las búsquedas
+     */
+    function debounce(func, wait) {
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(searchTimeout);
+                func(...args);
+            };
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(later, wait);
+        };
+    }
+
+    /**
+     * Función para crear el HTML de una tarjeta de examen con highlighting
+     */
+    function createExamenCard(examen, searchQuery = '') {
         const priceFormatted = examen.price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
+        const deliveryTime = getDeliveryTime(examen.tipoExamen); // Usando la lógica de 5/10 días
+        
+        // Función para resaltar texto (funciona con y sin acentos)
+        function highlightText(text, query) {
+            if (!query) return text;
+            
+            // Normalizar tanto el texto como la query
+            const normalizedText = normalizeText(text);
+            const normalizedQuery = normalizeText(query);
+            
+            // Buscar la posición en el texto normalizado
+            const index = normalizedText.indexOf(normalizedQuery);
+            if (index === -1) return text;
+            
+            // Encontrar la posición correspondiente en el texto original
+            let originalIndex = 0;
+            let normalizedIndex = 0;
+            
+            while (normalizedIndex < index && originalIndex < text.length) {
+                const char = text[originalIndex];
+                const normalizedChar = normalizeText(char);
+                normalizedIndex += normalizedChar.length;
+                originalIndex++;
+            }
+            
+            // Encontrar la longitud original de la query en el texto original
+            let originalQueryLength = 0;
+            let currentNormalizedLength = 0;
+            let i = 0;
+            while (currentNormalizedLength < normalizedQuery.length && (originalIndex + i) < text.length) {
+                const char = text[originalIndex + i];
+                const normalizedChar = normalizeText(char);
+                currentNormalizedLength += normalizedChar.length;
+                originalQueryLength++;
+                i++;
+            }
+
+            const before = text.substring(0, originalIndex);
+            const match = text.substring(originalIndex, originalIndex + originalQueryLength);
+            const after = text.substring(originalIndex + originalQueryLength);
+            
+            return `${before}<mark class="bg-yellow-200 px-1 rounded">${match}</mark>${after}`;
+        }
         
         return `
             <a 
                 href="/examenes/${examen.slug}" 
-                class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500 "
+                class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
             >
-                <h3 class="text-xl font-bold text-gray-800 mb-2">${examen.title}</h3>
-                <p class="text-sm text-gray-600 mb-3 line-clamp-2">${examen.description}</p>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">${highlightText(examen.title, searchQuery)}</h3>
+                <p class="text-sm text-gray-600 mb-3 line-clamp-2">${highlightText(examen.description, searchQuery)}</p>
                 <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                    <span class="text-sm font-semibold text-blue-600 uppercase">${examen.tipoExamen}</span>
+                    <span class="text-sm font-semibold text-blue-600 uppercase">${highlightText(examen.tipoExamen, searchQuery)}</span>
                     <span class="text-lg font-extrabold text-green-700">
                         ${priceFormatted}
+                    </span>
+                </div>
+                <div class="mt-2 flex justify-between items-center text-xs text-gray-500">
+                    <span class="bg-gray-100 px-2 py-1 rounded">${examen.category}</span>
+                    <span class="flex items-center gap-1 text-sm font-medium text-indigo-600">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Entrega: ${deliveryTime}
                     </span>
                 </div>
             </a>
         `;
     }
 
-    // Escuchar el evento de entrada en la barra de búsqueda
-    searchInput.addEventListener('input', (event) => {
-        const query = event.target.value.toLowerCase().trim();
-        searchResults.innerHTML = '';
-        
-        if (query.length < 2) {
-            // Mostrar las secciones originales y ocultar los resultados
-            categorySections.forEach(section => section.style.display = 'block');
-            searchResults.style.display = 'none';
-            noResults.classList.add('hidden');
-            return;
-        }
+    /**
+     * Función para filtrar exámenes con múltiples criterios (incluyendo búsqueda sin acentos)
+     */
+    function filterExamenes(query, filters) {
+        return allExamenes.filter(examen => {
+            // Filtro por texto de búsqueda (sin acentos)
+            if (query) {
+                const normalizedQuery = normalizeText(query);
+                const searchFields = [
+                    examen.title,
+                    examen.description,
+                    examen.category,
+                    examen.tipoExamen
+                ].join(' ');
+                
+                const normalizedSearchFields = normalizeText(searchFields);
+                
+                // Búsqueda sin acentos
+                if (!normalizedSearchFields.includes(normalizedQuery)) {
+                    return false;
+                }
+            }
 
-        // 1. Filtrar los exámenes
-        const filteredExamenes = allExamenes.filter(examen => {
-            const searchFields = [
-                examen.title,
-                examen.description,
-                examen.category,
-                examen.tipoExamen
-            ].join(' ').toLowerCase();
-            
-            return searchFields.includes(query);
+            // Filtro por categoría
+            if (filters.category && examen.category !== filters.category) {
+                return false;
+            }
+
+            // Filtro por tipo de examen
+            if (filters.type && examen.tipoExamen !== filters.type) {
+                return false;
+            }
+
+            // Filtro por precio máximo
+            if (examen.price > filters.maxPrice) {
+                return false;
+            }
+
+            return true;
         });
+    }
 
-        // 2. Mostrar/Ocultar elementos según el filtro
-        if (filteredExamenes.length > 0) {
+    /**
+     * Función para mostrar resultados de búsqueda
+     */
+    function displaySearchResults(filteredExamenes, query = '') {
+        const count = filteredExamenes.length;
+        
+        // Limpiar paginación existente
+        removeExistingPagination();
+        
+        // Actualizar estadísticas
+        resultsCount.textContent = count;
+        searchStats.classList.toggle('hidden', count === 0);
+
+        if (count > 0) {
             // Ocultar las secciones originales
             categorySections.forEach(section => section.style.display = 'none');
             
             // Mostrar la sección de resultados
             searchResults.style.display = 'grid';
             noResults.classList.add('hidden');
+            searchSuggestions.classList.add('hidden');
             
-            // Rellenar resultados
-            filteredExamenes.forEach(examen => {
-                searchResults.innerHTML += createExamenCard(examen);
-            });
+            // Rellenar resultados con paginación virtual
+            const itemsPerPage = 12;
+            const totalPages = Math.ceil(count / itemsPerPage);
+            
+            function renderPage(page) {
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, count);
+                const pageItems = filteredExamenes.slice(startIndex, endIndex);
+                
+                searchResults.innerHTML = pageItems.map(examen => 
+                    createExamenCard(examen, query)
+                ).join('');
+                
+                // Agregar controles de paginación si es necesario
+                if (totalPages > 1) {
+                    const pagination = createPaginationControls(page, totalPages);
+                    // Asegurarse de que no haya paginación duplicada antes de insertar
+                    removeExistingPagination();
+                    searchResults.insertAdjacentHTML('afterend', pagination);
+                }
+            }
+            
+            renderPage(1);
             
         } else {
             // Ocultar la sección original y mostrar mensaje de no resultados
             categorySections.forEach(section => section.style.display = 'none');
             searchResults.style.display = 'none';
             noResults.classList.remove('hidden');
+            searchSuggestions.classList.add('hidden');
         }
+    }
+
+    /**
+     * Función para limpiar paginación existente
+     */
+    function removeExistingPagination() {
+        // Busca el elemento de paginación que se inserta después de search-results
+        let nextElement = searchResults.nextElementSibling;
+        while(nextElement && nextElement.classList.contains('flex') && nextElement.classList.contains('justify-center')) {
+            const temp = nextElement.nextElementSibling;
+            nextElement.remove();
+            nextElement = temp;
+        }
+    }
+
+    /**
+     * Función para crear controles de paginación
+     */
+    function createPaginationControls(currentPage, totalPages) {
+        let pagination = '<div class="flex justify-center mt-8 space-x-2">';
+        
+        // Botón anterior
+        if (currentPage > 1) {
+            pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="goToPage(${currentPage - 1})">←</button>`;
+        }
+        
+        // Números de página
+        for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+            const activeClass = i === currentPage ? 'bg-indigo-600 text-white' : 'bg-gray-200 hover:bg-gray-300';
+            pagination += `<button class="px-3 py-2 rounded ${activeClass}" onclick="goToPage(${i})">${i}</button>`;
+        }
+        
+        // Botón siguiente
+        if (currentPage < totalPages) {
+            pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="goToPage(${currentPage + 1})">→</button>`;
+        }
+        
+        pagination += '</div>';
+        return pagination;
+    }
+
+    /**
+     * Función para agregar búsqueda al historial
+     */
+    function addToSearchHistory(query) {
+        if (!query || query.length < 2) return;
+        
+        // Remover si ya existe
+        searchHistoryList = searchHistoryList.filter(item => item !== query);
+        
+        // Agregar al inicio
+        searchHistoryList.unshift(query);
+        
+        // Mantener solo las últimas 5 búsquedas
+        searchHistoryList = searchHistoryList.slice(0, 5);
+        
+        // Guardar en localStorage
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistoryList));
+        
+        // Actualizar UI
+        updateSearchHistoryUI();
+    }
+
+    /**
+     * Función para actualizar la UI del historial de búsquedas
+     */
+    function updateSearchHistoryUI() {
+        if (searchHistoryList.length === 0) {
+            searchHistory.classList.add('hidden');
+            return;
+        }
+        
+        searchHistory.classList.remove('hidden');
+        recentSearches.innerHTML = searchHistoryList.map(query => 
+            `<button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition duration-150" onclick="performSearch('${query}', true)">${query}</button>`
+        ).join('');
+    }
+
+    /**
+     * Función para generar sugerencias de búsqueda
+     */
+    function generateSearchSuggestions() {
+        const suggestions = [
+            ...categories.slice(0, 3),
+            ...tiposExamen.slice(0, 3),
+            'análisis', 'prueba', 'examen', 'laboratorio'
+        ].slice(0, 6);
+        
+        suggestionsList.innerHTML = suggestions.map(suggestion => 
+            `<button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition duration-150" onclick="performSearch('${suggestion}', true)">${suggestion}</button>`
+        ).join('');
+        
+        searchSuggestions.classList.remove('hidden');
+    }
+
+    /**
+     * Función principal de búsqueda
+     */
+    function performSearch(query = '', updateInput = false) {
+        // Si la búsqueda está vacía, volver a la vista normal
+        if (!query || query.trim().length === 0) {
+            clearSearch();
+            return;
+        }
+
+        if (updateInput) {
+            searchInput.value = query;
+        }
+
+        // Mostrar indicador de carga
+        searchLoading.classList.remove('hidden');
+        
+        // Simular delay para mostrar el loading (opcional)
+        setTimeout(() => {
+            const filteredExamenes = filterExamenes(query, currentFilters);
+            displaySearchResults(filteredExamenes, query);
+            
+            // Ocultar indicador de carga
+            searchLoading.classList.add('hidden');
+            
+            // Agregar al historial si hay query
+            if (query) {
+                addToSearchHistory(query);
+            }
+            
+            // Mostrar/ocultar botón de limpiar
+            clearSearchBtn.classList.toggle('hidden', !query);
+            
+        }, 100);
+    }
+
+    /**
+     * Función para limpiar búsqueda
+     */
+    function clearSearch() {
+        searchInput.value = '';
+        searchResults.style.display = 'none';
+        noResults.classList.add('hidden');
+        searchSuggestions.classList.add('hidden');
+        searchStats.classList.add('hidden');
+        searchLoading.classList.add('hidden'); // Asegurar que se oculte el loading
+        clearSearchBtn.classList.add('hidden');
+        
+        // Limpiar paginación existente
+        removeExistingPagination();
+        
+        // Mostrar las secciones originales
+        categorySections.forEach(section => section.style.display = 'block');
+    }
+
+    /**
+     * Función para limpiar filtros
+     */
+    function clearFilters() {
+        currentFilters = {
+            category: '',
+            type: '',
+            maxPrice: maxPrice
+        };
+        
+        categoryFilter.value = '';
+        typeFilter.value = '';
+        priceFilter.value = maxPrice;
+        priceDisplay.textContent = `$${maxPrice}`;
+        
+        // Si el campo de búsqueda tiene contenido, solo aplicar filtros, si no, limpiar todo.
+        const currentQuery = searchInput.value.trim();
+        if (currentQuery) {
+             performSearch(currentQuery);
+        } else {
+            // Volver a la vista normal completamente
+            clearSearch();
+        }
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', debounce((event) => {
+        const query = event.target.value.trim();
+        
+        // Si la búsqueda está vacía, limpiar inmediatamente
+        if (!query) {
+            clearSearch();
+            return;
+        }
+        
+        performSearch(query);
+    }, 300));
+
+    clearSearchBtn.addEventListener('click', clearSearch);
+
+    toggleFiltersBtn.addEventListener('click', () => {
+        filtersContent.classList.toggle('hidden');
+        const icon = toggleFiltersBtn.querySelector('svg');
+        icon.classList.toggle('rotate-180');
     });
 
+    categoryFilter.addEventListener('change', (event) => {
+        currentFilters.category = event.target.value;
+        performSearch(searchInput.value);
+    });
+
+    typeFilter.addEventListener('change', (event) => {
+        currentFilters.type = event.target.value;
+        performSearch(searchInput.value);
+    });
+
+    priceFilter.addEventListener('input', (event) => {
+        currentFilters.maxPrice = parseInt(event.target.value);
+        priceDisplay.textContent = `$${currentFilters.maxPrice}`;
+        performSearch(searchInput.value);
+    });
+
+    clearFiltersBtn.addEventListener('click', clearFilters);
+
+    suggestSearchBtn.addEventListener('click', generateSearchSuggestions);
+
+    clearHistoryBtn.addEventListener('click', clearSearchHistory);
+
+    // Inicialización
+    updateSearchHistoryUI();
+
+    // Hacer funciones globales para los botones de paginación y historial
+    window.goToPage = function(page) {
+        const query = searchInput.value.trim();
+        const filteredExamenes = filterExamenes(query, currentFilters);
+        const itemsPerPage = 12;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, filteredExamenes.length);
+        const pageItems = filteredExamenes.slice(startIndex, endIndex);
+        
+        searchResults.innerHTML = pageItems.map(examen => 
+            createExamenCard(examen, query)
+        ).join('');
+        
+        // Limpiar paginación existente antes de agregar nueva
+        removeExistingPagination();
+        
+        const totalPages = Math.ceil(filteredExamenes.length / itemsPerPage);
+        if (totalPages > 1) {
+            const pagination = createPaginationControls(page, totalPages);
+            searchResults.insertAdjacentHTML('afterend', pagination);
+        }
+    };
+
+    // Hacer performSearch global para que funcione con el historial y sugerencias
+    window.performSearch = performSearch;
 </script>

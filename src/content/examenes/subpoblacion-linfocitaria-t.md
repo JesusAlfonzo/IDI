@@ -4,7 +4,7 @@ description: Cuantificación de los Linfocitos T totales (CD3), Cooperadores (CD
 pubDate: 2025-09-26
 category: Citometría
 tipoExamen: Citometría de Flujo de Subpoblaciones
-price: 48.00
+price: 60.00
 ---
 
 ## Relevancia Clínica

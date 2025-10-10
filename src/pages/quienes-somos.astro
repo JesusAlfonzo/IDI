@@ -1,36 +1,30 @@
 ---
-import '../styles/global.css';
-import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
-import Divider from '../components/Divider.astro';
+import "../styles/global.css";
+import Layout from "../layouts/Layout.astro";
+import Nav from "../components/Nav.astro";
+import Divider from "../components/Divider.astro";
 ---
 
 <Layout title="IDI - Quiénes Somos">
   <Nav />
 
-  <main class="container mx-auto px-4 pt-24">
+  <main class="container mx-auto px-4 pt-24 pb-20 animate-blurred-fade-in">
     
-    <header class="grid place-items-center py-12 text-center">
-      <h1
-        class="text-5xl font-extrabold leading-none tracking-tight md:text-6xl lg:text-7xl text-gray-900 transition-colors duration-300 hover:text-blue-700"
-      >
+    <header class="text-center py-16">
+      <h1 class="text-5xl font-extrabold leading-none md:text-6xl lg:text-7xl text-blue-600">
         Nuestra Historia
       </h1>
-      <h2
-        class="text-xl font-medium leading-relaxed tracking-wide text-gray-600 md:text-2xl lg:text-3xl mt-4"
-      >
-        Instituto de Inmunología "Dr. Nicolás Bianco Colmenares"
+      <h2 class="mt-6 text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto">
+        Instituto de Inmunología "Dr. Nicolás E. Bianco Colmenares"
       </h2>
     </header>
 
     <Divider title="Historia" />
 
-    <section id="historia-idi" class="py-12 scroll-mt-20 px-6 lg:px-12">
+    <section id="historia-idi" class="py-12 scroll-mt-20">
       
-      <div class="lg:text-right pt-6">
-        <h3
-          class="text-3xl md:text-4xl font-bold tracking-wide mb-6 text-blue-600 transition-colors duration-300 hover:text-indigo-600 border-b-2 border-indigo-300 pb-2 inline-block"
-        >
+      <div class="text-center mb-8">
+        <h3 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
           Origen y Misión del IDI-UCV
         </h3>
       </div>
@@ -40,7 +34,7 @@ import Divider from '../components/Divider.astro';
           <figure class="rounded-xl overflow-hidden border border-gray-200">
             <img
               src="/images/IDI-slider-1.jpg" 
-              alt="Fachada del Instituto de Inmunología Dr. Nicolás Bianco Colmenares, UCV"
+              alt="Fachada del Instituto de Inmunología Dr. Nicolás E. Bianco Colmenares, UCV"
               class="w-full h-auto object-cover"
               loading="lazy"
             />
@@ -50,31 +44,31 @@ import Divider from '../components/Divider.astro';
           </figure>
         </div>
 
-        <div class="prose lg:prose-xl max-w-none text-gray-700 order-2 lg:w-2/3">
-          <p>
-            El **Instituto de Inmunología de la Universidad Central de Venezuela (IDI-UCV)** tiene una historia de transformación y crecimiento constante dentro del ecosistema académico venezolano. Notablemente, es el más joven de los siete institutos de investigación que conforman la prestigiosa Facultad de Medicina. Su fundación no fue un evento súbito, sino la culminación de un proceso evolutivo que comenzó con la antigua **Cátedra de Patología General y Fisiopatología**. Este camino histórico sentó las bases para su consolidación como un centro neurálgico en el estudio avanzado de las ciencias inmunológicas, adaptándose continuamente a las necesidades de la salud pública y la academia en el país.
-          </p>
+        <div class="order-2 lg:w-2/3">
+          <div class="bg-white p-6 rounded-xl border border-gray-200">
+            <p class="text-lg text-gray-700 leading-relaxed">
+              El <strong>Instituto de Inmunología de la Universidad Central de Venezuela (IDI-UCV)</strong> tiene una historia de transformación y crecimiento constante dentro del ecosistema académico venezolano. Notablemente, es el más joven de los siete institutos de investigación que conforman la prestigiosa Facultad de Medicina. Su fundación no fue un evento súbito, sino la culminación de un proceso evolutivo que comenzó con la antigua <strong>Cátedra de Patología General y Fisiopatología</strong>. Este camino histórico sentó las bases para su consolidación como un centro neurálgico en el estudio avanzado de las ciencias inmunológicas, adaptándose continuamente a las necesidades de la salud pública y la academia en el país.
+            </p>
 
-          <h4 class="text-2xl font-semibold mt-10 mb-4 text-indigo-600">
-            Foco: Investigación, Docencia y Servicio
-          </h4>
-          
-          <p>
-            Desde su inauguración formal, el IDI ha asumido la responsabilidad tripartita de la **investigación, la docencia y el servicio** bajo un estándar de máxima excelencia. Nuestra misión principal se enfoca en la **investigación de alto nivel**, abordando temas que van desde los mecanismos fundamentales del sistema inmune hasta sus aplicaciones clínicas directas. Esta labor científica se traduce en líneas de investigación y servicios orientados a patologías de gran impacto nacional, posicionando al IDI como un **referente indispensable en alergología e inmunología clínica** en Venezuela. El instituto se dedica incansablemente a la **formación de futuras generaciones** de especialistas e investigadores, asegurando así la transferencia de conocimiento y el compromiso continuo con la salud de la comunidad.
-          </p>
+            <h4 class="text-2xl font-semibold mt-8 mb-4 text-indigo-600">
+              Foco: Investigación, Docencia y Servicio
+            </h4>
+            
+            <p class="text-lg text-gray-700 leading-relaxed">
+              Desde su inauguración formal, el IDI ha asumido la responsabilidad tripartita de la <strong>investigación, la docencia y el servicio</strong> bajo un estándar de máxima excelencia. Nuestra misión principal se enfoca en la <strong>investigación de alto nivel</strong>, abordando temas que van desde los mecanismos fundamentales del sistema inmune hasta sus aplicaciones clínicas directas. Esta labor científica se traduce en líneas de investigación y servicios orientados a patologías de gran impacto nacional, posicionando al IDI como un <strong>referente indispensable en alergología e inmunología clínica</strong> en Venezuela. El instituto se dedica incansablemente a la <strong>formación de futuras generaciones</strong> de especialistas e investigadores, asegurando así la transferencia de conocimiento y el compromiso continuo con la salud de la comunidad.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
     <Divider title="" />
 
-    <section id="dr-bianco" class="py-12 scroll-mt-20 px-6 lg:px-12">
+    <section id="dr-bianco" class="py-12 scroll-mt-20">
       
-      <div class="lg:text-right pt-6"> 
-        <h3
-          class="text-3xl md:text-4xl font-bold tracking-wide mb-6 text-blue-600 transition-colors duration-300 hover:text-indigo-600 border-b-2 border-indigo-300 pb-2 inline-block"
-        >
-          Dr. Nicolás Bianco Colmenares: El Fundador
+      <div class="text-center mb-8"> 
+        <h3 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
+          Dr. Nicolás E. Bianco Colmenares: El Fundador
         </h3>
       </div>
       
@@ -83,53 +77,55 @@ import Divider from '../components/Divider.astro';
           <figure class="rounded-xl overflow-hidden border border-gray-200">
             <img
               src="/images/nicolas-bianco-placeholder.jpg" 
-              alt="Retrato del Dr. Nicolás Bianco Colmenares, Vicerrector Académico de la UCV"
+              alt="Retrato del Dr. Nicolás E. Bianco Colmenares, Vicerrector Académico de la UCV"
               class="w-full h-auto object-cover"
               loading="lazy"
             />
             <figcaption class="p-3 text-center text-sm text-gray-500 bg-gray-100">
-                Dr. Nicolás Bianco Colmenares (1947 - 2021).
+                Dr. Nicolás E. Bianco Colmenares (1947 - 2021).
             </figcaption>
           </figure>
         </div>
 
-        <div class="prose lg:prose-xl max-w-none text-gray-700 lg:w-2/3">
-          <p>
-            El instituto lleva con profundo honor el nombre del **Dr. Nicolás Bianco Colmenares**, una figura monumental que dejó una huella indeleble en la medicina, la docencia y la vida política universitaria de Venezuela. Nacido en Caracas en 1947 y egresado de la UCV, el Dr. Bianco fue un distinguido **Médico, Inmunólogo y Profesor Titular** de la Facultad de Medicina. Su visión estratégica y su pasión por la ciencia y la educación fueron las fuerzas impulsoras detrás del desarrollo y la posterior consolidación del Instituto de Inmunología, al que dedicó una parte fundamental de su brillante carrera profesional, estableciendo los cimientos de la excelencia académica y clínica que hoy nos define.
-          </p>
+        <div class="lg:w-2/3">
+          <div class="bg-white p-6 rounded-xl border border-gray-200">
+            <p class="text-lg text-gray-700 leading-relaxed">
+              El instituto lleva con profundo honor el nombre del <strong>Dr. Nicolás E. Bianco Colmenares</strong>, una figura monumental que dejó una huella indeleble en la medicina, la docencia y la vida política universitaria de Venezuela. Nacido en Caracas en 1947 y egresado de la UCV, el Dr. Bianco fue un distinguido <strong>Médico, Inmunólogo y Profesor Titular</strong> de la Facultad de Medicina. Su visión estratégica y su pasión por la ciencia y la educación fueron las fuerzas impulsoras detrás del desarrollo y la posterior consolidación del Instituto de Inmunología, al que dedicó una parte fundamental de su brillante carrera profesional, estableciendo los cimientos de la excelencia académica y clínica que hoy nos define.
+            </p>
 
-          <h4 class="text-2xl font-semibold mt-10 mb-4 text-indigo-600">
-            Liderazgo y Legado Académico
-          </h4>
-          
-          <p>
-            La influencia del Dr. Bianco en la UCV fue notable. Además de ser un científico riguroso, demostró un liderazgo académico excepcional al ocupar cargos de máxima responsabilidad, incluyendo **Vicerrector Académico de la UCV** y Director de la Escuela de Medicina "Luis Razetti". Su investigación fue pionera, destacándose especialmente en el estudio del sistema inmune y en la **investigación de enfermedades tropicales** endémicas, como la leishmaniasis. Más allá de sus innumerables logros científicos y administrativos, el Dr. Bianco será siempre recordado como un firme defensor de la autonomía universitaria y un **ejemplo de ética, compromiso y pasión** por la salud pública y la formación de profesionales en Venezuela.
-          </p>
+            <h4 class="text-2xl font-semibold mt-8 mb-4 text-indigo-600">
+              Liderazgo y Legado Académico
+            </h4>
+            
+            <p class="text-lg text-gray-700 leading-relaxed">
+              La influencia del Dr. Bianco en la UCV fue notable. Además de ser un científico riguroso, demostró un liderazgo académico excepcional al ocupar cargos de máxima responsabilidad, incluyendo <strong>Vicerrector Académico de la UCV</strong> y Director de la Escuela de Medicina "Luis Razetti". Su investigación fue pionera, destacándose especialmente en el estudio del sistema inmune y en la <strong>investigación de enfermedades tropicales</strong> endémicas, como la leishmaniasis. Más allá de sus innumerables logros científicos y administrativos, el Dr. Bianco será siempre recordado como un firme defensor de la autonomía universitaria y un <strong>ejemplo de ética, compromiso y pasión</strong> por la salud pública y la formación de profesionales en Venezuela.
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
     <Divider title="" />
 
-    <section id="legado" class="py-12 scroll-mt-20 px-6 lg:px-12">
+    <section id="legado" class="py-12 scroll-mt-20">
       
-      <div class="lg:text-right pt-6">
-        <h3
-          class="text-3xl md:text-4xl font-bold tracking-wide mb-6 text-blue-600 transition-colors duration-300 hover:text-indigo-600 border-b-2 border-indigo-300 pb-2 inline-block"
-        >
+      <div class="text-center mb-8">
+        <h3 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
           Compromiso con la Inmunología y el País
         </h3>
       </div>
       
       <div class="flex flex-col lg:flex-row gap-10 items-center pb-6">
-        <div class="prose lg:prose-xl max-w-none text-gray-700 order-2 lg:order-1 lg:w-2/3">
-          <p>
-            Mantener el nombre del Dr. Nicolás Bianco Colmenares en nuestra institución es más que un simple acto de homenaje; es una reafirmación diaria de nuestro compromiso con los valores que él defendió. Su **contribución inestimable** al campo de la Inmunología y su devoción inquebrantable por la Universidad Central de Venezuela constituyen la brújula moral y científica que guía todos nuestros esfuerzos. Su ejemplo de rigor, ética y servicio público es el estándar que nos esforzamos por alcanzar en cada investigación, clase y atención al paciente.
-          </p>
-          
-          <p>
-            Hoy, el **IDI-UCV** se mantiene como un centro dinámico que continúa la labor de su epónimo con una visión de futuro. Nos enorgullece ofrecer **servicios clínicos y de laboratorio de vanguardia**, utilizando tecnología avanzada para diagnósticos precisos y tratamientos eficaces. Al mismo tiempo, sostenemos un alto estándar en la **generación de conocimiento científico**, publicando hallazgos relevantes y participando activamente en la comunidad científica global. El Instituto de Inmunología es, sin duda, un pilar esencial para la salud y la academia, sirviendo al país con la misma pasión y excelencia que legó el Dr. Bianco.
-          </p>
+        <div class="order-2 lg:order-1 lg:w-2/3">
+          <div class="bg-white p-6 rounded-xl border border-gray-200">
+            <p class="text-lg text-gray-700 leading-relaxed">
+              Mantener el nombre del Dr. Nicolás E. Bianco Colmenares en nuestra institución es más que un simple acto de homenaje; es una reafirmación diaria de nuestro compromiso con los valores que él defendió. Su <strong>contribución inestimable</strong> al campo de la Inmunología y su devoción inquebrantable por la Universidad Central de Venezuela constituyen la brújula moral y científica que guía todos nuestros esfuerzos. Su ejemplo de rigor, ética y servicio público es el estándar que nos esforzamos por alcanzar en cada investigación, clase y atención al paciente.
+            </p>
+            
+            <p class="text-lg text-gray-700 leading-relaxed mt-6">
+              Hoy, el <strong>IDI-UCV</strong> se mantiene como un centro dinámico que continúa la labor de su epónimo con una visión de futuro. Nos enorgullece ofrecer <strong>servicios clínicos y de laboratorio de vanguardia</strong>, utilizando tecnología avanzada para diagnósticos precisos y tratamientos eficaces. Al mismo tiempo, sostenemos un alto estándar en la <strong>generación de conocimiento científico</strong>, publicando hallazgos relevantes y participando activamente en la comunidad científica global. El Instituto de Inmunología es, sin duda, un pilar esencial para la salud y la academia, sirviendo al país con la misma pasión y excelencia que legó el Dr. Bianco.
+            </p>
+          </div>
         </div>
 
         <div class="order-1 lg:order-2 w-full lg:w-1/3 lg:max-w-md flex-shrink-0">
@@ -150,20 +146,20 @@ import Divider from '../components/Divider.astro';
 
     <Divider title="" />
 
-    <section id="llamada-accion" class="py-12 text-center">
-      <p
-        class="text-2xl md:text-3xl lg:text-4xl font-normal transition-colors duration-300 hover:text-indigo-600 text-gray-900"
-      >
-        Conoce más sobre <span class="text-blue-600 font-bold">nuestros servicios</span> y cómo podemos ayudarte.
-      </p>
-      <a
-        href="/"
-        class="mt-6 inline-flex items-center justify-center px-6 py-3 border border-transparent text-lg font-medium rounded-md text-white 
-               bg-blue-600 hover:bg-indigo-600 
-               transition duration-300"
-      >
-        Volver a Servicios
-      </a>
+    <section id="llamada-accion" class="py-10 text-center">
+      <div class="bg-white p-8 rounded-xl border border-gray-200 max-w-4xl mx-auto">
+        <p class="text-2xl md:text-3xl lg:text-4xl font-normal text-gray-900 mb-6">
+          Conoce más sobre <span class="text-blue-600 font-bold">nuestros servicios</span> y cómo podemos ayudarte.
+        </p>
+        <a
+          href="/"
+          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-lg font-medium rounded-md text-white 
+                 bg-blue-600 hover:bg-indigo-600 
+                 transition duration-300"
+        >
+          Volver a Servicios
+        </a>
+      </div>
     </section>
   </main>
 </Layout>   

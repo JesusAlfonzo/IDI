@@ -9,3 +9,11 @@ price: 100.00
 
 ## Relevancia Clínica
 Si el resultado es negativo, **descarta** casi por completo la posibilidad de desarrollar **Enfermedad Celíaca**.
+
+---
+### 1. Días y Horarios del Examen
+
+El examen **solo** se realizará en el siguiente horario:
+
+* **Días:** **Lunes a Viernes** **(Por Orden de llegada)**
+* **Hora:** **7:00 AM - 10:00 AM**
