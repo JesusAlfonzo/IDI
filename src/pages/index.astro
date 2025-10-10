@@ -5,6 +5,8 @@ import Nav from "../components/Nav.astro";
 import Slider from "../components/Slider.astro";
 import Divider from "../components/Divider.astro";
 import Card from "../components/Card.astro";
+// Si SearchExams usa una ruta relativa, deberías usar el alias de raíz si existe:
+// import SearchExams from '~/components/searchExams.astro';
 ---
 
 <Layout title="IDI - Bienvenido">
@@ -70,7 +72,7 @@ import Card from "../components/Card.astro";
         >
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/consulta.png"
+              url="images/consulta.png"
               title="Consulta"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/consulta"
@@ -78,7 +80,7 @@ import Card from "../components/Card.astro";
           </div>
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/laboratorio.png"
+              url="images/laboratorio.png"
               title="Laboratorio"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/laboratorio"
@@ -86,7 +88,7 @@ import Card from "../components/Card.astro";
           </div>
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/espirometria.png"
+              url="images/espirometria.png"
               title="Espirometria"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/espirometria"
@@ -94,7 +96,7 @@ import Card from "../components/Card.astro";
           </div>
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/Informe.png"
+              url="images/Informe.png"
               title="Informe Alto Costo"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/informe-alto-costo"
@@ -102,7 +104,7 @@ import Card from "../components/Card.astro";
           </div>
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/Prick.png"
+              url="images/Prick.png"
               title="PRICK"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/prick"
@@ -110,7 +112,7 @@ import Card from "../components/Card.astro";
           </div>
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/espirometria.png"
+              url="images/espirometria.png"
               title="Prueba Epicutanea (Parche)"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/prueba-epicutanea"
@@ -118,7 +120,7 @@ import Card from "../components/Card.astro";
           </div>
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/Provocacion.png"
+              url="images/Provocacion.png"
               title="Prueba de Provocacion"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/prueba-provocacion"
@@ -126,7 +128,7 @@ import Card from "../components/Card.astro";
           </div>
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/Autologo.png"
+              url="images/Autologo.png"
               title="Suero Autologo"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/suero-autologo"
@@ -134,7 +136,7 @@ import Card from "../components/Card.astro";
           </div>
           <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
             <Card
-              url="/images/Parenteral.png"
+              url="images/Parenteral.png"
               title="Tratamiento Parenteral"
               description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
               page="/tratamiento-parenteral"
@@ -240,12 +242,11 @@ import Card from "../components/Card.astro";
         class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-gray-900 mb-8 transition-colors duration-300 hover:text-indigo-600"
       >
         Nuestros Horarios
-      </h2>
+        </h2>
       <div class="prose mx-auto">
         <p class="mt-4 text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
           Te ofrecemos atención de lunes a viernes en los siguientes horarios.
-          Por favor, toma en cuenta que las consultas y el laboratorio pueden
-          tener horas específicas.
+          Por favor, toma en cuenta que las consultas y el laboratorio pueden tener horas específicas.
         </p>
       </div>
 
@@ -343,13 +344,19 @@ import Card from "../components/Card.astro";
     id="contacto"
     class="py-12 text-center animate-blurred-fade-in scroll-mt-20 relative overflow-hidden"
   >
+    <span
+      class="hidden lg:block absolute left-[-10px] top-1/2 transform -translate-y-1/2 rotate-90 text-[7rem] font-extrabold text-blue-200 opacity-50 select-none pointer-events-none"
+    >
+      IDI
+    </span>
     <h2
       class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-gray-900 mb-8 transition-colors duration-300 hover:text-blue-600"
     >
       Contáctanos
     </h2>
     <p class="mt-4 text-xl font-normal text-gray-600 md:text-2xl">
-      Estamos aquí para ayudarte. Contáctanos **vía email o llamada local**.(Los números no poseen Whatsapp).
+      Estamos aquí para ayudarte. Contáctanos **vía email o llamada local**.
+      (Los números no poseen Whatsapp).
     </p>
 
     <div
@@ -422,6 +429,11 @@ import Card from "../components/Card.astro";
         </div>
       </div>
     </div>
+    <span
+      class="hidden lg:block absolute right-[-10px] top-1/2 transform -translate-y-1/2 -rotate-90 text-[7rem] font-extrabold text-indigo-200 opacity-50 select-none pointer-events-none"
+    >
+      UCV
+    </span>
   </section>
 
   <script is:inline>
