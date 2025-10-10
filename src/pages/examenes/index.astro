@@ -3,8 +3,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 /* Importa el nuevo componente */
-import SearchExams from '../../components/SearchExams.astro';
-
+import SearchExams from '@/components/searchExams.astro';
 /* Definir el tipo para el objeto agrupador */
 type GroupedExamenes = Record<string, CollectionEntry<'examenes'>[]>; 
 
