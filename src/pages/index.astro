@@ -200,7 +200,7 @@ import Card from "@components/Card.astro";
       >
         Nuestra Ubicación
       </h2>
-      <p class="mt-4 text-lg text-gray-600 mb-4">
+      <p class="mt-4 text-xl text-gray-600 mb-4">
         Visítanos en nuestra sede. ¡Te esperamos!
       </p>
       <div
@@ -243,7 +243,7 @@ import Card from "@components/Card.astro";
         Nuestros Horarios
       </h2>
       <div class="prose mx-auto">
-        <p class="mt-4 text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+        <p class="mt-4 text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
           Te ofrecemos atención de lunes a viernes en los siguientes horarios. <br> Por favor, toma en cuenta que las consultas y el laboratorio pueden tener horas específicas.
         </p>
       </div>
@@ -347,12 +347,13 @@ import Card from "@components/Card.astro";
       >
         ¿Listo para contactarnos?
       </h2>
-      <p class="mt-4 text-xl font-light text-gray-600 md:text-2xl max-w-3xl mx-auto mb-12">
+      <p class="mt-4 text-xl font-normal text-gray-700 md:text-2xl max-w-3xl mx-auto mb-12">
         Estamos aquí para atender tus necesidades médicas. Elige la forma que prefieras para comunicarte con el Instituto de Inmunología.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
 
+        {/* Tarjeta 1: Correo Electrónico (Efecto de elevación y borde azul) */}
         <a
           href="mailto:laboratorio.idiucv@gmail.com"
           class="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-4 border-transparent hover:border-blue-600"
@@ -382,9 +383,10 @@ import Card from "@components/Card.astro";
           </span>
         </a>
 
+        {/* Tarjeta 2: Línea Principal (Efecto de elevación y borde índigo) */}
         <a
           href="tel:+582126053509"
-          class="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-indigo-400"
+          class="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-4 border-transparent hover:border-indigo-600"
         >
           <div class="text-indigo-600 group-hover:text-indigo-700 mb-3">
             <svg
@@ -411,9 +413,10 @@ import Card from "@components/Card.astro";
           </span>
         </a>
 
+        {/* Tarjeta 3: Línea Secundaria (Efecto de elevación y borde índigo) */}
         <a
           href="tel:+582126053508"
-          class="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-indigo-400"
+          class="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-4 border-transparent hover:border-indigo-600"
         >
           <div class="text-indigo-600 group-hover:text-indigo-700 mb-3">
             <svg
@@ -508,7 +511,6 @@ import Card from "@components/Card.astro";
       // o tienes que gestionar la remoción del listener anterior.
       // Para simplificar, lo dejamos dentro, pero debemos prevenir duplicados.
       // Limpieza de event listeners de window (por si se llama más de una vez)
-      // Para evitar que el listener de 'resize' se acumule con cada swap:
       window.removeEventListener("resize", handleResize);
 
       function handleResize() {
