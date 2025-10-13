@@ -16,5 +16,3 @@ Diagnóstico de **crioglobulinemia**, un tipo de vasculitis sistémica que puede
 El examen **solo** se realizará en el siguiente horario:
 
 * **Días:** **Lunes y Martes** **(Por Orden de llegada)**
-* **Hora:** **7:00 AM - 10:00 AM**
-* **Requisitos:** **Estar en Ayunas**
