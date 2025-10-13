@@ -2,7 +2,6 @@
 // Importaciones de Astro
 import { getCollection, type CollectionEntry } from 'astro:content'; 
 import Layout from '@layouts/Layout.astro';
-import Nav from '@components/Nav.astro';
 // Asegúrate de que SearchExams se encuentra en src/components/searchExams.astro
 import SearchExams from '@components/searchExams.astro';
 
@@ -45,7 +44,6 @@ const getDeliveryTime = (tipoExamen: string): string => {
 
 ---
 <Layout title="IDI - Exámenes">
-    <Nav />
     
     <main class="container mx-auto px-4 pt-24 pb-16 animate-blurred-fade-in">
         <header class="text-center mb-12">
