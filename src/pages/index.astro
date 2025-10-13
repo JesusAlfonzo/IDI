@@ -10,494 +10,520 @@ import Card from "@components/Card.astro";
 ---
 
 <Layout title="IDI - Bienvenido">
-  <Nav />
+  <Nav />
 
-  <main class="container mx-auto px-4 pt-24 animate-blurred-fade-in">
-    <div class="grid place-items-center animate-blurred-fade-in py-10">
-      <div class="flex flex-col items-center text-center gap-2">
-        <h1
-          class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-blue-600 transition-colors duration-300 hover:text-indigo-600"
-        >
-          Instituto de Inmunología <br />
-          <span
-            class="text-gray-900 transition-colors duration-300 hover:text-indigo-600"
-          >
-            "Dr. Nicolás Bianco Colmenares" (IDI - UCV)
-          </span>
-        </h1>
-        <h2
-          class="text-2xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl transition-colors duration-300 hover:text-indigo-600"
-        >
-          Entre los siete Institutos de la Facultad de Medicina
-          <span
-            class="text-blue-600 transition-colors duration-300 hover:text-indigo-600"
-          >
-            "el más joven"
-          </span>
-        </h2>
-      </div>
-    </div>
-
-    <div class="py-4">
-      <Slider />
-        </div>
-
-    <div class="py-8">
-      <Divider title="" />
-    </div>
-
-    <section id="servicios" class="grid gap-4 py-8 text-center scroll-mt-20">
+  <main class="container mx-auto px-4 pt-24 animate-blurred-fade-in">
+    <div class="grid place-items-center animate-blurred-fade-in py-10">
+      <div class="flex flex-col items-center text-center gap-2">
         <h1
-        class="text-5xl md:text-6xl lg:text-8xl font-bold transition-colors duration-300"
+          class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-blue-600 transition-colors duration-300 hover:text-indigo-600"
         >
-        Te ofrecemos
-        <span
-            class="text-black transition-colors duration-300 hover:text-indigo-600"
-        >
-            los mejores servicios
-        </span>
+          Instituto de Inmunología <br />
+          <span
+            class="text-gray-900 transition-colors duration-300 hover:text-indigo-600"
+          >
+            "Dr. Nicolás Bianco Colmenares" (IDI - UCV)
+          </span>
         </h1>
         <h2
-        class="text-2xl md:text-3xl lg:text-4xl font-normal transition-colors duration-300"
+          class="text-2xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl transition-colors duration-300 hover:text-indigo-600"
         >
-        atendemos tus necesidades
+          Entre los siete Institutos de la Facultad de Medicina
+          <span
+            class="text-blue-600 transition-colors duration-300 hover:text-indigo-600"
+          >
+            "el más joven"
+          </span>
         </h2>
+      </div>
+    </div>
+
+    <div class="py-4">
+      <Slider />
+    </div>
+
+    <div class="py-8">
+      <Divider title="" />
+    </div>
+
+    <section id="servicios" class="grid gap-4 py-8 text-center scroll-mt-20">
+      <h1
+        class="text-5xl md:text-6xl lg:text-8xl font-bold transition-colors duration-300"
+      >
+        Te ofrecemos
+        <span
+          class="text-black transition-colors duration-300 hover:text-indigo-600"
+        >
+          los mejores servicios
+        </span>
+      </h1>
+      <h2
+        class="text-2xl md:text-3xl lg:text-4xl font-normal transition-colors duration-300"
+      >
+        atendemos tus necesidades
+      </h2>
     </section>
 
-    <div class="">
-      <div class="relative overflow-hidden mx-auto max-w-screen-xl">
-        <div
-          id="cards-container"
-          class="flex transition-transform duration-500 ease-in-out gap-6"
-        >
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/consulta.png"
-              title="Consulta"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/consulta"
-            />
-          </div>
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/laboratorio.png"
-              title="Laboratorio"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/laboratorio"
-            />
-          </div>
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/espirometria.png"
-              title="Espirometria"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/espirometria"
-            />
-          </div>
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/Informe.png"
-              title="Informe Alto Costo"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/informe-alto-costo"
-            />
-          </div>
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/Prick.png"
-              title="PRICK"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/prick"
-            />
-          </div>
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/espirometria.png"
-              title="Prueba Epicutanea (Parche)"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/prueba-epicutanea"
-            />
-          </div>
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/Provocacion.png"
-              title="Prueba de Provocacion"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/prueba-provocacion"
-            />
-          </div>
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/Autologo.png"
-              title="Suero Autologo"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/suero-autologo"
-            />
-          </div>
-          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
-            <Card
-              url="images/Parenteral.png"
-              title="Tratamiento Parenteral"
-              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-              page="/tratamiento-parenteral"
-            />
-          </div>
-        </div>
+    <div class="">
+      <div class="relative overflow-hidden mx-auto max-w-screen-xl">
+        <div
+          id="cards-container"
+          class="flex transition-transform duration-500 ease-in-out gap-6"
+        >
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/consulta.png"
+              title="Consulta"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/consulta"
+            />
+          </div>
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/laboratorio.png"
+              title="Laboratorio"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/laboratorio"
+            />
+          </div>
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/espirometria.png"
+              title="Espirometria"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/espirometria"
+            />
+          </div>
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/Informe.png"
+              title="Informe Alto Costo"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/informe-alto-costo"
+            />
+          </div>
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/Prick.png"
+              title="PRICK"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/prick"
+            />
+          </div>
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/espirometria.png"
+              title="Prueba Epicutanea (Parche)"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/prueba-epicutanea"
+            />
+          </div>
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/Provocacion.png"
+              title="Prueba de Provocacion"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/prueba-provocacion"
+            />
+          </div>
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/Autologo.png"
+              title="Suero Autologo"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/suero-autologo"
+            />
+          </div>
+          <div class="flex-shrink-0 w-full sm:w-1/2 lg:w-[calc(25%-18px)]">
+            <Card
+              url="images/Parenteral.png"
+              title="Tratamiento Parenteral"
+              description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
+              page="/tratamiento-parenteral"
+            />
+          </div>
+        </div>
 
-        <button
-          id="prev-btn"
-          class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full p-2 bg-white/50 hover:bg-white/75 transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"></path>
-          </svg>
-        </button>
-        <button
-          id="next-btn"
-          class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full p-2 bg-white/50 hover:bg-white/75 transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div class="py-8">
-      <Divider title="" />
-    </div>
+        <button
+          id="prev-btn"
+          class="absolute top-1/2 left-4 -translate-y-1/2 rounded-full p-2 bg-white/50 hover:bg-white/75 transition z-10"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            ></path>
+          </svg>
+        </button>
+        <button
+          id="next-btn"
+          class="absolute top-1/2 right-4 -translate-y-1/2 rounded-full p-2 bg-white/50 hover:bg-white/75 transition z-10"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="py-8">
+      <Divider title="" />
+    </div>
 
-    <section
-      id="ubicacion"
-      class="py-12 text-center animate-blurred-fade-in scroll-mt-20 relative overflow-hidden"
-    >
-      <span
-        class="hidden lg:block absolute left-[-10px] top-1/2 transform -translate-y-1/2 rotate-90 text-[7rem] font-extrabold text-blue-200 opacity-50 select-none pointer-events-none"
-      >
-        IDI
-      </span>
+    <section
+      id="ubicacion"
+      class="py-12 text-center animate-blurred-fade-in scroll-mt-20 relative overflow-hidden"
+    >
+      <span
+        class="hidden lg:block absolute left-[-10px] top-1/2 transform -translate-y-1/2 rotate-90 text-[7rem] font-extrabold text-blue-200 opacity-50 select-none pointer-events-none"
+      >
+        IDI
+      </span>
 
-      <h2
-        class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-gray-900 mb-8 transition-colors duration-300 hover:text-blue-600"
-      >
-        Nuestra Ubicación
-        </h2>
-      <p class="mt-4 text-lg text-gray-600 mb-4">
-        Visítanos en nuestra sede. ¡Te esperamos!
-      </p>
-      <div
-        class="relative max-w-xl mx-auto overflow-hidden rounded-lg shadow-lg"
-      >
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.110328394241!2d-66.8956476241258!3d10.491968264374478!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8c2a58d73bc1f427%3A0x301550da9a607d3c!2sInstituto%20de%20Inmunolog%C3%ADa%20%22Dr.%20Nicol%C3%A1s%20Bianco%20Colmenares%22%20(IDI)%20-%20UCV!5e0!3m2!1ses!2sve!4v1758846958491!5m2!1ses!2sve"
-          width="600"
-          height="450"
-          style="border:0;"
-          allowfullscreen=""
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
-      </div>
+      <h2
+        class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-gray-900 mb-8 transition-colors duration-300 hover:text-blue-600"
+      >
+        Nuestra Ubicación
+      </h2>
+      <p class="mt-4 text-lg text-gray-600 mb-4">
+        Visítanos en nuestra sede. ¡Te esperamos!
+      </p>
+      <div
+        class="relative max-w-xl mx-auto overflow-hidden rounded-lg shadow-lg"
+      >
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.110328394241!2d-66.8956476241258!3d10.491968264374478!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8c2a58d73bc1f427%3A0x301550da9a607d3c!2sInstituto%20de%20Inmunolog%C3%ADa%20%22Dr.%20Nicol%C3%A1s%20Bianco%20Colmenares%22%20(IDI)%20-%20UCV!5e0!3m2!1ses!2sve!4v1758846958491!5m2!1ses!2sve"
+          width="600"
+          height="450"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
 
-      <span
-        class="hidden lg:block absolute right-[-10px] top-1/2 transform -translate-y-1/2 -rotate-90 text-[7rem] font-extrabold text-indigo-200 opacity-50 select-none pointer-events-none"
-      >
-        UCV
-      </span>
-    </section>
+      <span
+        class="hidden lg:block absolute right-[-10px] top-1/2 transform -translate-y-1/2 -rotate-90 text-[7rem] font-extrabold text-indigo-200 opacity-50 select-none pointer-events-none"
+      >
+        UCV
+      </span>
+    </section>
 
-    <div class="py-8">
-      <Divider title="" />
-    </div>
+    <div class="py-8">
+      <Divider title="" />
+    </div>
 
-    <section
-      id="horarios"
-      class="py-12 text-center animate-blurred-fade-in scroll-mt-20 relative overflow-hidden"
-    >
-      <span
-        class="hidden lg:block absolute right-[-10px] top-1/2 transform -translate-y-1/2 -rotate-90 text-[7rem] font-extrabold text-indigo-200 opacity-50 select-none pointer-events-none"
-      >
-        IDI
-      </span>
+    <section
+      id="horarios"
+      class="py-12 text-center animate-blurred-fade-in scroll-mt-20 relative overflow-hidden"
+    >
+      <span
+        class="hidden lg:block absolute right-[-10px] top-1/2 transform -translate-y-1/2 -rotate-90 text-[7rem] font-extrabold text-indigo-200 opacity-50 select-none pointer-events-none"
+      >
+        IDI
+      </span>
 
-      <h2
-        class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-gray-900 mb-8 transition-colors duration-300 hover:text-indigo-600"
-      >
-        Nuestros Horarios
-        </h2>
-      <div class="prose mx-auto">
-        <p class="mt-4 text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-          Te ofrecemos atención de lunes a viernes en los siguientes horarios. <br> Por favor, toma en cuenta que las consultas y el laboratorio pueden tener horas específicas.
-        </p>
-      </div>
+      <h2
+        class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-gray-900 mb-8 transition-colors duration-300 hover:text-indigo-600"
+      >
+        Nuestros Horarios
+      </h2>
+      <div class="prose mx-auto">
+        <p class="mt-4 text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+          Te ofrecemos atención de lunes a viernes en los siguientes horarios. <br> Por favor, toma en cuenta que las consultas y el laboratorio pueden tener horas específicas.
+        </p>
+      </div>
 
-      <div
-        class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-100"
-      >
-        <div class="space-y-3">
-          <div class="text-xl font-semibold text-blue-600 border-b pb-2 mb-4">
-            Horarios de Atención
-          </div>
+      <div
+        class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-100"
+      >
+        <div class="space-y-3">
+          <div class="text-xl font-semibold text-blue-600 border-b pb-2 mb-4">
+            Horarios de Atención
+          </div>
 
-          <div class="border-b border-indigo-400 pb-3">
-            <div class="flex justify-between items-center">
-              <span class="text-lg font-medium text-gray-700"
-                >Toma de Muestras:</span
-              >
-              <span class="text-lg font-bold text-indigo-600"
-                >7:00 AM - 10:00 AM</span
-              >
-            </div>
-            <div class="flex justify-end mt-1">
-              <span class="text-sm font-semibold text-red-500"
-                >Lunes a Viernes</span
-              >
-            </div>
-          </div>
+          <div class="border-b border-indigo-400 pb-3">
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-medium text-gray-700"
+                >Toma de Muestras:</span
+              >
+              <span class="text-lg font-bold text-indigo-600"
+                >7:00 AM - 10:00 AM</span
+              >
+            </div>
+            <div class="flex justify-end mt-1">
+              <span class="text-sm font-semibold text-red-500"
+                >Lunes a Viernes</span
+              >
+            </div>
+          </div>
 
-          <div class="border-b border-indigo-400 pb-3">
-            <div class="flex justify-between items-center">
-              <span class="text-lg font-medium text-gray-700"
-                >Citas para Triaje:</span
-              >
-              <span class="text-lg font-bold text-indigo-600"
-                >8:00 AM - 10:00 AM</span
-              >
-            </div>
-            <div class="flex justify-end mt-1">
-              <span class="text-sm font-semibold text-red-500"
-                >Lunes a Jueves</span
-              >
-            </div>
-          </div>
+          <div class="border-b border-indigo-400 pb-3">
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-medium text-gray-700"
+                >Citas para Triaje:</span
+              >
+              <span class="text-lg font-bold text-indigo-600"
+                >8:00 AM - 10:00 AM</span
+              >
+            </div>
+            <div class="flex justify-end mt-1">
+              <span class="text-sm font-semibold text-red-500"
+                >Lunes a Jueves</span
+              >
+            </div>
+          </div>
 
-          <div class="border-b border-indigo-400 pb-3">
-            <div class="flex justify-between items-center">
-              <span class="text-lg font-medium text-gray-700"
-                >Atención al Público:</span
-              >
-              <span class="text-lg font-bold text-indigo-600"
-                >7:00 AM - 12:00 PM</span
-              >
-            </div>
-            <div class="flex justify-end mt-1">
-              <span class="text-sm font-semibold text-red-500"
-                >Lunes a Viernes</span
-              >
-            </div>
-          </div>
+          <div class="border-b border-indigo-400 pb-3">
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-medium text-gray-700"
+                >Atención al Público:</span
+              >
+              <span class="text-lg font-bold text-indigo-600"
+                >7:00 AM - 12:00 PM</span
+              >
+            </div>
+            <div class="flex justify-end mt-1">
+              <span class="text-sm font-semibold text-red-500"
+                >Lunes a Viernes</span
+              >
+            </div>
+          </div>
 
-          <div class="border-b border-indigo-400 pb-3">
-            <div class="flex justify-between items-center">
-              <span class="text-lg font-medium text-gray-700"
-                >Retiro de Resultados:</span
-              >
-              <span class="text-lg font-bold text-indigo-600"
-                >7:00 AM - 12:00 PM</span
-              >
-            </div>
-            <div class="flex justify-end mt-1">
-              <span class="text-sm font-semibold text-red-500"
-                >Lunes a Viernes</span
-              >
-            </div>
-          </div>
-        </div>
+          <div class="border-b border-indigo-400 pb-3">
+            <div class="flex justify-between items-center">
+              <span class="text-lg font-medium text-gray-700"
+                >Retiro de Resultados:</span
+              >
+              <span class="text-lg font-bold text-indigo-600"
+                >7:00 AM - 12:00 PM</span
+              >
+            </div>
+            <div class="flex justify-end mt-1">
+              <span class="text-sm font-semibold text-red-500"
+                >Lunes a Viernes</span
+              >
+            </div>
+          </div>
+        </div>
 
-        <p class="mt-6 text-sm text-gray-500 italic">
-    Para procedimientos especiales o si tienes dudas, te recomendamos confirmar por teléfono antes de tu visita.
-        </p>
-      </div>
-        <span
-        class="hidden lg:block absolute left-[-10px] top-1/2 transform -translate-y-1/2 rotate-90 text-[7rem] font-extrabold text-blue-200 opacity-50 select-none pointer-events-none"
-      >
-        UCV
-      </span>
-    </section>
-  </main>
+        <p class="mt-6 text-sm text-gray-500 italic">
+          Para procedimientos especiales o si tienes dudas, te recomendamos confirmar por teléfono antes de tu visita.
+        </p>
+      </div>
+      <span
+        class="hidden lg:block absolute left-[-10px] top-1/2 transform -translate-y-1/2 rotate-90 text-[7rem] font-extrabold text-blue-200 opacity-50 select-none pointer-events-none"
+      >
+        UCV
+      </span>
+    </section>
+  </main>
 
-  <div class="py-8">
-    <Divider title="" />
-  </div>
+  <div class="py-8">
+    <Divider title="" />
+  </div>
 
-  <section
-    id="contacto"
-    class="py-12 text-center animate-blurred-fade-in scroll-mt-20 relative overflow-hidden"
-  >
-    <h2
-      class="text-4xl font-extrabold leading-none tracking-tight md:text-5xl lg:text-6xl text-gray-900 mb-8 transition-colors duration-300 hover:text-blue-600"
-    >
-      Contáctanos
-    </h2>
-    <p class="mt-4 text-xl font-normal text-gray-600 md:text-2xl">
-     ¿Necesitas ayuda o tienes alguna pregunta? <br> ¡Estamos listos para escucharte! Contáctanos fácilmente por email o llamando a nuestra línea local.
-    </p>
+  <section
+    id="contacto"
+    class="py-16 scroll-mt-20 relative"
+  >
+    <div class="container mx-auto px-4 text-center">
+      <h2
+        class="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl text-gray-900 mb-4 transition-colors duration-300 hover:text-indigo-600"
+      >
+        ¿Listo para contactarnos?
+      </h2>
+      <p class="mt-4 text-xl font-light text-gray-600 md:text-2xl max-w-3xl mx-auto mb-12">
+        Estamos aquí para atender tus necesidades médicas. Elige la forma que prefieras para comunicarte con el Instituto de Inmunología.
+      </p>
 
-    <div
-      class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-lg border border-gray-100 mt-8"
-    >
-      <div class="flex flex-col items-center space-y-4">
-        <div
-          class="flex items-center space-x-2 transition-colors duration-300 hover:text-blue-600"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-gray-900 transition-colors duration-300 hover:text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            ></path>
-          </svg>
-          <a
-            href="mailto:laboratorio.idiucv@gmail.com"
-            class="text-lg font-medium text-gray-900 transition-colors duration-300 hover:text-blue-600"
-          >
-            laboratorio.idiucv@gmail.com
-          </a>
-        </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
 
-        <div
-          class="flex items-center space-x-2 transition-colors duration-300 hover:text-blue-600"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-gray-900 transition-colors duration-300 hover:text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-            ></path>
-          </svg>
-          <span class="text-lg font-medium text-gray-900"> 0212-6053509 </span>
-        </div>
+        <a
+          href="mailto:laboratorio.idiucv@gmail.com"
+          class="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-4 border-transparent hover:border-blue-600"
+        >
+          <div class="text-blue-600 group-hover:text-blue-700 mb-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-10 w-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              ></path>
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-gray-900 mb-1">
+            Correo Electrónico
+          </span>
+          <span class="text-sm text-gray-500 mb-3">laboratorio.idiucv@gmail.com</span>
+          <span class="text-sm font-semibold text-blue-600 group-hover:text-white bg-blue-100 group-hover:bg-blue-600 px-3 py-1 rounded-full transition-all">
+            ¡Enviar Correo!
+          </span>
+        </a>
 
-        <div
-          class="flex items-center space-x-2 transition-colors duration-300 hover:text-blue-600"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 text-gray-900 transition-colors duration-300 hover:text-blue-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-            ></path>
-          </svg>
-          <span class="text-lg font-medium text-gray-900"> 0212-6053508 </span>
-        </div>
-      </div>
-    </div>
-  </section>
+        <a
+          href="tel:+582126053509"
+          class="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-indigo-400"
+        >
+          <div class="text-indigo-600 group-hover:text-indigo-700 mb-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-10 w-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+              ></path>
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-gray-900 mb-1">
+            Línea Principal
+          </span>
+          <span class="text-sm text-gray-500 mb-3">0212-6053509</span>
+          <span class="text-sm font-semibold text-indigo-600 group-hover:text-white bg-indigo-100 group-hover:bg-indigo-600 px-3 py-1 rounded-full transition-all">
+            Llamar Ahora
+          </span>
+        </a>
 
-  <script is:inline>
-    /**
-     * Función que encapsula toda la lógica de inicialización del slider.
-     */
-    function initCardSlider() {
-      // 1. Las selecciones de DOM deben estar DENTRO de la función
-      //    para asegurar que se obtienen los nuevos elementos después del swap.
-      const cardsContainer = document.getElementById("cards-container");
-      const prevBtn = document.getElementById("prev-btn");
-      const nextBtn = document.getElementById("next-btn"); // Salir si los elementos principales no existen en la página actual
+        <a
+          href="tel:+582126053508"
+          class="group flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-indigo-400"
+        >
+          <div class="text-indigo-600 group-hover:text-indigo-700 mb-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-10 w-10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+              ></path>
+            </svg>
+          </div>
+          <span class="text-xl font-bold text-gray-900 mb-1">
+            Línea Secundaria
+          </span>
+          <span class="text-sm text-gray-500 mb-3">0212-6053508</span>
+          <span class="text-sm font-semibold text-indigo-600 group-hover:text-white bg-indigo-100 group-hover:bg-indigo-600 px-3 py-1 rounded-full transition-all">
+            Llamar Ahora
+          </span>
+        </a>
+      </div>
 
-      if (!cardsContainer || !prevBtn || !nextBtn) return;
+      <p class="mt-12 text-md text-gray-500 italic">
+          *Recuerda revisar nuestra sección de <a href="#horarios" class="underline text-blue-600 hover:text-blue-800 transition">Horarios</a> para asegurar la mejor atención.
+      </p>
+    </div>
+  </section>
+  <script is:inline>
+    /**
+     * Función que encapsula toda la lógica de inicialización del slider.
+     */
+    function initCardSlider() {
+      // 1. Las selecciones de DOM deben estar DENTRO de la función
+      //    para asegurar que se obtienen los nuevos elementos después del swap.
+      const cardsContainer = document.getElementById("cards-container");
+      const prevBtn = document.getElementById("prev-btn");
+      const nextBtn = document.getElementById("next-btn"); // Salir si los elementos principales no existen en la página actual
 
-      const cards = [...cardsContainer.querySelectorAll(".flex-shrink-0")];
-      const totalCards = cards.length;
-      let currentIndex = 0; // --- Lógica de cálculo y movimiento ---
+      if (!cardsContainer || !prevBtn || !nextBtn) return;
 
-      const getCardsToShow = () => {
-        if (window.innerWidth >= 1024) return 4;
-        if (window.innerWidth >= 640) return 2;
-        return 1;
-      };
+      const cards = [...cardsContainer.querySelectorAll(".flex-shrink-0")];
+      const totalCards = cards.length;
+      let currentIndex = 0; // --- Lógica de cálculo y movimiento ---
 
-      const updateSlider = () => {
-        // Asegúrate de que cards[0] exista antes de acceder a offsetWidth
-        if (cards.length === 0) return;
-        const cardWidth = cards[0].offsetWidth; // 24px es el gap (asumiendo que viene de Tailwind, ej. gap-6)
-        const offset = currentIndex * (cardWidth + 24);
-        cardsContainer.style.transform = `translateX(-${offset}px)`;
-      }; // --- Lógica de Eventos ---
-      // La función interna para el resize necesita ser nombrada o almacenada
-      // para poder manejar la limpieza de eventos si se estuviera usando transition:persist.
-      // Sin embargo, como el DOM se reemplaza, podemos reasignar.
-      // Botones de navegación
-      nextBtn.onclick = () => {
-        const cardsToShow = getCardsToShow();
-        if (currentIndex >= totalCards - cardsToShow) {
-          currentIndex = 0;
-        } else {
-          currentIndex++;
-        }
-        updateSlider();
-      };
+      const getCardsToShow = () => {
+        if (window.innerWidth >= 1024) return 4;
+        if (window.innerWidth >= 640) return 2;
+        return 1;
+      };
 
-      prevBtn.onclick = () => {
-        const cardsToShow = getCardsToShow();
-        if (currentIndex <= 0) {
-          currentIndex = totalCards - cardsToShow;
-        } else {
-          currentIndex--;
-        }
-        updateSlider();
-      }; // Manejo de la función de redimensionamiento (resize)
-      // Es CRÍTICO que al re-inicializar el script, el listener de resize
-      // no se añada múltiples veces. Usaremos un 'flag' o una función con nombre
-      // o simplemente reasignación de eventos para los botones.
-      // Para el evento 'resize' del window, es mejor mantener un solo listener global.
-      // Aquí inicializamos y llamamos updateSlider() para la posición inicial.
-      updateSlider(); // El listener de resize se añade UNA SOLA VEZ globalmente, fuera de la función,
-      // o tienes que gestionar la remoción del listener anterior.
-      // Para simplificar, lo dejamos dentro, pero debemos prevenir duplicados.
-      // Limpieza de event listeners de window (por si se llama más de una vez)
-      // Para evitar que el listener de 'resize' se acumule con cada swap:
-      window.removeEventListener("resize", handleResize);
+      const updateSlider = () => {
+        // Asegúrate de que cards[0] exista antes de acceder a offsetWidth
+        if (cards.length === 0) return;
+        const cardWidth = cards[0].offsetWidth; // 24px es el gap (asumiendo que viene de Tailwind, ej. gap-6)
+        const offset = currentIndex * (cardWidth + 24);
+        cardsContainer.style.transform = `translateX(-${offset}px)`;
+      }; // --- Lógica de Eventos ---
+      // La función interna para el resize necesita ser nombrada o almacenada
+      // para poder manejar la limpieza de eventos si se estuviera usando transition:persist.
+      // Sin embargo, como el DOM se reemplaza, podemos reasignar.
+      // Botones de navegación
+      nextBtn.onclick = () => {
+        const cardsToShow = getCardsToShow();
+        if (currentIndex >= totalCards - cardsToShow) {
+          currentIndex = 0;
+        } else {
+          currentIndex++;
+        }
+        updateSlider();
+      };
 
-      function handleResize() {
-        currentIndex = 0;
-        updateSlider();
-      }
-      window.addEventListener("resize", handleResize);
-    } // ------------------- INICIALIZACIÓN DE ASTRO -------------------
-    // 1. Ejecutar en la carga inicial (reemplaza 'DOMContentLoaded')
+      prevBtn.onclick = () => {
+        const cardsToShow = getCardsToShow();
+        if (currentIndex <= 0) {
+          currentIndex = totalCards - cardsToShow;
+        } else {
+          currentIndex--;
+        }
+        updateSlider();
+      }; // Manejo de la función de redimensionamiento (resize)
+      // Es CRÍTICO que al re-inicializar el script, el listener de resize
+      // no se añada múltiples veces. Usaremos un 'flag' o una función con nombre
+      // o simplemente reasignación de eventos para los botones.
+      // Para el evento 'resize' del window, es mejor mantener un solo listener global.
+      // Aquí inicializamos y llamamos updateSlider() para la posición inicial.
+      updateSlider(); // El listener de resize se añade UNA SOLA VEZ globalmente, fuera de la función,
+      // o tienes que gestionar la remoción del listener anterior.
+      // Para simplificar, lo dejamos dentro, pero debemos prevenir duplicados.
+      // Limpieza de event listeners de window (por si se llama más de una vez)
+      // Para evitar que el listener de 'resize' se acumule con cada swap:
+      window.removeEventListener("resize", handleResize);
 
-    initCardSlider(); // 2. Ejecutar después de cada navegación cliente-side
+      function handleResize() {
+        currentIndex = 0;
+        updateSlider();
+      }
+      window.addEventListener("resize", handleResize);
+    } // ------------------- INICIALIZACIÓN DE ASTRO -------------------
+    // 1. Ejecutar en la carga inicial (reemplaza 'DOMContentLoaded')
 
-    document.addEventListener("astro:after-swap", initCardSlider);
-  </script>
+    initCardSlider(); // 2. Ejecutar después de cada navegación cliente-side
+
+    document.addEventListener("astro:after-swap", initCardSlider);
+  </script>
 </Layout>
