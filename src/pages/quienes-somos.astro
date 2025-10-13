@@ -18,6 +18,7 @@ import Divider from "@components/Divider.astro";
 
     <Divider title="Historia" />
 
+    {/* Seccion 1: Imagen Izquierda */}
     <section id="historia-idi" class="py-12 scroll-mt-20">
       
       <div class="text-center mb-8">
@@ -30,7 +31,7 @@ import Divider from "@components/Divider.astro";
         <div class="order-1 w-full lg:w-1/3 lg:max-w-md flex-shrink-0">
           <figure class="rounded-xl overflow-hidden border border-gray-200">
             <img
-              src="/images/IDI-slider-1.jpg" 
+              src="/images/IDI-slider-4.webp" 
               alt="Fachada del Instituto de Inmunología Dr. Nicolás E. Bianco Colmenares, UCV"
               class="w-full h-auto object-cover"
               loading="lazy"
@@ -61,6 +62,7 @@ import Divider from "@components/Divider.astro";
 
     <Divider title="" />
 
+    {/* Seccion 2: Imagen Derecha */}
     <section id="dr-bianco" class="py-12 scroll-mt-20">
       
       <div class="text-center mb-8"> 
@@ -70,10 +72,10 @@ import Divider from "@components/Divider.astro";
       </div>
       
       <div class="flex flex-col lg:flex-row gap-10 items-center pb-6">
-        <div class="w-full lg:w-1/3 lg:max-w-md flex-shrink-0">
+        <div class="order-2 w-full lg:w-1/3 lg:max-w-md flex-shrink-0">
           <figure class="rounded-xl overflow-hidden border border-gray-200">
             <img
-              src="/images/nicolas-bianco-placeholder.jpg" 
+              src="/images/3.webp" 
               alt="Retrato del Dr. Nicolás E. Bianco Colmenares, Vicerrector Académico de la UCV"
               class="w-full h-auto object-cover"
               loading="lazy"
@@ -84,7 +86,7 @@ import Divider from "@components/Divider.astro";
           </figure>
         </div>
 
-        <div class="lg:w-2/3">
+        <div class="order-1 lg:w-2/3">
           <div class="bg-white p-6 rounded-xl border border-gray-200">
             <p class="text-lg text-gray-700 leading-relaxed">
               El instituto lleva con profundo honor el nombre del <strong>Dr. Nicolás E. Bianco Colmenares</strong>, una figura monumental que dejó una huella indeleble en la medicina, la docencia y la vida política universitaria de Venezuela. Nacido en Caracas en 1947 y egresado de la UCV, el Dr. Bianco fue un distinguido <strong>Médico, Inmunólogo y Profesor Titular</strong> de la Facultad de Medicina. Su visión estratégica y su pasión por la ciencia y la educación fueron las fuerzas impulsoras detrás del desarrollo y la posterior consolidación del Instituto de Inmunología, al que dedicó una parte fundamental de su brillante carrera profesional, estableciendo los cimientos de la excelencia académica y clínica que hoy nos define.
@@ -104,6 +106,7 @@ import Divider from "@components/Divider.astro";
 
     <Divider title="" />
 
+    {/* Seccion 3: Imagen Izquierda */}
     <section id="legado" class="py-12 scroll-mt-20">
       
       <div class="text-center mb-8">
@@ -113,7 +116,7 @@ import Divider from "@components/Divider.astro";
       </div>
       
       <div class="flex flex-col lg:flex-row gap-10 items-center pb-6">
-        <div class="order-2 lg:order-1 lg:w-2/3">
+        <div class="order-2 lg:order-2 lg:w-2/3">
           <div class="bg-white p-6 rounded-xl border border-gray-200">
             <p class="text-lg text-gray-700 leading-relaxed">
               Mantener el nombre del Dr. Nicolás E. Bianco Colmenares en nuestra institución es más que un simple acto de homenaje; es una reafirmación diaria de nuestro compromiso con los valores que él defendió. Su <strong>contribución inestimable</strong> al campo de la Inmunología y su devoción inquebrantable por la Universidad Central de Venezuela constituyen la brújula moral y científica que guía todos nuestros esfuerzos. Su ejemplo de rigor, ética y servicio público es el estándar que nos esforzamos por alcanzar en cada investigación, clase y atención al paciente.
@@ -125,10 +128,10 @@ import Divider from "@components/Divider.astro";
           </div>
         </div>
 
-        <div class="order-1 lg:order-2 w-full lg:w-1/3 lg:max-w-md flex-shrink-0">
+        <div class="order-1 lg:order-1 w-full lg:w-1/3 lg:max-w-md flex-shrink-0">
           <figure class="rounded-xl overflow-hidden border border-gray-200">
             <img
-              src="/images/IDI-slider-2.jpg" 
+              src="/images/IDI-slider-3.webp" 
               alt="Vista de laboratorio o investigación moderna en el IDI"
               class="w-full h-auto object-cover"
               loading="lazy"
@@ -143,20 +146,22 @@ import Divider from "@components/Divider.astro";
 
     <Divider title="" />
 
+    {/* SECCIÓN FINAL REESTILIZADA */}
     <section id="llamada-accion" class="py-10 text-center">
-      <div class="bg-white p-8 rounded-xl border border-gray-200 max-w-4xl mx-auto">
-        <p class="text-2xl md:text-3xl lg:text-4xl font-normal text-gray-900 mb-6">
-          Conoce más sobre <span class="text-blue-600 font-bold">nuestros servicios</span> y cómo podemos ayudarte.
+      <div class="bg-gray-50 p-10 rounded-xl shadow-xl border-l-4 border-blue-600 max-w-4xl mx-auto">
+        <p class="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-800 mb-8">
+          Conoce más sobre <span class="text-blue-600 font-extrabold">nuestros servicios</span> y cómo podemos ayudarte.
         </p>
         <a
           href="/"
-          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-lg font-medium rounded-md text-white 
-                 bg-blue-600 hover:bg-indigo-600 
-                 transition duration-300"
+          class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-xl font-bold rounded-lg text-white 
+                 bg-gradient-to-r from-blue-600 to-indigo-700 
+                 hover:from-indigo-700 hover:to-blue-600 
+                 shadow-lg hover:shadow-xl transition duration-300 ease-in-out transform hover:scale-105"
         >
           Volver a Servicios
         </a>
       </div>
     </section>
   </main>
-</Layout>   
+</Layout>
