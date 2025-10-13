@@ -166,527 +166,460 @@ const maxPrice = Math.max(...allExamenes.map(examen => examen.data.price));
 
 
 <script define:vars={{ examenesJson, categories, tiposExamen, minPrice, maxPrice }}>
-    // Parsear los datos de Astro
-    const allExamenes = JSON.parse(examenesJson);
     
-    // Referencias a elementos del DOM
-    const searchInput = document.getElementById('search-input');
-    const searchResults = document.getElementById('search-results');
-    const noResults = document.getElementById('no-results');
-    const searchSuggestions = document.getElementById('search-suggestions');
-    const suggestionsList = document.getElementById('suggestions-list');
-    const categorySections = document.querySelectorAll('.category-section');
-    const clearSearchBtn = document.getElementById('clear-search');
-    const searchLoading = document.getElementById('search-loading');
-    const searchHistory = document.getElementById('search-history');
-    const recentSearches = document.getElementById('recent-searches');
-    const clearHistoryBtn = document.getElementById('clear-history');
-    const searchStats = document.getElementById('search-stats');
-    const resultsCount = document.getElementById('results-count');
-    const toggleFiltersBtn = document.getElementById('toggle-filters');
-    const filtersContent = document.getElementById('filters-content');
-    const categoryFilter = document.getElementById('category-filter');
-    const typeFilter = document.getElementById('type-filter');
-    const priceFilter = document.getElementById('price-filter');
-    const priceDisplay = document.getElementById('price-display');
-    const clearFiltersBtn = document.getElementById('clear-filters');
-    const suggestSearchBtn = document.getElementById('suggest-search');
-
-    // Estado de la aplicación
     let searchTimeout;
-    let currentFilters = {
-        category: '',
-        type: '',
-        maxPrice: maxPrice
-    };
-
-    // Historial de búsquedas (almacenado en localStorage)
-    let searchHistoryList = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-
-    /**
-     * Función para normalizar texto removiendo acentos y caracteres especiales
-     */
-    function normalizeText(text) {
-        return text
-            .toLowerCase()
-            .trim()
-            .normalize("NFD") // Descompone caracteres acentuados
-            .replace(/[\u0300-\u036f]/g, '') // Remueve marcas diacríticas
-            .replace(/[ñ]/g, 'n') // Convierte ñ a n
-            .replace(/[ç]/g, 'c'); // Convierte ç a c
-    }
     
     /**
-     * Función para obtener el tiempo de entrega basado en el tipo de examen.
-     * *** Lógica replicada de index.astro: 5 días para Citometría, 10 días para el resto. ***
+     * Función principal de inicialización que se ejecuta al cargar y después de cada astro:after-swap.
+     * Toda la lógica y listeners deben estar dentro de esta función para que se reactiven.
      */
-    function getDeliveryTime(tipoExamen) {
-        // Estandarizamos el tipo de examen a minúsculas y sin acentos/espacios para una comparación robusta
-        const normalizedType = normalizeText(tipoExamen);
-
-        // Citometria entrega en 5 días
-        if (normalizedType.includes('citometria')) {
-            return '5 Días Hábiles';
-        }
+    function initializeSearch() {
         
-        // Todos los demás (Inmunodiagnostico, Inmunogenetica, Retrovirus, etc.) entregan en 10 días
-        return '10 Días Hábiles'; 
-    }
-
-    /**
-     * Función para limpiar historial de búsquedas
-     */
-    function clearSearchHistory() {
-        searchHistoryList = [];
-        localStorage.removeItem('searchHistory');
-        updateSearchHistoryUI();
+        // ** (1) PARSEO DE DATOS Y ESTADO **
+        // Se define aquí para asegurar que 'allExamenes' es accesible en cada inicialización
+        const allExamenes = JSON.parse(examenesJson);
         
-        // Mostrar confirmación visual
-        const originalText = clearHistoryBtn.innerHTML;
-        clearHistoryBtn.innerHTML = `
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
-            ¡Limpiado!
-        `;
-        clearHistoryBtn.classList.remove('text-red-600', 'hover:text-red-800');
-        clearHistoryBtn.classList.add('text-green-600');
-        
-        setTimeout(() => {
-            clearHistoryBtn.innerHTML = originalText;
-            clearHistoryBtn.classList.remove('text-green-600');
-            clearHistoryBtn.classList.add('text-red-600', 'hover:text-red-800');
-        }, 2000);
-    }
+        // ** (2) REFERENCIAS A ELEMENTOS DEL DOM **
+        // Se buscan aquí para asegurar que se refieren al DOM actual después del "swap"
+        const searchInput = document.getElementById('search-input');
+        const searchResults = document.getElementById('search-results');
+        const noResults = document.getElementById('no-results');
+        const searchSuggestions = document.getElementById('search-suggestions');
+        const suggestionsList = document.getElementById('suggestions-list');
+        const categorySections = document.querySelectorAll('.category-section');
+        const clearSearchBtn = document.getElementById('clear-search');
+        const searchLoading = document.getElementById('search-loading');
+        const searchHistory = document.getElementById('search-history');
+        const recentSearches = document.getElementById('recent-searches');
+        const clearHistoryBtn = document.getElementById('clear-history');
+        const searchStats = document.getElementById('search-stats');
+        const resultsCount = document.getElementById('results-count');
+        const toggleFiltersBtn = document.getElementById('toggle-filters');
+        const filtersContent = document.getElementById('filters-content');
+        const categoryFilter = document.getElementById('category-filter');
+        const typeFilter = document.getElementById('type-filter');
+        const priceFilter = document.getElementById('price-filter');
+        const priceDisplay = document.getElementById('price-display');
+        const clearFiltersBtn = document.getElementById('clear-filters');
+        const suggestSearchBtn = document.getElementById('suggest-search');
 
-    /**
-     * Función de debounce para optimizar las búsquedas
-     */
-    function debounce(func, wait) {
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(searchTimeout);
-                func(...args);
-            };
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(later, wait);
+        let currentFilters = {
+            category: categoryFilter?.value || '',
+            type: typeFilter?.value || '',
+            maxPrice: parseFloat(priceFilter?.value) || maxPrice
         };
-    }
 
-    /**
-     * Función para crear el HTML de una tarjeta de examen con highlighting
-     */
-    function createExamenCard(examen, searchQuery = '') {
-        const priceFormatted = examen.price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
-        const deliveryTime = getDeliveryTime(examen.tipoExamen); // Usando la lógica de 5/10 días
-        
-        // Función para resaltar texto (funciona con y sin acentos)
-        function highlightText(text, query) {
-            if (!query) return text;
-            
-            // Normalizar tanto el texto como la query
-            const normalizedText = normalizeText(text);
-            const normalizedQuery = normalizeText(query);
-            
-            // Buscar la posición en el texto normalizado
-            const index = normalizedText.indexOf(normalizedQuery);
-            if (index === -1) return text;
-            
-            // Encontrar la posición correspondiente en el texto original
-            let originalIndex = 0;
-            let normalizedIndex = 0;
-            
-            while (normalizedIndex < index && originalIndex < text.length) {
-                const char = text[originalIndex];
-                const normalizedChar = normalizeText(char);
-                normalizedIndex += normalizedChar.length;
-                originalIndex++;
-            }
-            
-            // Encontrar la longitud original de la query en el texto original
-            let originalQueryLength = 0;
-            let currentNormalizedLength = 0;
-            let i = 0;
-            while (currentNormalizedLength < normalizedQuery.length && (originalIndex + i) < text.length) {
-                const char = text[originalIndex + i];
-                const normalizedChar = normalizeText(char);
-                currentNormalizedLength += normalizedChar.length;
-                originalQueryLength++;
-                i++;
-            }
+        let searchHistoryList = JSON.parse(localStorage.getItem('searchHistory') || '[]');
 
-            const before = text.substring(0, originalIndex);
-            const match = text.substring(originalIndex, originalIndex + originalQueryLength);
-            const after = text.substring(originalIndex + originalQueryLength);
-            
-            return `${before}<mark class="bg-yellow-200 px-1 rounded">${match}</mark>${after}`;
+        // ** (3) FUNCIONES DE UTILIDAD (Deben ser redefinidas o hechas globales) **
+        // Las definimos aquí para que cierren sobre el contexto del DOM actual.
+        function normalizeText(text) {
+            return text
+                .toLowerCase()
+                .trim()
+                .normalize("NFD") 
+                .replace(/[\u0300-\u036f]/g, '') 
+                .replace(/[ñ]/g, 'n') 
+                .replace(/[ç]/g, 'c'); 
         }
         
-        return `
-            <a 
-                href="/examenes/${examen.slug}" 
-                class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
-            >
-                <h3 class="text-xl font-bold text-gray-800 mb-2">${highlightText(examen.title, searchQuery)}</h3>
-                <p class="text-sm text-gray-600 mb-3 line-clamp-2">${highlightText(examen.description, searchQuery)}</p>
-                <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                    <span class="text-sm font-semibold text-blue-600 uppercase">${highlightText(examen.tipoExamen, searchQuery)}</span>
-                    <span class="text-lg font-extrabold text-green-700">
-                        ${priceFormatted}
-                    </span>
-                </div>
-                <div class="mt-2 flex justify-between items-center text-xs text-gray-500">
-                    <span class="bg-gray-100 px-2 py-1 rounded">${examen.category}</span>
-                    <span class="flex items-center gap-1 text-sm font-medium text-indigo-600">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        Entrega: ${deliveryTime}
-                    </span>
-                </div>
-            </a>
-        `;
-    }
+        function getDeliveryTime(tipoExamen) {
+            const normalizedType = normalizeText(tipoExamen);
+            if (normalizedType.includes('citometria')) {
+                return '5 Días Hábiles';
+            }
+            return '10 Días Hábiles'; 
+        }
 
-    /**
-     * Función para filtrar exámenes con múltiples criterios (incluyendo búsqueda sin acentos)
-     */
-    function filterExamenes(query, filters) {
-        return allExamenes.filter(examen => {
-            // Filtro por texto de búsqueda (sin acentos)
-            if (query) {
+        function createExamenCard(examen, searchQuery = '') {
+            const priceFormatted = examen.price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
+            const deliveryTime = getDeliveryTime(examen.tipoExamen);
+            
+            function highlightText(text, query) {
+                if (!query) return text;
+                
+                const normalizedText = normalizeText(text);
                 const normalizedQuery = normalizeText(query);
-                const searchFields = [
-                    examen.title,
-                    examen.description,
-                    examen.category,
-                    examen.tipoExamen
-                ].join(' ');
+                const index = normalizedText.indexOf(normalizedQuery);
+                if (index === -1) return text;
                 
-                const normalizedSearchFields = normalizeText(searchFields);
+                let originalIndex = 0;
+                let normalizedIndex = 0;
                 
-                // Búsqueda sin acentos
-                if (!normalizedSearchFields.includes(normalizedQuery)) {
+                while (normalizedIndex < index && originalIndex < text.length) {
+                    const char = text[originalIndex];
+                    const normalizedChar = normalizeText(char);
+                    normalizedIndex += normalizedChar.length;
+                    originalIndex++;
+                }
+                
+                let originalQueryLength = 0;
+                let currentNormalizedLength = 0;
+                let i = 0;
+                while (currentNormalizedLength < normalizedQuery.length && (originalIndex + i) < text.length) {
+                    const char = text[originalIndex + i];
+                    const normalizedChar = normalizeText(char);
+                    currentNormalizedLength += normalizedChar.length;
+                    originalQueryLength++;
+                    i++;
+                }
+
+                const before = text.substring(0, originalIndex);
+                const match = text.substring(originalIndex, originalIndex + originalQueryLength);
+                const after = text.substring(originalIndex + originalQueryLength);
+                
+                return `${before}<mark class="bg-yellow-200 px-1 rounded">${match}</mark>${after}`;
+            }
+            
+            return `
+                <a 
+                    href="/examenes/${examen.slug}" 
+                    class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
+                >
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">${highlightText(examen.title, searchQuery)}</h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">${highlightText(examen.description, searchQuery)}</p>
+                    <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                        <span class="text-sm font-semibold text-blue-600 uppercase">${highlightText(examen.tipoExamen, searchQuery)}</span>
+                        <span class="text-lg font-extrabold text-green-700">
+                            ${priceFormatted}
+                        </span>
+                    </div>
+                    <div class="mt-2 flex justify-between items-center text-xs text-gray-500">
+                        <span class="bg-gray-100 px-2 py-1 rounded">${examen.category}</span>
+                        <span class="flex items-center gap-1 text-sm font-medium text-indigo-600">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Entrega: ${deliveryTime}
+                        </span>
+                    </div>
+                </a>
+            `;
+        }
+
+        function filterExamenes(query, filters) {
+            return allExamenes.filter(examen => {
+                // Filtro por texto de búsqueda (sin acentos)
+                if (query) {
+                    const normalizedQuery = normalizeText(query);
+                    const searchFields = [
+                        examen.title,
+                        examen.description,
+                        examen.category,
+                        examen.tipoExamen
+                    ].join(' ');
+                    
+                    const normalizedSearchFields = normalizeText(searchFields);
+                    
+                    if (!normalizedSearchFields.includes(normalizedQuery)) {
+                        return false;
+                    }
+                }
+
+                // Filtro por categoría
+                if (filters.category && examen.category !== filters.category) {
                     return false;
                 }
-            }
 
-            // Filtro por categoría
-            if (filters.category && examen.category !== filters.category) {
-                return false;
-            }
+                // Filtro por tipo de examen
+                if (filters.type && examen.tipoExamen !== filters.type) {
+                    return false;
+                }
 
-            // Filtro por tipo de examen
-            if (filters.type && examen.tipoExamen !== filters.type) {
-                return false;
-            }
+                // Filtro por precio máximo
+                if (examen.price > filters.maxPrice) {
+                    return false;
+                }
 
-            // Filtro por precio máximo
-            if (examen.price > filters.maxPrice) {
-                return false;
-            }
+                return true;
+            });
+        }
 
-            return true;
-        });
-    }
-
-    /**
-     * Función para mostrar resultados de búsqueda
-     */
-    function displaySearchResults(filteredExamenes, query = '') {
-        const count = filteredExamenes.length;
+        // ** (4) FUNCIONES DE ACCIÓN **
         
-        // Limpiar paginación existente
-        removeExistingPagination();
-        
-        // Actualizar estadísticas
-        resultsCount.textContent = count;
-        searchStats.classList.toggle('hidden', count === 0);
+        function removeExistingPagination() {
+            let nextElement = searchResults.nextElementSibling;
+            while(nextElement && nextElement.classList.contains('flex') && nextElement.classList.contains('justify-center')) {
+                const temp = nextElement.nextElementSibling;
+                nextElement.remove();
+                nextElement = temp;
+            }
+        }
 
-        if (count > 0) {
-            // Ocultar las secciones originales
-            categorySections.forEach(section => section.style.display = 'none');
+        function createPaginationControls(currentPage, totalPages) {
+            let pagination = '<div class="flex justify-center mt-8 space-x-2">';
             
-            // Mostrar la sección de resultados
-            searchResults.style.display = 'grid';
+            if (currentPage > 1) {
+                pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="window.goToPage(${currentPage - 1})">←</button>`;
+            }
+            
+            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
+                const activeClass = i === currentPage ? 'bg-indigo-600 text-white' : 'bg-gray-200 hover:bg-gray-300';
+                pagination += `<button class="px-3 py-2 rounded ${activeClass}" onclick="window.goToPage(${i})">${i}</button>`;
+            }
+            
+            if (currentPage < totalPages) {
+                pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="window.goToPage(${currentPage + 1})">→</button>`;
+            }
+            
+            pagination += '</div>';
+            return pagination;
+        }
+
+        function displaySearchResults(filteredExamenes, query = '') {
+            const count = filteredExamenes.length;
+            
+            removeExistingPagination();
+            resultsCount.textContent = count;
+            searchStats.classList.toggle('hidden', count === 0);
+
+            if (count > 0) {
+                categorySections.forEach(section => section.style.display = 'none');
+                searchResults.style.display = 'grid';
+                noResults.classList.add('hidden');
+                searchSuggestions.classList.add('hidden');
+                
+                const itemsPerPage = 12;
+                const totalPages = Math.ceil(count / itemsPerPage);
+                
+                function renderPage(page) {
+                    const startIndex = (page - 1) * itemsPerPage;
+                    const endIndex = Math.min(startIndex + itemsPerPage, count);
+                    const pageItems = filteredExamenes.slice(startIndex, endIndex);
+                    
+                    searchResults.innerHTML = pageItems.map(examen => 
+                        createExamenCard(examen, query)
+                    ).join('');
+                    
+                    removeExistingPagination();
+                    
+                    if (totalPages > 1) {
+                        const pagination = createPaginationControls(page, totalPages);
+                        searchResults.insertAdjacentHTML('afterend', pagination);
+                    }
+                }
+                
+                renderPage(1);
+                
+            } else {
+                categorySections.forEach(section => section.style.display = 'none');
+                searchResults.style.display = 'none';
+                noResults.classList.remove('hidden');
+                searchStats.classList.add('hidden');
+                generateSearchSuggestions();
+            }
+        }
+
+        function addToSearchHistory(query) {
+            if (!query || query.length < 2) return;
+            query = query.trim();
+            
+            searchHistoryList = searchHistoryList.filter(item => normalizeText(item) !== normalizeText(query));
+            searchHistoryList.unshift(query);
+            searchHistoryList = searchHistoryList.slice(0, 5);
+            
+            localStorage.setItem('searchHistory', JSON.stringify(searchHistoryList));
+            updateSearchHistoryUI();
+        }
+
+        function updateSearchHistoryUI() {
+            if (searchHistoryList.length === 0) {
+                searchHistory.classList.add('hidden');
+                return;
+            }
+            
+            searchHistory.classList.remove('hidden');
+            recentSearches.innerHTML = searchHistoryList.map(query => 
+                `<button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition duration-150" onclick="window.performSearch('${query}', true)">${query}</button>`
+            ).join('');
+        }
+
+        function generateSearchSuggestions() {
+            const suggestions = [
+                ...categories.slice(0, 3),
+                ...tiposExamen.slice(0, 3),
+                'análisis', 'prueba', 'examen', 'laboratorio'
+            ].slice(0, 6);
+            
+            suggestionsList.innerHTML = suggestions.map(suggestion => 
+                `<button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition duration-150" onclick="window.performSearch('${suggestion}', true)">${suggestion}</button>`
+            ).join('');
+            
+            searchSuggestions.classList.remove('hidden');
+        }
+
+        function clearSearch() {
+            searchInput.value = '';
+            searchResults.style.display = 'none';
             noResults.classList.add('hidden');
             searchSuggestions.classList.add('hidden');
+            searchStats.classList.add('hidden');
+            searchLoading.classList.add('hidden'); 
+            clearSearchBtn.classList.add('hidden');
             
-            // Rellenar resultados con paginación virtual
-            const itemsPerPage = 12;
-            const totalPages = Math.ceil(count / itemsPerPage);
+            removeExistingPagination();
+            categorySections.forEach(section => section.style.display = 'block');
+        }
+
+        function clearFilters() {
+            currentFilters = {
+                category: '',
+                type: '',
+                maxPrice: maxPrice
+            };
             
-            function renderPage(page) {
-                const startIndex = (page - 1) * itemsPerPage;
-                const endIndex = Math.min(startIndex + itemsPerPage, count);
-                const pageItems = filteredExamenes.slice(startIndex, endIndex);
+            categoryFilter.value = '';
+            typeFilter.value = '';
+            priceFilter.value = maxPrice;
+            priceDisplay.textContent = `$${maxPrice}`;
+            
+            const currentQuery = searchInput.value.trim();
+            if (currentQuery) {
+                performSearch(currentQuery);
+            } else {
+                clearSearch();
+            }
+        }
+
+        function performSearch(query = '', updateInput = false) {
+            const trimmedQuery = query.trim();
+
+            if (!trimmedQuery && !currentFilters.category && !currentFilters.type && currentFilters.maxPrice >= maxPrice) {
+                clearSearch();
+                return;
+            }
+
+            if (updateInput) {
+                searchInput.value = trimmedQuery;
+            }
+
+            searchLoading.classList.remove('hidden');
+            
+            setTimeout(() => {
+                const filteredExamenes = filterExamenes(trimmedQuery, currentFilters);
+                displaySearchResults(filteredExamenes, trimmedQuery);
                 
-                searchResults.innerHTML = pageItems.map(examen => 
-                    createExamenCard(examen, query)
-                ).join('');
+                searchLoading.classList.add('hidden');
                 
-                // Agregar controles de paginación si es necesario
-                if (totalPages > 1) {
-                    const pagination = createPaginationControls(page, totalPages);
-                    // Asegurarse de que no haya paginación duplicada antes de insertar
-                    removeExistingPagination();
-                    searchResults.insertAdjacentHTML('afterend', pagination);
+                if (trimmedQuery && filteredExamenes.length > 0) {
+                    addToSearchHistory(trimmedQuery);
                 }
+                
+                clearSearchBtn.classList.toggle('hidden', !trimmedQuery);
+                
+            }, 100);
+        }
+
+        function debounce(func, wait) {
+            return function executedFunction(...args) {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    func(...args);
+                }, wait);
+            };
+        }
+
+        // ** (5) LISTENERS DE EVENTOS **
+
+        // Debemos asegurarnos de que solo se añade un listener por elemento, 
+        // pero dado que el DOM se reemplaza en cada swap, podemos añadirlo directamente.
+
+        // Limpiar listeners existentes (opcional pero más seguro)
+        searchInput.removeEventListener('input', searchInput.handleInput);
+        clearSearchBtn.removeEventListener('click', clearSearch);
+        clearFiltersBtn.removeEventListener('click', clearFilters);
+        suggestSearchBtn.removeEventListener('click', generateSearchSuggestions);
+        clearHistoryBtn.removeEventListener('click', clearHistory);
+        toggleFiltersBtn.removeEventListener('click', toggleFilters);
+        categoryFilter.removeEventListener('change', handleFilterChange);
+        typeFilter.removeEventListener('change', handleFilterChange);
+        priceFilter.removeEventListener('input', handleFilterChange);
+
+
+        function handleInput(event) {
+            const query = event.target.value.trim();
+            if (!query) {
+                clearSearch();
+                return;
             }
-            
-            renderPage(1);
-            
-        } else {
-            // Ocultar la sección original y mostrar mensaje de no resultados
-            categorySections.forEach(section => section.style.display = 'none');
-            searchResults.style.display = 'none';
-            noResults.classList.remove('hidden');
-            searchSuggestions.classList.add('hidden');
+            debounce(performSearch, 300)(query);
         }
-    }
+        searchInput.handleInput = handleInput;
+        searchInput.addEventListener('input', handleInput);
 
-    /**
-     * Función para limpiar paginación existente
-     */
-    function removeExistingPagination() {
-        // Busca el elemento de paginación que se inserta después de search-results
-        let nextElement = searchResults.nextElementSibling;
-        while(nextElement && nextElement.classList.contains('flex') && nextElement.classList.contains('justify-center')) {
-            const temp = nextElement.nextElementSibling;
-            nextElement.remove();
-            nextElement = temp;
-        }
-    }
 
-    /**
-     * Función para crear controles de paginación
-     */
-    function createPaginationControls(currentPage, totalPages) {
-        let pagination = '<div class="flex justify-center mt-8 space-x-2">';
-        
-        // Botón anterior
-        if (currentPage > 1) {
-            pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="goToPage(${currentPage - 1})">←</button>`;
-        }
-        
-        // Números de página
-        for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
-            const activeClass = i === currentPage ? 'bg-indigo-600 text-white' : 'bg-gray-200 hover:bg-gray-300';
-            pagination += `<button class="px-3 py-2 rounded ${activeClass}" onclick="goToPage(${i})">${i}</button>`;
-        }
-        
-        // Botón siguiente
-        if (currentPage < totalPages) {
-            pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="goToPage(${currentPage + 1})">→</button>`;
-        }
-        
-        pagination += '</div>';
-        return pagination;
-    }
+        clearSearchBtn.addEventListener('click', clearSearch);
+        clearFiltersBtn.addEventListener('click', clearFilters);
+        suggestSearchBtn.addEventListener('click', generateSearchSuggestions);
+        clearHistoryBtn.addEventListener('click', clearHistory);
 
-    /**
-     * Función para agregar búsqueda al historial
-     */
-    function addToSearchHistory(query) {
-        if (!query || query.length < 2) return;
-        
-        // Remover si ya existe
-        searchHistoryList = searchHistoryList.filter(item => item !== query);
-        
-        // Agregar al inicio
-        searchHistoryList.unshift(query);
-        
-        // Mantener solo las últimas 5 búsquedas
-        searchHistoryList = searchHistoryList.slice(0, 5);
-        
-        // Guardar en localStorage
-        localStorage.setItem('searchHistory', JSON.stringify(searchHistoryList));
-        
-        // Actualizar UI
+        function clearHistory() {
+            searchHistoryList = [];
+            localStorage.removeItem('searchHistory');
+            updateSearchHistoryUI();
+        }
+
+        function toggleFilters() {
+            filtersContent.classList.toggle('hidden');
+            const icon = toggleFiltersBtn.querySelector('svg');
+            icon.classList.toggle('rotate-180');
+        }
+        toggleFiltersBtn.addEventListener('click', toggleFilters);
+
+        function handleFilterChange(event) {
+            if (event.target.id === 'category-filter') {
+                currentFilters.category = event.target.value;
+            } else if (event.target.id === 'type-filter') {
+                currentFilters.type = event.target.value;
+            } else if (event.target.id === 'price-filter') {
+                currentFilters.maxPrice = parseInt(event.target.value);
+                priceDisplay.textContent = `$${currentFilters.maxPrice}`;
+            }
+            performSearch(searchInput.value);
+        }
+
+        categoryFilter.addEventListener('change', handleFilterChange);
+        typeFilter.addEventListener('change', handleFilterChange);
+        priceFilter.addEventListener('input', handleFilterChange);
+
+        // ** (6) Inicialización Final y Exposición Global **
+
         updateSearchHistoryUI();
-    }
+        priceDisplay.textContent = `$${currentFilters.maxPrice}`;
 
-    /**
-     * Función para actualizar la UI del historial de búsquedas
-     */
-    function updateSearchHistoryUI() {
-        if (searchHistoryList.length === 0) {
-            searchHistory.classList.add('hidden');
-            return;
-        }
-        
-        searchHistory.classList.remove('hidden');
-        recentSearches.innerHTML = searchHistoryList.map(query => 
-            `<button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition duration-150" onclick="performSearch('${query}', true)">${query}</button>`
-        ).join('');
-    }
-
-    /**
-     * Función para generar sugerencias de búsqueda
-     */
-    function generateSearchSuggestions() {
-        const suggestions = [
-            ...categories.slice(0, 3),
-            ...tiposExamen.slice(0, 3),
-            'análisis', 'prueba', 'examen', 'laboratorio'
-        ].slice(0, 6);
-        
-        suggestionsList.innerHTML = suggestions.map(suggestion => 
-            `<button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition duration-150" onclick="performSearch('${suggestion}', true)">${suggestion}</button>`
-        ).join('');
-        
-        searchSuggestions.classList.remove('hidden');
-    }
-
-    /**
-     * Función principal de búsqueda
-     */
-    function performSearch(query = '', updateInput = false) {
-        // Si la búsqueda está vacía, volver a la vista normal
-        if (!query || query.trim().length === 0) {
-            clearSearch();
-            return;
-        }
-
-        if (updateInput) {
-            searchInput.value = query;
-        }
-
-        // Mostrar indicador de carga
-        searchLoading.classList.remove('hidden');
-        
-        // Simular delay para mostrar el loading (opcional)
-        setTimeout(() => {
+        // Exponer funciones globales para los botones (historial y paginación)
+        window.goToPage = function(page) {
+            const query = searchInput.value.trim();
             const filteredExamenes = filterExamenes(query, currentFilters);
-            displaySearchResults(filteredExamenes, query);
+            const itemsPerPage = 12;
+            const totalPages = Math.ceil(filteredExamenes.length / itemsPerPage);
+
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = Math.min(startIndex + itemsPerPage, filteredExamenes.length);
+            const pageItems = filteredExamenes.slice(startIndex, endIndex);
             
-            // Ocultar indicador de carga
-            searchLoading.classList.add('hidden');
+            searchResults.innerHTML = pageItems.map(examen => createExamenCard(examen, query)).join('');
             
-            // Agregar al historial si hay query
-            if (query) {
-                addToSearchHistory(query);
+            removeExistingPagination();
+            if (totalPages > 1) {
+                const pagination = createPaginationControls(page, totalPages);
+                searchResults.insertAdjacentHTML('afterend', pagination);
             }
-            
-            // Mostrar/ocultar botón de limpiar
-            clearSearchBtn.classList.toggle('hidden', !query);
-            
-        }, 100);
-    }
-
-    /**
-     * Función para limpiar búsqueda
-     */
-    function clearSearch() {
-        searchInput.value = '';
-        searchResults.style.display = 'none';
-        noResults.classList.add('hidden');
-        searchSuggestions.classList.add('hidden');
-        searchStats.classList.add('hidden');
-        searchLoading.classList.add('hidden'); // Asegurar que se oculte el loading
-        clearSearchBtn.classList.add('hidden');
-        
-        // Limpiar paginación existente
-        removeExistingPagination();
-        
-        // Mostrar las secciones originales
-        categorySections.forEach(section => section.style.display = 'block');
-    }
-
-    /**
-     * Función para limpiar filtros
-     */
-    function clearFilters() {
-        currentFilters = {
-            category: '',
-            type: '',
-            maxPrice: maxPrice
+            window.scrollTo({ top: searchInput.offsetTop, behavior: 'smooth' });
         };
         
-        categoryFilter.value = '';
-        typeFilter.value = '';
-        priceFilter.value = maxPrice;
-        priceDisplay.textContent = `$${maxPrice}`;
-        
-        // Si el campo de búsqueda tiene contenido, solo aplicar filtros, si no, limpiar todo.
-        const currentQuery = searchInput.value.trim();
-        if (currentQuery) {
-             performSearch(currentQuery);
-        } else {
-            // Volver a la vista normal completamente
-            clearSearch();
+        window.performSearch = performSearch; // Exponer la función principal
+
+        // Si la página se está restaurando (navegador guarda el valor del input), ejecutar búsqueda
+        if (searchInput.value.trim() || currentFilters.category || currentFilters.type || currentFilters.maxPrice < maxPrice) {
+            performSearch(searchInput.value);
         }
     }
+    
+    // 1. Ejecutar la inicialización al cargar la página por primera vez
+    initializeSearch();
 
-    // Event listeners
-    searchInput.addEventListener('input', debounce((event) => {
-        const query = event.target.value.trim();
+    // 2. Ejecutar la inicialización después de cada transición de página de Astro (la SOLUCIÓN)
+    document.addEventListener('astro:after-swap', initializeSearch);
         
-        // Si la búsqueda está vacía, limpiar inmediatamente
-        if (!query) {
-            clearSearch();
-            return;
-        }
-        
-        performSearch(query);
-    }, 300));
-
-    clearSearchBtn.addEventListener('click', clearSearch);
-
-    toggleFiltersBtn.addEventListener('click', () => {
-        filtersContent.classList.toggle('hidden');
-        const icon = toggleFiltersBtn.querySelector('svg');
-        icon.classList.toggle('rotate-180');
-    });
-
-    categoryFilter.addEventListener('change', (event) => {
-        currentFilters.category = event.target.value;
-        performSearch(searchInput.value);
-    });
-
-    typeFilter.addEventListener('change', (event) => {
-        currentFilters.type = event.target.value;
-        performSearch(searchInput.value);
-    });
-
-    priceFilter.addEventListener('input', (event) => {
-        currentFilters.maxPrice = parseInt(event.target.value);
-        priceDisplay.textContent = `$${currentFilters.maxPrice}`;
-        performSearch(searchInput.value);
-    });
-
-    clearFiltersBtn.addEventListener('click', clearFilters);
-
-    suggestSearchBtn.addEventListener('click', generateSearchSuggestions);
-
-    clearHistoryBtn.addEventListener('click', clearSearchHistory);
-
-    // Inicialización
-    updateSearchHistoryUI();
-
-    // Hacer funciones globales para los botones de paginación y historial
-    window.goToPage = function(page) {
-        const query = searchInput.value.trim();
-        const filteredExamenes = filterExamenes(query, currentFilters);
-        const itemsPerPage = 12;
-        const startIndex = (page - 1) * itemsPerPage;
-        const endIndex = Math.min(startIndex + itemsPerPage, filteredExamenes.length);
-        const pageItems = filteredExamenes.slice(startIndex, endIndex);
-        
-        searchResults.innerHTML = pageItems.map(examen => 
-            createExamenCard(examen, query)
-        ).join('');
-        
-        // Limpiar paginación existente antes de agregar nueva
-        removeExistingPagination();
-        
-        const totalPages = Math.ceil(filteredExamenes.length / itemsPerPage);
-        if (totalPages > 1) {
-            const pagination = createPaginationControls(page, totalPages);
-            searchResults.insertAdjacentHTML('afterend', pagination);
-        }
-    };
-
-    // Hacer performSearch global para que funcione con el historial y sugerencias
-    window.performSearch = performSearch;
-</script>
+</script>                                                                                                                   
