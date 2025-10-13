@@ -5,7 +5,7 @@ import ExamenLayout from '../../layouts/ExamenLayout.astro';
 // Tipado seguro
 type ExamenEntry = CollectionEntry<'examenes'>;
 
-// 1. FUNCIÓN CORREGIDA: Debe devolver el array de rutas.
+// 1. FUNCIÓN getStaticPaths
 export async function getStaticPaths() {
   const examenes = await getCollection('examenes');
   
@@ -14,13 +14,57 @@ export async function getStaticPaths() {
     props: { examen }, 
   }));
 }
-// -------------------- FIN FUNCIÓN CORREGIDA --------------------
 
-// 2. Componente de la página (con tipado y renderizado seguro)
+// 2. Componente de la página
 const { examen } = Astro.props as { examen: ExamenEntry }; 
 const { Content } = await examen.render(); 
+
+// 3. Lógica para requisitos específicos
+// ¡IMPORTANTE! Se usan las categorías en minúsculas que SÍ requieren ayunas.
+const CATEGORIAS_CON_AYUNAS = [
+  'citometría',       // Corresponde a 'Citometría'
+  'retrovirus',       // Corresponde a 'Retrovirus'
+  'inmunodiagnóstico' // Corresponde a 'Inmunodiagnóstico'
+];
+
+// Se accede a examen.data.category y se convierte a minúsculas para la comparación.
+const categoriaExamen = examen.data.category?.toLowerCase() || '';
+const necesitaAyunas = CATEGORIAS_CON_AYUNAS.includes(categoriaExamen);
 ---
 
 <ExamenLayout {...examen.data}>
+  
   <Content /> 
+
+  <hr class="my-8 border-gray-300" />
+  
+  {necesitaAyunas && (
+    <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-500 mb-6">
+      <h3 class="text-xl font-semibold text-yellow-800 mb-2">Requisitos de Preparación Importantes</h3>
+      <ul class="list-disc list-inside text-yellow-700">
+        <li>El paciente debe asistir **en ayunas** para este estudio.</li>
+        <li>Horario de atención para la toma de muestra: **7:00 a 10:00 AM**.</li>
+      </ul>
+    </div>
+  )}
+
+  <div class="p-4 border border-gray-200 rounded-lg bg-gray-50 mt-6">
+    <h3 class="text-xl font-semibold text-indigo-700 mb-3">Información de Contacto y Citas</h3>
+    <p class="mb-2">Para consultas, citas o confirmación de requisitos:</p>
+    <ul class="space-y-1">
+      <li class="flex items-center">
+        <span class="font-medium mr-2">Teléfono 1:</span> 
+        <a href="tel:02126053509" class="text-indigo-600 hover:underline">0212-6053509</a>
+      </li>
+      <li class="flex items-center">
+        <span class="font-medium mr-2">Teléfono 2:</span> 
+        <a href="tel:02126053508" class="text-indigo-600 hover:underline">0212-6053508</a>
+      </li>
+      <li class="flex items-center">
+        <span class="font-medium mr-2">Correo Electrónico:</span> 
+        <a href="mailto:laboratorio.idiucv@gmail.com" class="text-indigo-600 hover:underline">laboratorio.idiucv@gmail.com</a>
+      </li>
+    </ul>
+  </div>
+
 </ExamenLayout>
