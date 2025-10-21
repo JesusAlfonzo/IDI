@@ -9,11 +9,11 @@ const {
     description, 
     category,
     tipoExamen,
-    price
+    // price
 } = Astro.props;
 
 // Formateamos el precio
-const formattedPrice = price ? price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' }) : 'N/A';
+// const formattedPrice = price ? price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' }) : 'N/A';
 
 // ❌ ELIMINAR ESTA LÍNEA si estaba presente: const Content = Astro.props.Content; 
 //    (El cuerpo del MD se maneja con <slot />)
@@ -39,10 +39,10 @@ const formattedPrice = price ? price.toLocaleString('es-ES', { style: 'currency'
                         <p class="text-sm font-medium text-gray-500">Tipo de Análisis</p>
                         <p class="text-lg font-bold text-blue-800">{tipoExamen}</p>
                     </div>
-                    <div class="p-3 bg-green-50 border-l-4 border-green-600 rounded-md shadow-sm">
+                    <!-- <div class="p-3 bg-green-50 border-l-4 border-green-600 rounded-md shadow-sm">
                         <p class="text-sm font-medium text-gray-500">Precio</p>
                         <p class="text-2xl font-extrabold text-green-700">{formattedPrice}</p>
-                    </div>
+                    </div> -->
                 </div>
 
             </header>
