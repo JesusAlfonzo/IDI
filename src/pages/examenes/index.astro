@@ -24,10 +24,10 @@ const groupedExamenes: GroupedExamenes = allExamenes.reduce((acc, examen) => {
 const categories = Object.keys(groupedExamenes).sort();
 
 /* 2. FUNCIÓN PARA SIMPLIFICAR EL RENDERIZADO DEL PRECIO */
-// const formatPrice = (price: number): string => {
-//     // Formato de moneda USD (ajusta el locale si es necesario)
-//     return price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
-// };
+ const formatPrice = (price: number): string => {
+     // Formato de moneda USD (ajusta el locale si es necesario)
+    return price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
+ };
 
 /* 3. FUNCIÓN PARA DETERMINAR EL TIEMPO DE ENTREGA */
 const getDeliveryTime = (tipoExamen: string): string => {
@@ -99,13 +99,12 @@ const getDeliveryTime = (tipoExamen: string): string => {
                                                 {getDeliveryTime(examen.data.tipoExamen)}
                                             </p>
                                         </div>
-                                        {/* Campo de Precio (Verde/Green) */}
-                                        {/* <div class="p-2 bg-green-50 border-l-4 border-green-600 rounded-md flex-shrink-0">
+                                         <div class="p-2 bg-green-50 border-l-4 border-green-600 rounded-md flex-shrink-0">
                                             <p class="text-xs font-medium text-gray-500">Precio</p>
                                             <p class="text-lg font-extrabold text-green-700">
                                                 {formatPrice(examen.data.price)}
                                             </p>
-                                        </div> */}
+                                        </div> 
                                     </div>
                                     {/* Campo de Tipo de Examen separado */}
                                     <div class="pt-2 border-t border-gray-100 mt-2">

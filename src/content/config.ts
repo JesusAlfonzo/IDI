@@ -9,7 +9,7 @@ const examenesCollection = defineCollection({
     // AÑADIDA LA CATEGORÍA 'Inmunogenética'
     category: z.enum(['General', 'Retrovirus', 'Citometría', 'Inmunodiagnóstico', 'Inmunogenética']).default('General'), 
     tipoExamen: z.string().max(50, 'El tipo de examen es demasiado largo.'),
-    // price: z.number().positive('El precio debe ser un número positivo.'),
+    price: z.number().positive('El precio debe ser un número positivo.'),
   }),
 });
 
