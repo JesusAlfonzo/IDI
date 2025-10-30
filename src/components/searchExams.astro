@@ -232,70 +232,76 @@ const maxPrice = Math.max(...allExamenes.map(examen => examen.data.price));
         }
 
         function createExamenCard(examen, searchQuery = '') {
-            const priceFormatted = examen.price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
-            const deliveryTime = getDeliveryTime(examen.tipoExamen);
-            
-            function highlightText(text, query) {
-                if (!query) return text;
-                
-                const normalizedText = normalizeText(text);
-                const normalizedQuery = normalizeText(query);
-                const index = normalizedText.indexOf(normalizedQuery);
-                if (index === -1) return text;
-                
-                let originalIndex = 0;
-                let normalizedIndex = 0;
-                
-                while (normalizedIndex < index && originalIndex < text.length) {
-                    const char = text[originalIndex];
-                    const normalizedChar = normalizeText(char);
-                    normalizedIndex += normalizedChar.length;
-                    originalIndex++;
-                }
-                
-                let originalQueryLength = 0;
-                let currentNormalizedLength = 0;
-                let i = 0;
-                while (currentNormalizedLength < normalizedQuery.length && (originalIndex + i) < text.length) {
-                    const char = text[originalIndex + i];
-                    const normalizedChar = normalizeText(char);
-                    currentNormalizedLength += normalizedChar.length;
-                    originalQueryLength++;
-                    i++;
-                }
+    // ❌ ELIMINADA: La variable priceFormatted ya no es necesaria.
+    // const priceFormatted = examen.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
+    
+    // Se mantiene la función de tiempo de entrega, ya que no depende del precio.
+    const deliveryTime = getDeliveryTime(examen.tipoExamen);
+    
+    // NOTA: La función highlightText y normalizeText deben estar definidas globalmente o aquí.
+    // Asumimos que highlightText y normalizeText son correctas.
 
-                const before = text.substring(0, originalIndex);
-                const match = text.substring(originalIndex, originalIndex + originalQueryLength);
-                const after = text.substring(originalIndex + originalQueryLength);
-                
-                return `${before}<mark class="bg-yellow-200 px-1 rounded">${match}</mark>${after}`;
-            }
-            
-            return `
-                <a 
-                    href="/examenes/${examen.slug}" 
-                    class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
-                >
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">${highlightText(examen.title, searchQuery)}</h3>
-                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">${highlightText(examen.description, searchQuery)}</p>
-                    <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                        <span class="text-sm font-semibold text-blue-600 uppercase">${highlightText(examen.tipoExamen, searchQuery)}</span>
-                        <span class="text-lg font-extrabold text-green-700">
-                            ${priceFormatted}
-                        </span>
-                    </div>
-                    <div class="mt-2 flex justify-between items-center text-xs text-gray-500">
-                        <span class="bg-gray-100 px-2 py-1 rounded">${examen.category}</span>
-                        <span class="flex items-center gap-1 text-sm font-medium text-indigo-600">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            Entrega: ${deliveryTime}
-                        </span>
-                    </div>
-                </a>
-            `;
+    function highlightText(text, query) {
+        if (!query) return text;
+        
+        const normalizedText = normalizeText(text);
+        const normalizedQuery = normalizeText(query);
+        const index = normalizedText.indexOf(normalizedQuery);
+        if (index === -1) return text;
+        
+        let originalIndex = 0;
+        let normalizedIndex = 0;
+        
+        while (normalizedIndex < index && originalIndex < text.length) {
+            const char = text[originalIndex];
+            const normalizedChar = normalizeText(char);
+            normalizedIndex += normalizedChar.length;
+            originalIndex++;
         }
+        
+        let originalQueryLength = 0;
+        let currentNormalizedLength = 0;
+        let i = 0;
+        while (currentNormalizedLength < normalizedQuery.length && (originalIndex + i) < text.length) {
+            const char = text[originalIndex + i];
+            const normalizedChar = normalizeText(char);
+            currentNormalizedLength += normalizedChar.length;
+            originalQueryLength++;
+            i++;
+        }
+
+        const before = text.substring(0, originalIndex);
+        const match = text.substring(originalIndex, originalIndex + originalQueryLength);
+        const after = text.substring(originalIndex + originalQueryLength);
+        
+        return `${before}<mark class="bg-yellow-200 px-1 rounded">${match}</mark>${after}`;
+    }
+    
+    return `
+        <a 
+            href="/examenes/${examen.slug}" 
+            class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
+        >
+            <h3 class="text-xl font-bold text-gray-800 mb-2">${highlightText(examen.title, searchQuery)}</h3>
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">${highlightText(examen.description, searchQuery)}</p>
+            
+            <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                <span class="text-sm font-semibold text-blue-600 uppercase">Tipo: ${highlightText(examen.tipoExamen, searchQuery)}</span>
+                
+                </div>
+            
+            <div class="mt-2 flex justify-between items-center text-xs text-gray-500">
+                <span class="bg-gray-100 px-2 py-1 rounded">${examen.category}</span>
+                <span class="flex items-center gap-1 text-sm font-medium text-indigo-600">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Entrega: ${deliveryTime}
+                </span>
+            </div>
+        </a>
+    `;
+}
 
         function filterExamenes(query, filters) {
             return allExamenes.filter(examen => {
