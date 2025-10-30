@@ -44,7 +44,7 @@ import Card from "@components/Card.astro";
     </div>
 
     <section id="servicios" class="grid gap-4 py-8 text-center scroll-mt-20">
-      <h1
+      <h2
         class="text-5xl md:text-6xl lg:text-8xl font-bold transition-colors duration-300"
       >
         Te ofrecemos
@@ -53,31 +53,31 @@ import Card from "@components/Card.astro";
         >
           los mejores servicios
         </span>
-      </h1>
-      <h2
+      </h2>
+      <h3
         class="text-2xl md:text-3xl lg:text-4xl font-normal transition-colors duration-300"
       >
         atendemos tus necesidades
-      </h2>
+      </h3>
     </section>
 
     <div class="mx-auto max-w-screen-xl py-8">
       <div class="flex flex-wrap gap-6 justify-center">
         <div class="w-full sm:w-1/2 lg:w-1/2 xl:w-1/4">
           <Card
-            url="images/consulta.png"
+            url="/images/consulta.png" 
             title="Consulta"
-            description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-            page="/consulta"
+            description="Agenda una cita para evaluación especializada con nuestros inmunólogos."
+            page="/servicios/consulta"
           />
         </div>
 
         <div class="w-full sm:w-1/2 lg:w-1/2 xl:w-1/4">
           <Card
-            url="images/laboratorio.png"
+            url="/images/laboratorio.png" 
             title="Laboratorio"
-            description="Podés usar el mismo componente en varias ocasiones con distintos contenidos."
-            page="/laboratorio"
+            description="Realiza todos tus exámenes de inmunología con tecnología de punta."
+            page="/servicios/laboratorio"
           />
         </div>
       </div>
@@ -108,7 +108,7 @@ import Card from "@components/Card.astro";
         class="relative max-w-xl mx-auto overflow-hidden rounded-lg shadow-lg"
       >
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3923.110328394241!2d-66.8956476241258!3d10.491968264374478!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8c2a58d73bc1f427%3A0x301550da9a607d3c!2sInstituto%20de%20Inmunolog%C3%ADa%20%22Dr.%20Nicol%C3%A1s%20Bianco%20Colmenares%22%20(IDI)%20-%20UCV!5e0!3m2!1ses!2sve!4v1758846958491!5m2!1ses!2sve"
+          src="https://maps.google.com/maps?q=Instituto%20de%20Inmunolog%C3%ADa%20Dr.%20Nicol%C3%A1s%20E.%20Bianco%20Colmenares%20(IDI%20-%20UCV),%20Caracas,%20Venezuela&z=15&output=embed"
           width="600"
           height="450"
           style="border:0;"
@@ -366,80 +366,4 @@ import Card from "@components/Card.astro";
       </p>
     </div>
   </section>
-  <!-- <script is:inline>
-    /**
-    * Función que encapsula toda la lógica de inicialización del slider.
-    */
-    function initCardSlider() {
-      // 1. Las selecciones de DOM deben estar DENTRO de la función
-      //    para asegurar que se obtienen los nuevos elementos después del swap.
-      const cardsContainer = document.getElementById("cards-container");
-      const prevBtn = document.getElementById("prev-btn");
-      const nextBtn = document.getElementById("next-btn"); // Salir si los elementos principales no existen en la página actual
-
-      if (!cardsContainer || !prevBtn || !nextBtn) return;
-
-      const cards = [...cardsContainer.querySelectorAll(".flex-shrink-0")];
-      const totalCards = cards.length;
-      let currentIndex = 0; // --- Lógica de cálculo y movimiento ---
-
-      const getCardsToShow = () => {
-        if (window.innerWidth >= 1024) return 4;
-        if (window.innerWidth >= 640) return 2;
-        return 1;
-      };
-
-      const updateSlider = () => {
-        // Asegúrate de que cards[0] exista antes de acceder a offsetWidth
-        if (cards.length === 0) return;
-        const cardWidth = cards[0].offsetWidth; // 24px es el gap (asumiendo que viene de Tailwind, ej. gap-6)
-        const offset = currentIndex * (cardWidth + 24);
-        cardsContainer.style.transform = `translateX(-${offset}px)`;
-      }; // --- Lógica de Eventos ---
-      // La función interna para el resize necesita ser nombrada o almacenada
-      // para poder manejar la limpieza de eventos si se estuviera usando transition:persist.
-      // Sin embargo, como el DOM se reemplaza, podemos reasignar.
-      // Botones de navegación
-      nextBtn.onclick = () => {
-        const cardsToShow = getCardsToShow();
-        if (currentIndex >= totalCards - cardsToShow) {
-          currentIndex = 0;
-        } else {
-          currentIndex++;
-        }
-        updateSlider();
-      };
-
-      prevBtn.onclick = () => {
-        const cardsToShow = getCardsToShow();
-        if (currentIndex <= 0) {
-          currentIndex = totalCards - cardsToShow;
-        } else {
-          currentIndex--;
-        }
-        updateSlider();
-      }; // Manejo de la función de redimensionamiento (resize)
-      // Es CRÍTICO que al re-inicializar el script, el listener de resize
-      // no se añada múltiples veces. Usaremos un 'flag' o una función con nombre
-      // o simplemente reasignación de eventos para los botones.
-      // Para el evento 'resize' del window, es mejor mantener un solo listener global.
-      // Aquí inicializamos y llamamos updateSlider() para la posición inicial.
-      updateSlider(); // El listener de resize se añade UNA SOLA VEZ globalmente, fuera de la función,
-      // o tienes que gestionar la remoción del listener anterior.
-      // Para simplificar, lo dejamos dentro, pero debemos prevenir duplicados.
-      // Limpieza de event listeners de window (por si se llama más de una vez)
-      window.removeEventListener("resize", handleResize);
-
-      function handleResize() {
-        currentIndex = 0;
-        updateSlider();
-      }
-      window.addEventListener("resize", handleResize);
-    } // ------------------- INICIALIZACIÓN DE ASTRO -------------------
-    // 1. Ejecutar en la carga inicial (reemplaza 'DOMContentLoaded')
-
-    initCardSlider(); // 2. Ejecutar después de cada navegación cliente-side
-
-    document.addEventListener("astro:after-swap", initCardSlider);
-  </script> -->
 </Layout>
