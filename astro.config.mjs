@@ -11,10 +11,10 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  server: {
-    host:true,
-    port:3000
-  },
+  // server: {
+  //   host:true,
+  //   port:3000
+  // },
 
   adapter: vercel()
 });
