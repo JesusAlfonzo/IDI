@@ -4,11 +4,15 @@ import Layout from "@layouts/Layout.astro";
 import Slider from "@components/Slider.astro";
 import Divider from "@components/Divider.astro";
 import Card from "@components/Card.astro";
+import WelcomeModal from "@components/WelcomeModal.astro";
 // Si SearchExams usa una ruta relativa, deberías usar el alias de raíz si existe:
 // import SearchExams from '~/components/searchExams.astro';
 ---
 
 <Layout title="IDI - Bienvenido">
+
+  <WelcomeModal />
+  
   <main class="container mx-auto px-4 pt-24 animate-blurred-fade-in">
     <div class="grid place-items-center animate-blurred-fade-in py-10">
       <div class="flex flex-col items-center text-center gap-2">

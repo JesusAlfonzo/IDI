@@ -2,7 +2,7 @@
 title: Ac Anti Herpes 2 IgM / IgG
 description: Detección de anticuerpos IgM e IgG contra el Virus del Herpes Simple tipo 2 (VHS-2), asociado a **herpes genital**.
 pubDate: 2025-09-26
-category: Retrovirus
+category: Pruebas Virales
 tipoExamen: Serología Viral
 price: 25.00
 ---

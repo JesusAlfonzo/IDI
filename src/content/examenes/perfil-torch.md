@@ -2,7 +2,7 @@
 title: Perfil TORCH
 description: Batería de serologías para **Toxoplasma, **Otros (Varicela, Parvovirus), **Rubéola, **CMV, **Herpes. Infecciones peligrosas durante el embarazo.
 pubDate: 2025-09-26
-category: Retrovirus
+category: Pruebas Virales
 tipoExamen: Perfil Serológico
 price: 70.00
 ---

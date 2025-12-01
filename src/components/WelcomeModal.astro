@@ -1,0 +1,115 @@
+---
+// src/components/WelcomeModal.astro
+---
+
+<div 
+  id="welcome-modal" 
+  class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0"
+>
+  <div 
+    class="relative w-full max-w-lg transform rounded-xl bg-white p-6 shadow-2xl transition-all scale-95 duration-300 mx-4" 
+    id="modal-content"
+  >
+    
+    <button 
+      id="close-modal-x"
+      class="absolute right-4 top-4 text-gray-400 hover:text-red-500 focus:outline-none transition-colors"
+      aria-label="Cerrar modal"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <div class="text-center mt-2">
+      <h3 class="text-2xl font-bold text-blue-600 mb-2">
+        Cronograma de Fin de Año
+      </h3>
+      <div class="h-1 w-24 bg-indigo-500 mx-auto rounded-full mb-6"></div>
+    </div>
+
+    <div class="space-y-4 text-gray-600 px-2">
+      <p class="text-center">
+        Informamos a nuestros estimados pacientes que <strong>han finalizado las citas para consultas</strong> por este año 2025.
+      </p>
+
+      <div class="bg-blue-50 rounded-lg p-4 border border-blue-100 text-sm shadow-sm">
+        <ul class="space-y-3">
+          <li class="flex items-start gap-3">
+            <span class="text-indigo-600 font-bold">🧪</span>
+            <span>
+              <strong>Recepción de Muestras:</strong> <br/>
+              Hasta el Viernes 05 de diciembre.
+            </span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-indigo-600 font-bold">🔒</span>
+            <span>
+              <strong>Cierre Administrativo:</strong> <br/>
+              Viernes 12 de diciembre.
+            </span>
+          </li>
+          <li class="flex items-start gap-3">
+            <span class="text-indigo-600 font-bold">✨</span>
+            <span>
+              <strong>Reinicio de Actividades:</strong> <br/>
+              Miercoles 07 de enero de 2026.
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <p class="text-center text-sm italic mt-4 text-gray-500">
+        Si posee alguna duda adicional, le invitamos a utilizar los canales de contacto disponibles en esta página.
+      </p>
+    </div>
+
+    <div class="mt-6 flex justify-center">
+      <button
+        id="close-modal-btn"
+        class="rounded-lg bg-blue-600 px-8 py-2.5 text-white font-medium shadow-md hover:bg-blue-700 hover:shadow-lg transition-all transform hover:-translate-y-0.5 focus:ring-4 focus:ring-blue-300"
+      >
+        Entendido
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('welcome-modal');
+    const modalContent = document.getElementById('modal-content');
+    const closeBtn = document.getElementById('close-modal-btn');
+    const closeX = document.getElementById('close-modal-x');
+
+    const showModal = () => {
+      if (modal && modalContent) {
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+          modal.classList.remove('opacity-0');
+          modalContent.classList.remove('scale-95');
+          modalContent.classList.add('scale-100');
+        }, 10);
+      }
+    };
+
+    const closeModal = () => {
+      if (modal && modalContent) {
+        modal.classList.add('opacity-0');
+        modalContent.classList.remove('scale-100');
+        modalContent.classList.add('scale-95');
+        setTimeout(() => {
+          modal.classList.add('hidden');
+        }, 300);
+      }
+    };
+
+    showModal();
+
+    closeBtn?.addEventListener('click', closeModal);
+    closeX?.addEventListener('click', closeModal);
+    modal?.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  });
+</script>

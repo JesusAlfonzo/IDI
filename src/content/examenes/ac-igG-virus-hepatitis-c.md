@@ -2,7 +2,7 @@
 title: Ac IgG Virus Hepatitis C
 description: Detección de anticuerpos IgG contra el Virus de la Hepatitis C (VHC). Indica **exposición pasada** o infección crónica.
 pubDate: 2025-09-26
-category: Retrovirus
+category: Pruebas Virales
 tipoExamen: Serología Viral
 price: 15.00
 ---

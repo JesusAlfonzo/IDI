@@ -2,7 +2,7 @@
 title: Virus de Inmunodeficiencia Humana (VIH) - Detección
 description: Prueba de cribado para anticuerpos y/o antígeno p24 del VIH. Detección de la infección por **VIH** (tipos 1 y 2).
 pubDate: 2025-09-26
-category: Retrovirus
+category: Pruebas Virales
 tipoExamen: Serología / Antígeno
 price: 15.00
 ---
