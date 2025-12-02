@@ -2,22 +2,31 @@
 // src/components/WelcomeModal.astro
 ---
 
-<div 
-  id="welcome-modal" 
+<div
+  id="welcome-modal"
   class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300 opacity-0"
 >
-  <div 
-    class="relative w-full max-w-lg transform rounded-xl bg-white p-6 shadow-2xl transition-all scale-95 duration-300 mx-4" 
+  <div
+    class="relative w-full max-w-lg transform rounded-xl bg-white p-6 shadow-2xl transition-all scale-95 duration-300 mx-4"
     id="modal-content"
   >
-    
-    <button 
+    <button
       id="close-modal-x"
       class="absolute right-4 top-4 text-gray-400 hover:text-red-500 focus:outline-none transition-colors"
       aria-label="Cerrar modal"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-6 w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"></path>
       </svg>
     </button>
 
@@ -30,29 +39,36 @@
 
     <div class="space-y-4 text-gray-600 px-2">
       <p class="text-center">
-        Informamos a nuestros estimados pacientes que <strong>han finalizado las citas para consultas</strong> por este año 2025.
+        Informamos a nuestros estimados pacientes que <strong
+          >han finalizado las citas para consultas</strong
+        > por este año 2025.
       </p>
 
-      <div class="bg-blue-50 rounded-lg p-4 border border-blue-100 text-sm shadow-sm">
+      <div
+        class="bg-blue-50 rounded-lg p-4 border border-blue-100 text-sm shadow-sm"
+      >
         <ul class="space-y-3">
           <li class="flex items-start gap-3">
             <span class="text-indigo-600 font-bold">🧪</span>
             <span>
-              <strong>Recepción de Muestras:</strong> <br/>
+              <strong>Recepción de Muestras:</strong>
+              <br />
               Hasta el Viernes 05 de diciembre.
             </span>
           </li>
           <li class="flex items-start gap-3">
             <span class="text-indigo-600 font-bold">🔒</span>
             <span>
-              <strong>Cierre Administrativo:</strong> <br/>
+              <strong>Cierre Administrativo:</strong>
+              <br />
               Viernes 12 de diciembre.
             </span>
           </li>
           <li class="flex items-start gap-3">
             <span class="text-indigo-600 font-bold">✨</span>
             <span>
-              <strong>Reinicio de Actividades:</strong> <br/>
+              <strong>Reinicio de Actividades:</strong>
+              <br />
               Miercoles 07 de enero de 2026.
             </span>
           </li>
@@ -60,7 +76,8 @@
       </div>
 
       <p class="text-center text-sm italic mt-4 text-gray-500">
-        Si posee alguna duda adicional, le invitamos a utilizar los canales de contacto disponibles en esta página.
+        Si posee alguna duda adicional, le invitamos a utilizar los canales de
+        contacto disponibles en esta página.
       </p>
     </div>
 
@@ -76,39 +93,39 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('welcome-modal');
-    const modalContent = document.getElementById('modal-content');
-    const closeBtn = document.getElementById('close-modal-btn');
-    const closeX = document.getElementById('close-modal-x');
+  document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("welcome-modal");
+    const modalContent = document.getElementById("modal-content");
+    const closeBtn = document.getElementById("close-modal-btn");
+    const closeX = document.getElementById("close-modal-x");
 
     const showModal = () => {
       if (modal && modalContent) {
-        modal.classList.remove('hidden');
+        modal.classList.remove("hidden");
         setTimeout(() => {
-          modal.classList.remove('opacity-0');
-          modalContent.classList.remove('scale-95');
-          modalContent.classList.add('scale-100');
+          modal.classList.remove("opacity-0");
+          modalContent.classList.remove("scale-95");
+          modalContent.classList.add("scale-100");
         }, 10);
       }
     };
 
     const closeModal = () => {
       if (modal && modalContent) {
-        modal.classList.add('opacity-0');
-        modalContent.classList.remove('scale-100');
-        modalContent.classList.add('scale-95');
+        modal.classList.add("opacity-0");
+        modalContent.classList.remove("scale-100");
+        modalContent.classList.add("scale-95");
         setTimeout(() => {
-          modal.classList.add('hidden');
+          modal.classList.add("hidden");
         }, 300);
       }
     };
 
     showModal();
 
-    closeBtn?.addEventListener('click', closeModal);
-    closeX?.addEventListener('click', closeModal);
-    modal?.addEventListener('click', (e) => {
+    closeBtn?.addEventListener("click", closeModal);
+    closeX?.addEventListener("click", closeModal);
+    modal?.addEventListener("click", (e) => {
       if (e.target === modal) closeModal();
     });
   });

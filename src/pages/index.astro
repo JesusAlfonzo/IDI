@@ -6,19 +6,15 @@ import Divider from "@components/Divider.astro";
 import Card from "@components/Card.astro";
 import WelcomeModal from "@components/WelcomeModal.astro";
 import Loader from "@components/Loader.astro";
-
-
-// Si SearchExams usa una ruta relativa, deberías usar el alias de raíz si existe:
-// import SearchExams from '~/components/searchExams.astro';
 ---
 
 <Layout title="IDI - Bienvenido">
-		<Loader />
-
-
+  {/* Seccion 1: Loader y Modal */}
+  <Loader />
   <WelcomeModal />
-  
+
   <main class="container mx-auto px-4 pt-24 animate-blurred-fade-in">
+    {/* Seccion 2: Título Principal */}
     <div class="grid place-items-center animate-blurred-fade-in py-10">
       <div class="flex flex-col items-center text-center gap-2">
         <h1
@@ -44,14 +40,17 @@ import Loader from "@components/Loader.astro";
       </div>
     </div>
 
+    {/* Seccion 3: Slider */}
     <div class="py-4">
       <Slider />
     </div>
 
+    {/* Seccion 4: Divider */}
     <div class="py-8">
       <Divider title="" />
     </div>
 
+    {/* Seccion 5: Servicios */}
     <section id="servicios" class="grid gap-4 py-8 text-center scroll-mt-20">
       <h2
         class="text-5xl md:text-6xl lg:text-8xl font-bold transition-colors duration-300"
@@ -70,11 +69,12 @@ import Loader from "@components/Loader.astro";
       </h3>
     </section>
 
+    {/* Seccion 6: Cards de Servicios */}
     <div class="mx-auto max-w-screen-xl py-8">
       <div class="flex flex-wrap gap-6 justify-center">
         <div class="w-full sm:w-1/2 lg:w-1/2 xl:w-1/4">
           <Card
-            url="/images/consulta.webp" 
+            url="/images/consulta.webp"
             title="Consulta"
             description="Agenda una cita para evaluación especializada con nuestros inmunólogos."
             page="/servicios/consulta"
@@ -83,7 +83,7 @@ import Loader from "@components/Loader.astro";
 
         <div class="w-full sm:w-1/2 lg:w-1/2 xl:w-1/4">
           <Card
-            url="/images/laboratorio.webp" 
+            url="/images/laboratorio.webp"
             title="Laboratorio"
             description="Realiza todos tus exámenes de inmunología con tecnología de punta."
             page="/servicios/laboratorio"
@@ -91,10 +91,12 @@ import Loader from "@components/Loader.astro";
         </div>
       </div>
     </div>
+    {/* Seccion 7: Divider */}
     <div class="py-8">
       <Divider title="" />
     </div>
 
+    {/* Seccion 8: Ubicación */}
     <section
       id="ubicacion"
       class="py-12 text-center animate-blurred-fade-in scroll-mt-20 relative overflow-hidden"
@@ -133,10 +135,12 @@ import Loader from "@components/Loader.astro";
       </span>
     </section>
 
+    {/* Seccion 9: Divider */}
     <div class="py-8">
       <Divider title="" />
     </div>
 
+    {/* Seccion 10: Horarios */}
     <section
       id="horarios"
       class="py-12 text-center animate-blurred-fade-in scroll-mt-20 relative overflow-hidden"
@@ -246,10 +250,12 @@ import Loader from "@components/Loader.astro";
     </section>
   </main>
 
+  {/* Seccion 11: Divider */}
   <div class="py-8">
     <Divider title="" />
   </div>
 
+  {/* Seccion 12: Contacto */}
   <section id="contacto" class="py-16 scroll-mt-20 relative">
     <div class="container mx-auto px-4 text-center">
       <h2

@@ -5,164 +5,185 @@ import Divider from "@components/Divider.astro";
 
 // Datos del Servicio (Para Consulta.astro)
 const serviceData = {
-    title: "Consulta Especializada en Inmunología",
-    description: "Evaluación médica integral con nuestros especialistas para el diagnóstico y manejo de enfermedades inmunológicas, autoinmunes y alérgicas.",
-    prerequisites: [
-        "Cédula de identidad laminada.",
-        "Referencia médica original de su patología que se desea estudiar.",
-        "Informes y exámenes de laboratorio previos.",
-        "Lista de medicamentos actuales (dosis y frecuencia)."
-    ],
-    stepByStep: [
-        "Registro: Presenta tu documentación en la taquilla.",
-        "Espera: Serás llamado por el personal médico.",
-        "Consulta: Entrevista y examen físico por el médico especialista.",
-        "Indicaciones y Plan: El médico te proporcionará un diagnóstico, indicaciones y/o una orden para exámenes."
-    ],
-    schedule: [
-        { day: "Lunes a Viernes", time: "Horario de Citas" },
-        { day: "Recepción de pacientes", time: "7:30 AM - 11:00 AM" },
-        { day: "Emergencias/Prioridad", time: "Según disponibilidad" },
-    ],
-    contactInfo: {
-        phone: "0212-6053509 / 0212-6053508",
-        email: "laboratorio.idiucv@gmail.com"
-    }
+  title: "Consulta Especializada en Inmunología",
+  description:
+    "Evaluación médica integral con nuestros especialistas para el diagnóstico y manejo de enfermedades inmunológicas, autoinmunes y alérgicas.",
+  prerequisites: [
+    "Cédula de identidad laminada.",
+    "Referencia médica original de su patología que se desea estudiar.",
+    "Informes y exámenes de laboratorio previos.",
+    "Lista de medicamentos actuales (dosis y frecuencia).",
+  ],
+  stepByStep: [
+    "Registro: Presenta tu documentación en la taquilla.",
+    "Espera: Serás llamado por el personal médico.",
+    "Consulta: Entrevista y examen físico por el médico especialista.",
+    "Indicaciones y Plan: El médico te proporcionará un diagnóstico, indicaciones y/o una orden para exámenes.",
+  ],
+  schedule: [
+    { day: "Lunes a Viernes", time: "Horario de Citas" },
+    { day: "Recepción de pacientes", time: "7:30 AM - 11:00 AM" },
+    { day: "Emergencias/Prioridad", time: "Según disponibilidad" },
+  ],
+  contactInfo: {
+    phone: "0212-6053509 / 0212-6053508",
+    email: "laboratorio.idiucv@gmail.com",
+  },
 };
-
 ---
 
 <Layout title={`IDI - ${serviceData.title}`}>
-    <Nav />
-    <main class="container mx-auto px-4 pt-24 pb-20 animate-blurred-fade-in">
+  <Nav />
+  <main class="container mx-auto px-4 pt-24 pb-20 animate-blurred-fade-in">
+    {/* Seccion 1: Header */}
+    <header class="text-center py-4">
+      <h1
+        class="text-5xl font-extrabold leading-none md:text-6xl lg:text-7xl text-blue-600"
+      >
+        {serviceData.title}
+      </h1>
+      <p class="mt-6 text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto">
+        {serviceData.description}
+      </p>
+    </header>
 
-        <header class="text-center py-4">
-            <h1 class="text-5xl font-extrabold leading-none md:text-6xl lg:text-7xl text-blue-600">
-                {serviceData.title}
-            </h1>
-            <p class="mt-6 text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto">
-                {serviceData.description}
+    {/* Seccion 2: Divider */}
+    <div class="py-8">
+      <Divider title="Organiza tu visita" />
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-y-12 lg:gap-x-20">
+      {/* Seccion 3: Prerequisitos y Pagos */}
+      <section id="columna-izquierda" class="py-8 space-y-8">
+        {/* 3.1 PREREQUISITOS */}
+        <div>
+          <h2 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
+            Prerequisitos
+          </h2>
+          <div
+            class="bg-blue-50/70 p-6 rounded-xl space-y-4 border border-gray-200"
+          >
+            <p class="font-semibold text-lg text-blue-700">
+              Asegúrate de traer:
             </p>
-        </header>
-        
-        <div class="py-8">
-            <Divider title="Organiza tu visita" />
+            <ul class="space-y-3 list-disc list-inside text-gray-600 text-lg">
+              {
+                serviceData.prerequisites.map((req) => (
+                  <li>
+                    <span class="font-medium text-gray-700">{req}</span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-y-12 lg:gap-x-20">
+        {/* 3.2 MÉTODOS DE PAGO */}
+        <div>
+          <h2 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">Pagos</h2>
+          <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+            <h3
+              class="text-2xl font-bold text-green-700 mb-4 flex items-center gap-2"
+            >
+              <span>💳</span> Métodos de Pago
+            </h3>
 
-            {/* COLUMNA 1: PREREQUISITOS Y PAGOS */}
-            <section id="columna-izquierda" class="py-8 space-y-8">
-                
-                {/* 1.1 PREREQUISITOS */}
-                <div>
-                    <h2 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
-                        Prerequisitos
-                    </h2>
-                    <div class="bg-blue-50/70 p-6 rounded-xl space-y-4 border border-gray-200">
-                        <p class="font-semibold text-lg text-blue-700">Asegúrate de traer:</p>
-                        <ul class="space-y-3 list-disc list-inside text-gray-600 text-lg">
-                            {serviceData.prerequisites.map(req => (
-                                <li>
-                                    <span class="font-medium text-gray-700">{req}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+            <ul class="space-y-3 text-gray-600 text-lg mb-6">
+              <li class="flex items-center gap-2">
+                <span class="text-green-600 font-bold">✓</span>
+                <span>Pago Móvil</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-600 font-bold">✓</span>
+                <span>Tarjeta de Débito</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-600 font-bold">✓</span>
+                <span>Tarjeta de Crédito</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-600 font-bold">✓</span>
+                <span>Efectivo (Bs, $, €)</span>
+              </li>
+            </ul>
 
-                {/* 1.2 MÉTODOS DE PAGO (Añadido aquí) */}
-                <div>
-                    <h2 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
-                        Pagos
-                    </h2>
-                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                        <h3 class="text-2xl font-bold text-green-700 mb-4 flex items-center gap-2">
-                            <span>💳</span> Métodos de Pago
-                        </h3>
-                        
-                        <ul class="space-y-3 text-gray-600 text-lg mb-6">
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-600 font-bold">✓</span>
-                                <span>Pago Móvil</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-600 font-bold">✓</span>
-                                <span>Tarjeta de Débito</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-600 font-bold">✓</span>
-                                <span>Tarjeta de Crédito</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-600 font-bold">✓</span>
-                                <span>Efectivo (Bs, $, €)</span>
-                            </li>
-                        </ul>
+            <div
+              class="bg-green-50 border border-green-200 rounded-lg p-3 text-center"
+            >
+              <p class="text-green-800 font-bold text-sm">
+                ⚠️ Tasa Banco Central de Venezuela (BCV)
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                        <div class="bg-green-50 border border-green-200 rounded-lg p-3 text-center">
-                            <p class="text-green-800 font-bold text-sm">
-                                ⚠️ Tasa Banco Central de Venezuela (BCV)
-                            </p>
-                        </div>
-                    </div>
-                </div>
+      {/* Seccion 4: Pasos */}
+      <section id="pasos" class="py-8 space-y-6">
+        <h2 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
+          Pasos del Proceso
+        </h2>
+        <div class="bg-indigo-50/70 p-6 rounded-xl border border-gray-200">
+          <ol class="space-y-6 text-gray-600 text-lg">
+            {
+              serviceData.stepByStep.map((step, index) => (
+                <li class="p-4 rounded-lg bg-white/70 border border-gray-200">
+                  <span class="font-bold text-xl text-blue-700 mr-2">
+                    {index + 1}.
+                  </span>
+                  <span set:html={step} class="text-gray-700" />
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </section>
 
-            </section>
+      {/* Seccion 5: Horarios y Contacto */}
+      <section id="horarios-contacto" class="py-8 space-y-8">
+        <h2 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
+          Horarios y Contacto
+        </h2>
 
-            {/* COLUMNA 2: PASOS */}
-            <section id="pasos" class="py-8 space-y-6">
-                <h2 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
-                    Pasos del Proceso
-                </h2>
-                <div class="bg-indigo-50/70 p-6 rounded-xl border border-gray-200">
-                    <ol class="space-y-6 text-gray-600 text-lg">
-                        {serviceData.stepByStep.map((step, index) => (
-                            <li class="p-4 rounded-lg bg-white/70 border border-gray-200">
-                                <span class="font-bold text-xl text-blue-700 mr-2">{index + 1}.</span>
-                                <span set:html={step} class="text-gray-700"></span>
-                            </li>
-                        ))}
-                    </ol>
-                </div>
-            </section>
-
-            {/* COLUMNA 3: HORARIOS Y CONTACTO */}
-            <section id="horarios-contacto" class="py-8 space-y-8">
-                
-                <h2 class="text-4xl font-extrabold text-gray-700 pb-2 mb-6">
-                    Horarios y Contacto
-                </h2>
-                
-                {/* 3.1 HORARIOS */}
-                <div class="bg-white p-6 rounded-xl border border-gray-200">
-                    <h3 class="text-2xl font-bold text-indigo-700 mb-4 flex items-center gap-2">
-                        <span>📅</span> Horario de Atención
-                    </h3>
-                    <ul class="space-y-4 text-gray-600 text-lg">
-                        {serviceData.schedule.map(item => (
-                            <li class="flex justify-between border-b border-gray-200 pb-3 last:border-b-0">
-                                <span class="font-semibold text-gray-700">{item.day}</span>
-                                <span class="text-blue-700 font-bold">{item.time}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
-                {/* 3.2 CONTACTO */}
-                <div class="bg-white p-6 rounded-xl border border-gray-200">
-                    <h3 class="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2">
-                        <span>📞</span> Contáctanos
-                    </h3>
-                    <p class="text-lg font-medium text-gray-700">Teléfonos:</p>
-                    <span class="text-lg font-bold text-blue-700 block mb-4">{serviceData.contactInfo.phone}</span>
-                    <p class="text-lg font-medium text-gray-700">Email:</p>
-                    <a href={`mailto:${serviceData.contactInfo.email}`} class="text-lg font-bold text-blue-700 hover:underline break-all">
-                        {serviceData.contactInfo.email}
-                    </a>
-                </div>
-            </section>
+        {/* 5.1 HORARIOS */}
+        <div class="bg-white p-6 rounded-xl border border-gray-200">
+          <h3
+            class="text-2xl font-bold text-indigo-700 mb-4 flex items-center gap-2"
+          >
+            <span>📅</span> Horario de Atención
+          </h3>
+          <ul class="space-y-4 text-gray-600 text-lg">
+            {
+              serviceData.schedule.map((item) => (
+                <li class="flex justify-between border-b border-gray-200 pb-3 last:border-b-0">
+                  <span class="font-semibold text-gray-700">{item.day}</span>
+                  <span class="text-blue-700 font-bold">{item.time}</span>
+                </li>
+              ))
+            }
+          </ul>
         </div>
 
-    </main>
+        {/* 5.2 CONTACTO */}
+        <div class="bg-white p-6 rounded-xl border border-gray-200">
+          <h3
+            class="text-2xl font-bold text-blue-700 mb-4 flex items-center gap-2"
+          >
+            <span>📞</span> Contáctanos
+          </h3>
+          <p class="text-lg font-medium text-gray-700">Teléfonos:</p>
+          <span class="text-lg font-bold text-blue-700 block mb-4"
+            >{serviceData.contactInfo.phone}</span
+          >
+          <p class="text-lg font-medium text-gray-700">Email:</p>
+          <a
+            href={`mailto:${serviceData.contactInfo.email}`}
+            class="text-lg font-bold text-blue-700 hover:underline break-all"
+          >
+            {serviceData.contactInfo.email}
+          </a>
+        </div>
+      </section>
+    </div>
+  </main>
 </Layout>

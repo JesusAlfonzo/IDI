@@ -1,255 +1,327 @@
 ---
 // Importaciones de Astro
-import { getCollection, type CollectionEntry } from 'astro:content'; 
-import Layout from '@layouts/Layout.astro';
-// Asegúrate de que SearchExams se encuentra en src/components/searchExams.astro
-import SearchExams from '@components/searchExams.astro';
+import { getCollection, type CollectionEntry } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import SearchExams from "@components/searchExams.astro";
 
 /* Definir el tipo para el objeto agrupador */
-type GroupedExamenes = Record<string, CollectionEntry<'examenes'>[]>; 
+type GroupedExamenes = Record<string, CollectionEntry<"examenes">[]>;
 
 // 1. Obtener y Agrupar Exámenes
-const allExamenes = await getCollection('examenes');
+const allExamenes = await getCollection("examenes");
 
 const groupedExamenes: GroupedExamenes = allExamenes.reduce((acc, examen) => {
-    // Usamos 'category' según la definición de tu config.ts
-    const category = examen.data.category; 
-    if (!acc[category]) {
-        acc[category] = [];
-    }
-    acc[category].push(examen);
-    return acc;
-}, {} as GroupedExamenes); 
+  // Usamos 'category' según la definición de tu config.ts
+  const category = examen.data.category;
+  if (!acc[category]) {
+    acc[category] = [];
+  }
+  acc[category].push(examen);
+  return acc;
+}, {} as GroupedExamenes);
 
 const categories = Object.keys(groupedExamenes).sort();
 
 /* 2. FUNCIÓN PARA SIMPLIFICAR EL RENDERIZADO DEL PRECIO */
- const formatPrice = (price: number): string => {
-     // Formato de moneda USD (ajusta el locale si es necesario)
-    return price.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
- };
+const formatPrice = (price: number): string => {
+  // Formato de moneda USD (ajusta el locale si es necesario)
+  return price.toLocaleString("es-ES", { style: "currency", currency: "USD" });
+};
 
 /* 3. FUNCIÓN PARA DETERMINAR EL TIEMPO DE ENTREGA */
 const getDeliveryTime = (tipoExamen: string): string => {
-    // Estandarizamos el tipo de examen a minúsculas y sin acentos/espacios para una comparación robusta
-    const normalizedType = tipoExamen.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  // Estandarizamos el tipo de examen a minúsculas y sin acentos/espacios para una comparación robusta
+  const normalizedType = tipoExamen
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 
-    // Citometria entrega en 5 días
-    if (normalizedType.includes('citometria')) {
-        return '5 Días Hábiles';
-    }
-    // Todos los demás entregan en 10 días
-    return '10 Días Hábiles';
+  // Citometria entrega en 5 días
+  if (normalizedType.includes("citometria")) {
+    return "5 Días Hábiles";
+  }
+  // Todos los demás entregan en 10 días
+  return "10 Días Hábiles";
 };
-
 ---
+
 <Layout title="IDI - Exámenes">
-    
-    <main class="container mx-auto px-4 pt-24 pb-16 animate-blurred-fade-in">
-        <header class="text-center mb-12">
-            <h1 class="text-6xl font-extrabold leading-tight text-gray-900 mb-4">
-                Listado de Exámenes
-            </h1>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Explora nuestro catálogo de análisis especializados...
-            </p>
-        </header>
+  <main class="container mx-auto px-4 pt-24 pb-16 animate-blurred-fade-in">
+    {/* Seccion 1: Header */}
+    <header class="text-center mb-12">
+      <h1 class="text-6xl font-extrabold leading-tight text-gray-900 mb-4">
+        Listado de Exámenes
+      </h1>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Explora nuestro catálogo de análisis especializados...
+      </p>
+    </header>
 
-        <div class="max-w-6xl mx-auto">
-            
-            {/* INTEGRACIÓN DEL COMPONENTE DE BÚSQUEDA */}
-            <SearchExams allExamenes={allExamenes} client:load />
+    <div class="max-w-6xl mx-auto">
+      {/* Seccion 2: Integración del componente de búsqueda */}
+      <SearchExams allExamenes={allExamenes} client:load />
 
-            {/* IMPLEMENTACIÓN DE SECCIONES COLAPSABLES */}
-            {categories.map((category) => (
-                <details 
-                    class="mb-8 category-section group" 
-                    key={category} 
-                >
-                    <summary 
-                        class="cursor-pointer list-none py-3 px-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition duration-200 border border-indigo-200 shadow-md flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
-                    >
-                        <h2 class="text-2xl font-bold text-indigo-700 m-0">
-                            {category}
-                        </h2>
-                        {/* Ícono de flecha para indicar colapso */}
-                        <svg class="w-6 h-6 text-indigo-600 transform transition duration-300 group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                    </summary>
-                    
-                    {/* El contenido colapsable */}
-                    <div class="pt-6 pb-2 animate-opacity-fade-in">
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {groupedExamenes[category].map((examen) => (
-                                <a 
-                                    href={`/examenes/${examen.slug}`} 
-                                    class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
-                                    key={examen.slug}
-                                >
-                                    <h3 class="text-xl font-bold text-gray-800 mb-2">{examen.data.title}</h3>
-                                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">{examen.data.description}</p>
-                                    
-                                    {/* INSERCIÓN DEL CAMPO DE TIEMPO DE ENTREGA Y PRECIO */}
-                                    <div class="flex justify-start space-x-4 mt-4 border-t pt-3">
-                                        {/* Campo de Tiempo de Entrega (Amarillo/Yellow) */}
-                                        <div class="p-2 bg-yellow-50 border-l-4 border-yellow-600 rounded-md flex-1 min-w-0">
-                                            <p class="text-xs font-medium text-gray-500 truncate">Entrega Aprox.</p>
-                                            <p class="text-sm font-bold text-yellow-800">
-                                                {getDeliveryTime(examen.data.tipoExamen)}
-                                            </p>
-                                        </div>
-                                         {/* <div class="p-2 bg-green-50 border-l-4 border-green-600 rounded-md flex-shrink-0">
+      {/* Seccion 3: Implementación de secciones colapsables */}
+      {
+        categories.map((category) => (
+          <details class="mb-8 category-section group" key={category}>
+            <summary class="cursor-pointer list-none py-3 px-4 rounded-lg bg-indigo-50 hover:bg-indigo-100 transition duration-200 border border-indigo-200 shadow-md flex justify-between items-center focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50">
+              <h2 class="text-2xl font-bold text-indigo-700 m-0">{category}</h2>
+              {/* Ícono de flecha para indicar colapso */}
+              <svg
+                class="w-6 h-6 text-indigo-600 transform transition duration-300 group-open:rotate-90"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </summary>
+
+            {/* El contenido colapsable */}
+            <div class="pt-6 pb-2 animate-opacity-fade-in">
+              <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {groupedExamenes[category].map((examen) => (
+                  <a
+                    href={`/examenes/${examen.slug}`}
+                    class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
+                    key={examen.slug}
+                  >
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">
+                      {examen.data.title}
+                    </h3>
+                    <p class="text-sm text-gray-600 mb-3 line-clamp-2">
+                      {examen.data.description}
+                    </p>
+
+                    {/* INSERCIÓN DEL CAMPO DE TIEMPO DE ENTREGA Y PRECIO */}
+                    <div class="flex justify-start space-x-4 mt-4 border-t pt-3">
+                      {/* Campo de Tiempo de Entrega (Amarillo/Yellow) */}
+                      <div class="p-2 bg-yellow-50 border-l-4 border-yellow-600 rounded-md flex-1 min-w-0">
+                        <p class="text-xs font-medium text-gray-500 truncate">
+                          Entrega Aprox.
+                        </p>
+                        <p class="text-sm font-bold text-yellow-800">
+                          {getDeliveryTime(examen.data.tipoExamen)}
+                        </p>
+                      </div>
+                      {/* <div class="p-2 bg-green-50 border-l-4 border-green-600 rounded-md flex-shrink-0">
                                             <p class="text-xs font-medium text-gray-500">Precio</p>
                                             <p class="text-lg font-extrabold text-green-700">
                                                 {formatPrice(examen.data.price)}
                                             </p>
                                         </div>  */}
-                                    </div>
-                                    {/* Campo de Tipo de Examen separado */}
-                                    <div class="pt-2 border-t border-gray-100 mt-2">
-                                        <span class="text-xs font-semibold text-blue-600 uppercase">Tipo: {examen.data.tipoExamen}</span>
-                                    </div>
-
-                                </a>
-                            ))}
-                        </div>
                     </div>
-                </details>
-            ))}
-            
-            {/* INICIO DEL CONTENEDOR DE HORARIOS Y CONTACTO EN 2 COLUMNAS */}
-            <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12">
-                
-                {/* 1. CARD DE HORARIOS DE ATENCIÓN (COLUMNA IZQUIERDA) */}
-                <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-fit">
-                    <div class="space-y-3">
-                        <div class="text-2xl font-bold text-blue-600 border-b-2 pb-3 mb-4 flex items-center">
-                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            Horarios de Atención por Servicio
-                        </div>
-
-                        <div class="border-b pb-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-lg font-medium text-gray-700">Citometría:</span>
-                                <span class="text-lg font-bold text-indigo-600"
-                                    >7:00 AM - 10:00 AM</span
-                                >
-                            </div>
-                            <div class="flex justify-end mt-1">
-                                <span class="text-sm font-semibold text-red-500">Lunes a Jueves</span>
-                            </div>
-                        </div>
-
-                        <div class="border-b pb-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-lg font-medium text-gray-700">Inmunodiagnostico:</span>
-                                <span class="text-lg font-bold text-indigo-600"
-                                    >7:00 AM - 10:00 AM</span
-                                >
-                            </div>
-                            <div class="flex justify-end mt-1">
-                                <span class="text-sm font-semibold text-red-500"
-                                    >Lunes a Viernes</span
-                                >
-                            </div>
-                        </div>
-
-                        <div class="border-b pb-2">
-                            <div class="flex justify-between items-center">
-                                <span class="text-lg font-medium text-gray-700"
-                                    >Inmunogenetica:</span
-                                >
-                                <span class="text-lg font-bold text-indigo-600"
-                                    >7:00 AM - 10:00 AM</span
-                                >
-                            </div>
-                            <div class="flex justify-end mt-1">
-                                <span class="text-sm font-semibold text-red-500"
-                                    >Lunes a Viernes</span
-                                >
-                            </div>
-                        </div>
-                        <div class="pb-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-lg font-medium text-gray-700">Pruebas Virales:</span>
-                                <span class="text-lg font-bold text-indigo-600"
-                                    >7:00 AM - 10:00 AM</span
-                                >
-                            </div>
-                            <div class="flex justify-end mt-1">
-                                <span class="text-sm font-semibold text-red-500"
-                                    >Lunes a Viernes</span
-                                >
-                            </div>
-                        </div>
-                        
+                    {/* Campo de Tipo de Examen separado */}
+                    <div class="pt-2 border-t border-gray-100 mt-2">
+                      <span class="text-xs font-semibold text-blue-600 uppercase">
+                        Tipo: {examen.data.tipoExamen}
+                      </span>
                     </div>
-                    
-
-                    <p class="mt-6 text-s text-gray-500 italic">
-                        *Algunos exámenes tienen <strong>horarios especiales</strong> y requieren una solicitud previa por correo electrónico. Para obtener más información, consulte el detalle del examen deseado o comuníquese con nosotros.
-                    </p>
-                </div>
-                
-                {/* 2. CONTENEDOR DE LA COLUMNA DERECHA (Contacto + Nuevo Card) */}
-                <div class="flex flex-col gap-8">
-
-                    {/* 2.1. CARD DE CONTACTO */}
-                    <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-fit">
-                        <div class="space-y-4">
-                            
-                            {/* Título: text-blue-600 */}
-                            <div class="text-2xl font-bold text-blue-600 border-b-2 border-indigo-300 pb-3 mb-4">
-                                Números y Contacto Directo
-                            </div>
-
-                            {/* Teléfono 1 */}
-                            <div class="pb-3 border-b border-indigo-200">
-                                <p class="text-sm font-medium text-gray-700">Teléfono (Línea 1)</p>
-                                <a href="tel:02126053509" class="text-xl font-bold text-indigo-600 hover:text-indigo-700 transition duration-150">0212-6053509</a>
-                            </div>
-
-                            {/* Teléfono 2 */}
-                            <div class="pb-3 border-b border-indigo-200">
-                                <p class="text-sm font-medium text-gray-700">Teléfono (Línea 2)</p>
-                                <a href="tel:02126053508" class="text-xl font-bold text-indigo-600 hover:text-indigo-700 transition duration-150">0212-6053508</a>
-                            </div>
-
-                            {/* Correo - Sin divisor al final */}
-                            <div class="pb-3">
-                                <p class="text-sm font-medium text-gray-700">Correo Electrónico</p>
-                                <a href="mailto:laboratorio.idiucv@gmail.com" class="text-base font-bold text-indigo-600 hover:text-indigo-700 transition duration-150 break-all">laboratorio.idiucv@gmail.com</a>
-                            </div>
-
-                        </div>
-                        <p class="mt-6 text-s text-gray-500 italic">
-                            Recuerda que estas son <strong>líneas locales</strong> y no cuentan con servicio de WhatsApp.
-                        </p>
-                    </div>
-
-                    {/* 2.2. NUEVO CARD INFORMATIVO (TEXTO FINAL Y LINK ELIMINADO) */}
-                    <div class="bg-blue-50 p-6 rounded-xl shadow-lg border border-blue-200 h-fit">
-                        <div class="flex items-start">
-                            <svg class="w-8 h-8 text-blue-700 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <div>
-                                <h3 class="text-xl font-bold text-blue-700 mb-1">Recordatorio Importante</h3>
-                                <p class="text-gray-700 text-s">
-                                    Si tiene <strong>dudas específicas</strong> sobre los exámenes a realizarse, sus requisitos, preparación o tiempos de entrega, por favor, <strong>contáctese a nuestros números telefónicos</strong> para recibir la orientación adecuada.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    {/* FIN DEL NUEVO CARD */}
-
-                </div>
-                {/* FIN DEL CONTENEDOR DE LA COLUMNA DERECHA */}
-
+                  </a>
+                ))}
+              </div>
             </div>
-            {/* FIN DEL CONTENEDOR DE HORARIOS Y CONTACTO */}
-            
+          </details>
+        ))
+      }
+
+      {/* Seccion 4: Contenedor de horarios y contacto en 2 columnas */}
+      <div
+        class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12"
+      >
+        {/* Seccion 4.1: Card de horarios de atención */}
+        <div
+          class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-fit"
+        >
+          <div class="space-y-3">
+            <div
+              class="text-2xl font-bold text-blue-600 border-b-2 pb-3 mb-4 flex items-center"
+            >
+              <svg
+                class="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                ><path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg
+              >
+              Horarios de Atención por Servicio
+            </div>
+
+            <div class="border-b pb-3">
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-medium text-gray-700"
+                  >Citometría:</span
+                >
+                <span class="text-lg font-bold text-indigo-600"
+                  >7:00 AM - 10:00 AM</span
+                >
+              </div>
+              <div class="flex justify-end mt-1">
+                <span class="text-sm font-semibold text-red-500"
+                  >Lunes a Jueves</span
+                >
+              </div>
+            </div>
+
+            <div class="border-b pb-3">
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-medium text-gray-700"
+                  >Inmunodiagnostico:</span
+                >
+                <span class="text-lg font-bold text-indigo-600"
+                  >7:00 AM - 10:00 AM</span
+                >
+              </div>
+              <div class="flex justify-end mt-1">
+                <span class="text-sm font-semibold text-red-500"
+                  >Lunes a Viernes</span
+                >
+              </div>
+            </div>
+
+            <div class="border-b pb-2">
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-medium text-gray-700"
+                  >Inmunogenetica:</span
+                >
+                <span class="text-lg font-bold text-indigo-600"
+                  >7:00 AM - 10:00 AM</span
+                >
+              </div>
+              <div class="flex justify-end mt-1">
+                <span class="text-sm font-semibold text-red-500"
+                  >Lunes a Viernes</span
+                >
+              </div>
+            </div>
+            <div class="pb-3">
+              <div class="flex justify-between items-center">
+                <span class="text-lg font-medium text-gray-700"
+                  >Pruebas Virales:</span
+                >
+                <span class="text-lg font-bold text-indigo-600"
+                  >7:00 AM - 10:00 AM</span
+                >
+              </div>
+              <div class="flex justify-end mt-1">
+                <span class="text-sm font-semibold text-red-500"
+                  >Lunes a Viernes</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <p class="mt-6 text-s text-gray-500 italic">
+            *Algunos exámenes tienen <strong>horarios especiales</strong> y requieren
+            una solicitud previa por correo electrónico. Para obtener más información,
+            consulte el detalle del examen deseado o comuníquese con nosotros.
+          </p>
         </div>
-    </main>
+
+        {/* Seccion 4.2: Contenedor de la columna derecha */}
+        <div class="flex flex-col gap-8">
+          {/* Seccion 4.2.1: Card de contacto */}
+          <div
+            class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 h-fit"
+          >
+            <div class="space-y-4">
+              {/* Título: text-blue-600 */}
+              <div
+                class="text-2xl font-bold text-blue-600 border-b-2 border-indigo-300 pb-3 mb-4"
+              >
+                Números y Contacto Directo
+              </div>
+
+              {/* Teléfono 1 */}
+              <div class="pb-3 border-b border-indigo-200">
+                <p class="text-sm font-medium text-gray-700">
+                  Teléfono (Línea 1)
+                </p>
+                <a
+                  href="tel:02126053509"
+                  class="text-xl font-bold text-indigo-600 hover:text-indigo-700 transition duration-150"
+                  >0212-6053509</a
+                >
+              </div>
+
+              {/* Teléfono 2 */}
+              <div class="pb-3 border-b border-indigo-200">
+                <p class="text-sm font-medium text-gray-700">
+                  Teléfono (Línea 2)
+                </p>
+                <a
+                  href="tel:02126053508"
+                  class="text-xl font-bold text-indigo-600 hover:text-indigo-700 transition duration-150"
+                  >0212-6053508</a
+                >
+              </div>
+
+              {/* Correo - Sin divisor al final */}
+              <div class="pb-3">
+                <p class="text-sm font-medium text-gray-700">
+                  Correo Electrónico
+                </p>
+                <a
+                  href="mailto:laboratorio.idiucv@gmail.com"
+                  class="text-base font-bold text-indigo-600 hover:text-indigo-700 transition duration-150 break-all"
+                  >laboratorio.idiucv@gmail.com</a
+                >
+              </div>
+            </div>
+            <p class="mt-6 text-s text-gray-500 italic">
+              Recuerda que estas son <strong>líneas locales</strong> y no cuentan
+              con servicio de WhatsApp.
+            </p>
+          </div>
+
+          {/* Seccion 4.2.2: Card informativo */}
+          <div
+            class="bg-blue-50 p-6 rounded-xl shadow-lg border border-blue-200 h-fit"
+          >
+            <div class="flex items-start">
+              <svg
+                class="w-8 h-8 text-blue-700 mr-4 flex-shrink-0"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+              <div>
+                <h3 class="text-xl font-bold text-blue-700 mb-1">
+                  Recordatorio Importante
+                </h3>
+                <p class="text-gray-700 text-s">
+                  Si tiene <strong>dudas específicas</strong> sobre los exámenes
+                  a realizarse, sus requisitos, preparación o tiempos de entrega,
+                  por favor, <strong
+                    >contáctese a nuestros números telefónicos</strong
+                  > para recibir la orientación adecuada.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </Layout>

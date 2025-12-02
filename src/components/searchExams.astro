@@ -1,292 +1,379 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from "astro:content";
 
-// Definir el tipo para los props: una lista plana de todos los exámenes.
 interface Props {
-    allExamenes: CollectionEntry<'examenes'>[];
+  allExamenes: CollectionEntry<"examenes">[];
 }
 
 const { allExamenes } = Astro.props;
 
 // Convertimos la lista de exámenes en una cadena JSON para pasarla a JavaScript
-const examenesJson = JSON.stringify(allExamenes.map(examen => ({
+const examenesJson = JSON.stringify(
+  allExamenes.map((examen) => ({
     title: examen.data.title,
     description: examen.data.description,
     category: examen.data.category,
     tipoExamen: examen.data.tipoExamen,
     price: examen.data.price,
-    slug: examen.slug
-})));
+    slug: examen.slug,
+  }))
+);
 
 // Obtener categorías únicas para los filtros
-const categories = [...new Set(allExamenes.map(examen => examen.data.category))].sort();
-const tiposExamen = [...new Set(allExamenes.map(examen => examen.data.tipoExamen))].sort();
-const minPrice = Math.min(...allExamenes.map(examen => examen.data.price));
-const maxPrice = Math.max(...allExamenes.map(examen => examen.data.price));
+const categories = [
+  ...new Set(allExamenes.map((examen) => examen.data.category)),
+].sort();
+const tiposExamen = [
+  ...new Set(allExamenes.map((examen) => examen.data.tipoExamen)),
+].sort();
+const minPrice = Math.min(...allExamenes.map((examen) => examen.data.price));
+const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
 ---
 
 <div id="search-container" class="mb-12">
-    <div class="relative max-w-4xl mx-auto mb-8">
-        <div class="relative">
-        <input
-            type="text"
-            id="search-input"
-                placeholder="Buscar por nombre, descripción, categoría o tipo de examen..."
-                class="w-full p-4 pl-12 pr-16 text-lg border-2 border-indigo-300 rounded-xl focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition duration-150 shadow-md"
-                autocomplete="off"
-        />
-        <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+  <div class="relative max-w-4xl mx-auto mb-8">
+    <div class="relative">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Buscar por nombre del examen..."
+        class="w-full p-4 pl-12 pr-16 text-lg border-2 border-indigo-300 rounded-xl focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition duration-150 shadow-md"
+        autocomplete="off"
+      />
+      <svg
+        class="absolute left-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-indigo-400"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+
+      <button
+        id="clear-search"
+        class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400 hover:text-gray-600 transition duration-150 hidden"
+        title="Limpiar búsqueda"
+      >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path>
         </svg>
-            
-            <button
-                id="clear-search"
-                class="absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 text-gray-400 hover:text-gray-600 transition duration-150 hidden"
-                title="Limpiar búsqueda"
-            >
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-        
-        <div id="search-loading" class="hidden mt-2 text-center">
-            <div class="inline-flex items-center text-indigo-600">
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Buscando...
-            </div>
-        </div>
+      </button>
     </div>
 
-    <div id="advanced-filters" class="max-w-4xl mx-auto mb-8 bg-gray-50 rounded-xl p-6 border border-gray-200">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-lg font-semibold text-gray-700">Filtros Avanzados</h3>
-            <button id="toggle-filters" class="text-indigo-600 hover:text-indigo-800 transition duration-150">
-                <svg class="w-5 h-5 transform transition duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </button>
-        </div>
-        
-        <div id="filters-content" class="hidden">
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
-                    <select id="category-filter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="">Todas las categorías</option>
-                        {categories.map(category => (
-                            <option value={category}>{category}</option>
-                        ))}
-                    </select>
-                </div>
+    <div id="search-loading" class="hidden mt-2 text-center">
+      <div class="inline-flex items-center text-indigo-600">
+        <svg
+          class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+        Buscando...
+      </div>
+    </div>
+  </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Examen</label>
-                    <select id="type-filter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="">Todos los tipos</option>
-                        {tiposExamen.map(tipo => (
-                            <option value={tipo}>{tipo}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Precio Máximo</label>
-                    <input
-                        type="range"
-                        id="price-filter"
-                        min={minPrice}
-                        max={maxPrice}
-                        value={maxPrice}
-                        class="w-full"
-                    />
-                    <div class="flex justify-between text-sm text-gray-600 mt-1">
-                        <span>${minPrice}</span>
-                        <span id="price-display">${maxPrice}</span>
-                    </div>
-                </div>
-
-                <div class="flex items-end">
-                    <button
-                        id="clear-filters"
-                        class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-150"
-                    >
-                        Limpiar Filtros
-                    </button>
-                </div>
-            </div>
-        </div>
+  <div
+    id="advanced-filters"
+    class="max-w-4xl mx-auto mb-8 bg-gray-50 rounded-xl p-6 border border-gray-200"
+  >
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold text-gray-700">Filtros Avanzados</h3>
+      <button
+        id="toggle-filters"
+        class="text-indigo-600 hover:text-indigo-800 transition duration-150"
+      >
+        <svg
+          class="w-5 h-5 transform transition duration-200"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </button>
     </div>
 
-    <div id="search-history" class="max-w-4xl mx-auto mb-6 hidden">
-        <div class="flex items-center justify-between mb-2">
-            <h4 class="text-sm font-medium text-gray-600">Búsquedas recientes:</h4>
-            <button 
-                id="clear-history" 
-                class="text-xs text-red-600 hover:text-red-800 transition duration-150 flex items-center gap-1"
-                title="Limpiar historial de búsquedas"
-            >
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                </svg>
-                Limpiar historial
-            </button>
-        </div>
-        <div id="recent-searches" class="flex flex-wrap gap-2"></div>
-    </div>
-
-    <div id="search-stats" class="max-w-4xl mx-auto mb-6 hidden text-center">
-        <p class="text-sm text-gray-600">
-            <span id="results-count">0</span> resultados encontrados
-        </p>
-    </div>
-
-    <div id="search-results" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
+    <div id="filters-content" class="hidden">
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Categoría</label
+          >
+          <select
+            id="category-filter"
+            class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Todas las categorías</option>
+            {
+              categories.map((category) => (
+                <option value={category}>{category}</option>
+              ))
+            }
+          </select>
         </div>
 
-    <div id="no-results" class="hidden max-w-2xl mx-auto text-center p-8 bg-yellow-50 rounded-xl border border-yellow-200">
-        <div class="text-6xl mb-4">🔍</div>
-        <p class="text-xl text-yellow-800 font-semibold mb-2">
-            No se encontraron exámenes
-        </p>
-        <p class="text-gray-600 mb-4">Intenta usar términos más generales o ajusta los filtros.</p>
-        <button id="suggest-search" class="text-indigo-600 hover:text-indigo-800 underline">
-            Ver sugerencias
-        </button>
-    </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Tipo de Examen</label
+          >
+          <select
+            id="type-filter"
+            class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            <option value="">Todos los tipos</option>
+            {tiposExamen.map((tipo) => <option value={tipo}>{tipo}</option>)}
+          </select>
+        </div>
 
-    <div id="search-suggestions" class="hidden max-w-2xl mx-auto text-center p-6 bg-blue-50 rounded-xl border border-blue-200">
-        <h4 class="text-lg font-semibold text-blue-800 mb-3">Sugerencias de búsqueda:</h4>
-        <div id="suggestions-list" class="flex flex-wrap gap-2 justify-center"></div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Precio Máximo</label
+          >
+          <input
+            type="range"
+            id="price-filter"
+            min={minPrice}
+            max={maxPrice}
+            value={maxPrice}
+            class="w-full"
+          />
+          <div class="flex justify-between text-sm text-gray-600 mt-1">
+            <span>${minPrice}</span>
+            <span id="price-display">${maxPrice}</span>
+          </div>
+        </div>
+
+        <div class="flex items-end">
+          <button
+            id="clear-filters"
+            class="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition duration-150"
+          >
+            Limpiar Filtros
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div id="search-history" class="max-w-4xl mx-auto mb-6 hidden">
+    <div class="flex items-center justify-between mb-2">
+      <h4 class="text-sm font-medium text-gray-600">Búsquedas recientes:</h4>
+      <button
+        id="clear-history"
+        class="text-xs text-red-600 hover:text-red-800 transition duration-150 flex items-center gap-1"
+        title="Limpiar historial de búsquedas"
+      >
+        <svg
+          class="w-3 h-3"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+          ></path>
+        </svg>
+        Limpiar historial
+      </button>
+    </div>
+    <div id="recent-searches" class="flex flex-wrap gap-2"></div>
+  </div>
+
+  <div id="search-stats" class="max-w-4xl mx-auto mb-6 hidden text-center">
+    <p class="text-sm text-gray-600">
+      <span id="results-count">0</span> resultados encontrados
+    </p>
+  </div>
+
+  <div
+    id="search-results"
+    class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+    style="display: none;"
+  >
+  </div>
+
+  <div
+    id="no-results"
+    class="hidden max-w-2xl mx-auto text-center p-8 bg-yellow-50 rounded-xl border border-yellow-200"
+  >
+    <div class="text-6xl mb-4">🔍</div>
+    <p class="text-xl text-yellow-800 font-semibold mb-2">
+      No se encontraron exámenes
+    </p>
+    <p class="text-gray-600 mb-4">
+      Intenta usar términos más generales o ajusta los filtros.
+    </p>
+    <button
+      id="suggest-search"
+      class="text-indigo-600 hover:text-indigo-800 underline"
+    >
+      Ver sugerencias
+    </button>
+  </div>
+
+  <div
+    id="search-suggestions"
+    class="hidden max-w-2xl mx-auto text-center p-6 bg-blue-50 rounded-xl border border-blue-200"
+  >
+    <h4 class="text-lg font-semibold text-blue-800 mb-3">
+      Sugerencias de búsqueda:
+    </h4>
+    <div id="suggestions-list" class="flex flex-wrap gap-2 justify-center">
+    </div>
+  </div>
 </div>
 
+<script
+  define:vars={{ examenesJson, categories, tiposExamen, minPrice, maxPrice }}
+>
+  let searchTimeout;
 
-<script define:vars={{ examenesJson, categories, tiposExamen, minPrice, maxPrice }}>
-    
-    let searchTimeout;
-    
-    /**
-     * Función principal de inicialización que se ejecuta al cargar y después de cada astro:after-swap.
-     * Toda la lógica y listeners deben estar dentro de esta función para que se reactiven.
-     */
-    function initializeSearch() {
-        
-        // ** (1) PARSEO DE DATOS Y ESTADO **
-        // Se define aquí para asegurar que 'allExamenes' es accesible en cada inicialización
-        const allExamenes = JSON.parse(examenesJson);
-        
-        // ** (2) REFERENCIAS A ELEMENTOS DEL DOM **
-        // Se buscan aquí para asegurar que se refieren al DOM actual después del "swap"
-        const searchInput = document.getElementById('search-input');
-        const searchResults = document.getElementById('search-results');
-        const noResults = document.getElementById('no-results');
-        const searchSuggestions = document.getElementById('search-suggestions');
-        const suggestionsList = document.getElementById('suggestions-list');
-        const categorySections = document.querySelectorAll('.category-section');
-        const clearSearchBtn = document.getElementById('clear-search');
-        const searchLoading = document.getElementById('search-loading');
-        const searchHistory = document.getElementById('search-history');
-        const recentSearches = document.getElementById('recent-searches');
-        const clearHistoryBtn = document.getElementById('clear-history');
-        const searchStats = document.getElementById('search-stats');
-        const resultsCount = document.getElementById('results-count');
-        const toggleFiltersBtn = document.getElementById('toggle-filters');
-        const filtersContent = document.getElementById('filters-content');
-        const categoryFilter = document.getElementById('category-filter');
-        const typeFilter = document.getElementById('type-filter');
-        const priceFilter = document.getElementById('price-filter');
-        const priceDisplay = document.getElementById('price-display');
-        const clearFiltersBtn = document.getElementById('clear-filters');
-        const suggestSearchBtn = document.getElementById('suggest-search');
+  /**
+   * Función principal de inicialización.
+   */
+  function initializeSearch() {
+    // ** (1) PARSEO DE DATOS Y ESTADO **
+    const allExamenes = JSON.parse(examenesJson);
 
-        let currentFilters = {
-            category: categoryFilter?.value || '',
-            type: typeFilter?.value || '',
-            maxPrice: parseFloat(priceFilter?.value) || maxPrice
-        };
+    // ** (2) REFERENCIAS A ELEMENTOS DEL DOM **
+    const searchInput = document.getElementById("search-input");
+    const searchResults = document.getElementById("search-results");
+    const noResults = document.getElementById("no-results");
+    const searchSuggestions = document.getElementById("search-suggestions");
+    const suggestionsList = document.getElementById("suggestions-list");
+    const categorySections = document.querySelectorAll(".category-section");
+    const clearSearchBtn = document.getElementById("clear-search");
+    const searchLoading = document.getElementById("search-loading");
+    const searchHistory = document.getElementById("search-history");
+    const recentSearches = document.getElementById("recent-searches");
+    const clearHistoryBtn = document.getElementById("clear-history");
+    const searchStats = document.getElementById("search-stats");
+    const resultsCount = document.getElementById("results-count");
+    const toggleFiltersBtn = document.getElementById("toggle-filters");
+    const filtersContent = document.getElementById("filters-content");
+    const categoryFilter = document.getElementById("category-filter");
+    const typeFilter = document.getElementById("type-filter");
+    const priceFilter = document.getElementById("price-filter");
+    const priceDisplay = document.getElementById("price-display");
+    const clearFiltersBtn = document.getElementById("clear-filters");
+    const suggestSearchBtn = document.getElementById("suggest-search");
 
-        let searchHistoryList = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+    let currentFilters = {
+      category: categoryFilter?.value || "",
+      type: typeFilter?.value || "",
+      maxPrice: parseFloat(priceFilter?.value) || maxPrice,
+    };
 
-        // ** (3) FUNCIONES DE UTILIDAD (Deben ser redefinidas o hechas globales) **
-        // Las definimos aquí para que cierren sobre el contexto del DOM actual.
-        function normalizeText(text) {
-            return text
-                .toLowerCase()
-                .trim()
-                .normalize("NFD") 
-                .replace(/[\u0300-\u036f]/g, '') 
-                .replace(/[ñ]/g, 'n') 
-                .replace(/[ç]/g, 'c'); 
-        }
-        
-        function getDeliveryTime(tipoExamen) {
-            const normalizedType = normalizeText(tipoExamen);
-            if (normalizedType.includes('citometria')) {
-                return '5 Días Hábiles';
-            }
-            return '10 Días Hábiles'; 
-        }
+    let searchHistoryList = JSON.parse(
+      localStorage.getItem("searchHistory") || "[]"
+    );
 
-        function createExamenCard(examen, searchQuery = '') {
-    // ❌ ELIMINADA: La variable priceFormatted ya no es necesaria.
-    // const priceFormatted = examen.toLocaleString('es-ES', { style: 'currency', currency: 'USD' });
-    
-    // Se mantiene la función de tiempo de entrega, ya que no depende del precio.
-    const deliveryTime = getDeliveryTime(examen.tipoExamen);
-    
-    // NOTA: La función highlightText y normalizeText deben estar definidas globalmente o aquí.
-    // Asumimos que highlightText y normalizeText son correctas.
+    // ** (3) FUNCIONES DE UTILIDAD **
+    function normalizeText(text) {
+      return text
+        .toLowerCase()
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[ñ]/g, "n")
+        .replace(/[ç]/g, "c");
+    }
 
-    function highlightText(text, query) {
+    function getDeliveryTime(tipoExamen) {
+      const normalizedType = normalizeText(tipoExamen);
+      if (normalizedType.includes("citometria")) {
+        return "5 Días Hábiles";
+      }
+      return "10 Días Hábiles";
+    }
+
+    function createExamenCard(examen, searchQuery = "") {
+      const deliveryTime = getDeliveryTime(examen.tipoExamen);
+
+      function highlightText(text, query) {
         if (!query) return text;
-        
+
         const normalizedText = normalizeText(text);
         const normalizedQuery = normalizeText(query);
         const index = normalizedText.indexOf(normalizedQuery);
         if (index === -1) return text;
-        
+
         let originalIndex = 0;
         let normalizedIndex = 0;
-        
+
         while (normalizedIndex < index && originalIndex < text.length) {
-            const char = text[originalIndex];
-            const normalizedChar = normalizeText(char);
-            normalizedIndex += normalizedChar.length;
-            originalIndex++;
+          const char = text[originalIndex];
+          const normalizedChar = normalizeText(char);
+          normalizedIndex += normalizedChar.length;
+          originalIndex++;
         }
-        
+
         let originalQueryLength = 0;
         let currentNormalizedLength = 0;
         let i = 0;
-        while (currentNormalizedLength < normalizedQuery.length && (originalIndex + i) < text.length) {
-            const char = text[originalIndex + i];
-            const normalizedChar = normalizeText(char);
-            currentNormalizedLength += normalizedChar.length;
-            originalQueryLength++;
-            i++;
+        while (
+          currentNormalizedLength < normalizedQuery.length &&
+          originalIndex + i < text.length
+        ) {
+          const char = text[originalIndex + i];
+          const normalizedChar = normalizeText(char);
+          currentNormalizedLength += normalizedChar.length;
+          originalQueryLength++;
+          i++;
         }
 
         const before = text.substring(0, originalIndex);
-        const match = text.substring(originalIndex, originalIndex + originalQueryLength);
+        const match = text.substring(
+          originalIndex,
+          originalIndex + originalQueryLength
+        );
         const after = text.substring(originalIndex + originalQueryLength);
-        
+
         return `${before}<mark class="bg-yellow-200 px-1 rounded">${match}</mark>${after}`;
-    }
-    
-    return `
+      }
+
+      // IMPORTANTE: Solo usamos highlightText en el título.
+      // La descripción y el tipo se muestran tal cual, sin resaltar.
+      return `
         <a 
             href="/examenes/${examen.slug}" 
             class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
         >
             <h3 class="text-xl font-bold text-gray-800 mb-2">${highlightText(examen.title, searchQuery)}</h3>
-            <p class="text-sm text-gray-600 mb-3 line-clamp-2">${highlightText(examen.description, searchQuery)}</p>
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">${examen.description}</p>
             
             <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                <span class="text-sm font-semibold text-blue-600 uppercase">Tipo: ${highlightText(examen.tipoExamen, searchQuery)}</span>
+                <span class="text-sm font-semibold text-blue-600 uppercase">Tipo: ${examen.tipoExamen}</span>
                 
                 </div>
             
@@ -301,331 +388,354 @@ const maxPrice = Math.max(...allExamenes.map(examen => examen.data.price));
             </div>
         </a>
     `;
-}
-
-        function filterExamenes(query, filters) {
-            return allExamenes.filter(examen => {
-                // Filtro por texto de búsqueda (sin acentos)
-                if (query) {
-                    const normalizedQuery = normalizeText(query);
-                    const searchFields = [
-                        examen.title,
-                        examen.description,
-                        examen.category,
-                        examen.tipoExamen
-                    ].join(' ');
-                    
-                    const normalizedSearchFields = normalizeText(searchFields);
-                    
-                    if (!normalizedSearchFields.includes(normalizedQuery)) {
-                        return false;
-                    }
-                }
-
-                // Filtro por categoría
-                if (filters.category && examen.category !== filters.category) {
-                    return false;
-                }
-
-                // Filtro por tipo de examen
-                if (filters.type && examen.tipoExamen !== filters.type) {
-                    return false;
-                }
-
-                // Filtro por precio máximo
-                if (examen.price > filters.maxPrice) {
-                    return false;
-                }
-
-                return true;
-            });
-        }
-
-        // ** (4) FUNCIONES DE ACCIÓN **
-        
-        function removeExistingPagination() {
-            let nextElement = searchResults.nextElementSibling;
-            while(nextElement && nextElement.classList.contains('flex') && nextElement.classList.contains('justify-center')) {
-                const temp = nextElement.nextElementSibling;
-                nextElement.remove();
-                nextElement = temp;
-            }
-        }
-
-        function createPaginationControls(currentPage, totalPages) {
-            let pagination = '<div class="flex justify-center mt-8 space-x-2">';
-            
-            if (currentPage > 1) {
-                pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="window.goToPage(${currentPage - 1})">←</button>`;
-            }
-            
-            for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
-                const activeClass = i === currentPage ? 'bg-indigo-600 text-white' : 'bg-gray-200 hover:bg-gray-300';
-                pagination += `<button class="px-3 py-2 rounded ${activeClass}" onclick="window.goToPage(${i})">${i}</button>`;
-            }
-            
-            if (currentPage < totalPages) {
-                pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="window.goToPage(${currentPage + 1})">→</button>`;
-            }
-            
-            pagination += '</div>';
-            return pagination;
-        }
-
-        function displaySearchResults(filteredExamenes, query = '') {
-            const count = filteredExamenes.length;
-            
-            removeExistingPagination();
-            resultsCount.textContent = count;
-            searchStats.classList.toggle('hidden', count === 0);
-
-            if (count > 0) {
-                categorySections.forEach(section => section.style.display = 'none');
-                searchResults.style.display = 'grid';
-                noResults.classList.add('hidden');
-                searchSuggestions.classList.add('hidden');
-                
-                const itemsPerPage = 12;
-                const totalPages = Math.ceil(count / itemsPerPage);
-                
-                function renderPage(page) {
-                    const startIndex = (page - 1) * itemsPerPage;
-                    const endIndex = Math.min(startIndex + itemsPerPage, count);
-                    const pageItems = filteredExamenes.slice(startIndex, endIndex);
-                    
-                    searchResults.innerHTML = pageItems.map(examen => 
-                        createExamenCard(examen, query)
-                    ).join('');
-                    
-                    removeExistingPagination();
-                    
-                    if (totalPages > 1) {
-                        const pagination = createPaginationControls(page, totalPages);
-                        searchResults.insertAdjacentHTML('afterend', pagination);
-                    }
-                }
-                
-                renderPage(1);
-                
-            } else {
-                categorySections.forEach(section => section.style.display = 'none');
-                searchResults.style.display = 'none';
-                noResults.classList.remove('hidden');
-                searchStats.classList.add('hidden');
-                generateSearchSuggestions();
-            }
-        }
-
-        function addToSearchHistory(query) {
-            if (!query || query.length < 2) return;
-            query = query.trim();
-            
-            searchHistoryList = searchHistoryList.filter(item => normalizeText(item) !== normalizeText(query));
-            searchHistoryList.unshift(query);
-            searchHistoryList = searchHistoryList.slice(0, 5);
-            
-            localStorage.setItem('searchHistory', JSON.stringify(searchHistoryList));
-            updateSearchHistoryUI();
-        }
-
-        function updateSearchHistoryUI() {
-            if (searchHistoryList.length === 0) {
-                searchHistory.classList.add('hidden');
-                return;
-            }
-            
-            searchHistory.classList.remove('hidden');
-            recentSearches.innerHTML = searchHistoryList.map(query => 
-                `<button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition duration-150" onclick="window.performSearch('${query}', true)">${query}</button>`
-            ).join('');
-        }
-
-        function generateSearchSuggestions() {
-            const suggestions = [
-                ...categories.slice(0, 3),
-                ...tiposExamen.slice(0, 3),
-                'análisis', 'prueba', 'examen', 'laboratorio'
-            ].slice(0, 6);
-            
-            suggestionsList.innerHTML = suggestions.map(suggestion => 
-                `<button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition duration-150" onclick="window.performSearch('${suggestion}', true)">${suggestion}</button>`
-            ).join('');
-            
-            searchSuggestions.classList.remove('hidden');
-        }
-
-        function clearSearch() {
-            searchInput.value = '';
-            searchResults.style.display = 'none';
-            noResults.classList.add('hidden');
-            searchSuggestions.classList.add('hidden');
-            searchStats.classList.add('hidden');
-            searchLoading.classList.add('hidden'); 
-            clearSearchBtn.classList.add('hidden');
-            
-            removeExistingPagination();
-            categorySections.forEach(section => section.style.display = 'block');
-        }
-
-        function clearFilters() {
-            currentFilters = {
-                category: '',
-                type: '',
-                maxPrice: maxPrice
-            };
-            
-            categoryFilter.value = '';
-            typeFilter.value = '';
-            priceFilter.value = maxPrice;
-            priceDisplay.textContent = `$${maxPrice}`;
-            
-            const currentQuery = searchInput.value.trim();
-            if (currentQuery) {
-                performSearch(currentQuery);
-            } else {
-                clearSearch();
-            }
-        }
-
-        function performSearch(query = '', updateInput = false) {
-            const trimmedQuery = query.trim();
-
-            if (!trimmedQuery && !currentFilters.category && !currentFilters.type && currentFilters.maxPrice >= maxPrice) {
-                clearSearch();
-                return;
-            }
-
-            if (updateInput) {
-                searchInput.value = trimmedQuery;
-            }
-
-            searchLoading.classList.remove('hidden');
-            
-            setTimeout(() => {
-                const filteredExamenes = filterExamenes(trimmedQuery, currentFilters);
-                displaySearchResults(filteredExamenes, trimmedQuery);
-                
-                searchLoading.classList.add('hidden');
-                
-                if (trimmedQuery && filteredExamenes.length > 0) {
-                    addToSearchHistory(trimmedQuery);
-                }
-                
-                clearSearchBtn.classList.toggle('hidden', !trimmedQuery);
-                
-            }, 100);
-        }
-
-        function debounce(func, wait) {
-            return function executedFunction(...args) {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    func(...args);
-                }, wait);
-            };
-        }
-
-        // ** (5) LISTENERS DE EVENTOS **
-
-        // Debemos asegurarnos de que solo se añade un listener por elemento, 
-        // pero dado que el DOM se reemplaza en cada swap, podemos añadirlo directamente.
-
-        // Limpiar listeners existentes (opcional pero más seguro)
-        searchInput.removeEventListener('input', searchInput.handleInput);
-        clearSearchBtn.removeEventListener('click', clearSearch);
-        clearFiltersBtn.removeEventListener('click', clearFilters);
-        suggestSearchBtn.removeEventListener('click', generateSearchSuggestions);
-        clearHistoryBtn.removeEventListener('click', clearHistory);
-        toggleFiltersBtn.removeEventListener('click', toggleFilters);
-        categoryFilter.removeEventListener('change', handleFilterChange);
-        typeFilter.removeEventListener('change', handleFilterChange);
-        priceFilter.removeEventListener('input', handleFilterChange);
-
-
-        function handleInput(event) {
-            const query = event.target.value.trim();
-            if (!query) {
-                clearSearch();
-                return;
-            }
-            debounce(performSearch, 300)(query);
-        }
-        searchInput.handleInput = handleInput;
-        searchInput.addEventListener('input', handleInput);
-
-
-        clearSearchBtn.addEventListener('click', clearSearch);
-        clearFiltersBtn.addEventListener('click', clearFilters);
-        suggestSearchBtn.addEventListener('click', generateSearchSuggestions);
-        clearHistoryBtn.addEventListener('click', clearHistory);
-
-        function clearHistory() {
-            searchHistoryList = [];
-            localStorage.removeItem('searchHistory');
-            updateSearchHistoryUI();
-        }
-
-        function toggleFilters() {
-            filtersContent.classList.toggle('hidden');
-            const icon = toggleFiltersBtn.querySelector('svg');
-            icon.classList.toggle('rotate-180');
-        }
-        toggleFiltersBtn.addEventListener('click', toggleFilters);
-
-        function handleFilterChange(event) {
-            if (event.target.id === 'category-filter') {
-                currentFilters.category = event.target.value;
-            } else if (event.target.id === 'type-filter') {
-                currentFilters.type = event.target.value;
-            } else if (event.target.id === 'price-filter') {
-                currentFilters.maxPrice = parseInt(event.target.value);
-                priceDisplay.textContent = `$${currentFilters.maxPrice}`;
-            }
-            performSearch(searchInput.value);
-        }
-
-        categoryFilter.addEventListener('change', handleFilterChange);
-        typeFilter.addEventListener('change', handleFilterChange);
-        priceFilter.addEventListener('input', handleFilterChange);
-
-        // ** (6) Inicialización Final y Exposición Global **
-
-        updateSearchHistoryUI();
-        priceDisplay.textContent = `$${currentFilters.maxPrice}`;
-
-        // Exponer funciones globales para los botones (historial y paginación)
-        window.goToPage = function(page) {
-            const query = searchInput.value.trim();
-            const filteredExamenes = filterExamenes(query, currentFilters);
-            const itemsPerPage = 12;
-            const totalPages = Math.ceil(filteredExamenes.length / itemsPerPage);
-
-            const startIndex = (page - 1) * itemsPerPage;
-            const endIndex = Math.min(startIndex + itemsPerPage, filteredExamenes.length);
-            const pageItems = filteredExamenes.slice(startIndex, endIndex);
-            
-            searchResults.innerHTML = pageItems.map(examen => createExamenCard(examen, query)).join('');
-            
-            removeExistingPagination();
-            if (totalPages > 1) {
-                const pagination = createPaginationControls(page, totalPages);
-                searchResults.insertAdjacentHTML('afterend', pagination);
-            }
-            window.scrollTo({ top: searchInput.offsetTop, behavior: 'smooth' });
-        };
-        
-        window.performSearch = performSearch; // Exponer la función principal
-
-        // Si la página se está restaurando (navegador guarda el valor del input), ejecutar búsqueda
-        if (searchInput.value.trim() || currentFilters.category || currentFilters.type || currentFilters.maxPrice < maxPrice) {
-            performSearch(searchInput.value);
-        }
     }
-    
-    // 1. Ejecutar la inicialización al cargar la página por primera vez
-    initializeSearch();
 
-    // 2. Ejecutar la inicialización después de cada transición de página de Astro (la SOLUCIÓN)
-    document.addEventListener('astro:after-swap', initializeSearch);
-        
-</script>                                                                                                                   
+    function filterExamenes(query, filters) {
+      return allExamenes.filter((examen) => {
+        // 1. FILTRO POR TEXTO (SOLO NOMBRE)
+        if (query) {
+          const normalizedQuery = normalizeText(query);
+          
+          // MODIFICACIÓN: Solo buscamos en el título
+          const searchFields = examen.title;
+
+          const normalizedSearchFields = normalizeText(searchFields);
+
+          if (!normalizedSearchFields.includes(normalizedQuery)) {
+            return false;
+          }
+        }
+
+        // 2. FILTRO POR CATEGORÍA
+        if (filters.category && examen.category !== filters.category) {
+          return false;
+        }
+
+        // 3. FILTRO POR TIPO
+        if (filters.type && examen.tipoExamen !== filters.type) {
+          return false;
+        }
+
+        // 4. FILTRO POR PRECIO
+        if (examen.price > filters.maxPrice) {
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    // ** (4) FUNCIONES DE ACCIÓN **
+
+    function removeExistingPagination() {
+      let nextElement = searchResults.nextElementSibling;
+      while (
+        nextElement &&
+        nextElement.classList.contains("flex") &&
+        nextElement.classList.contains("justify-center")
+      ) {
+        const temp = nextElement.nextElementSibling;
+        nextElement.remove();
+        nextElement = temp;
+      }
+    }
+
+    function createPaginationControls(currentPage, totalPages) {
+      let pagination = '<div class="flex justify-center mt-8 space-x-2">';
+
+      if (currentPage > 1) {
+        pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="window.goToPage(${currentPage - 1})">←</button>`;
+      }
+
+      for (
+        let i = Math.max(1, currentPage - 2);
+        i <= Math.min(totalPages, currentPage + 2);
+        i++
+      ) {
+        const activeClass =
+          i === currentPage
+            ? "bg-indigo-600 text-white"
+            : "bg-gray-200 hover:bg-gray-300";
+        pagination += `<button class="px-3 py-2 rounded ${activeClass}" onclick="window.goToPage(${i})">${i}</button>`;
+      }
+
+      if (currentPage < totalPages) {
+        pagination += `<button class="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300" onclick="window.goToPage(${currentPage + 1})">→</button>`;
+      }
+
+      pagination += "</div>";
+      return pagination;
+    }
+
+    function displaySearchResults(filteredExamenes, query = "") {
+      const count = filteredExamenes.length;
+
+      removeExistingPagination();
+      resultsCount.textContent = count;
+      searchStats.classList.toggle("hidden", count === 0);
+
+      if (count > 0) {
+        categorySections.forEach((section) => (section.style.display = "none"));
+        searchResults.style.display = "grid";
+        noResults.classList.add("hidden");
+        searchSuggestions.classList.add("hidden");
+
+        const itemsPerPage = 12;
+        const totalPages = Math.ceil(count / itemsPerPage);
+
+        function renderPage(page) {
+          const startIndex = (page - 1) * itemsPerPage;
+          const endIndex = Math.min(startIndex + itemsPerPage, count);
+          const pageItems = filteredExamenes.slice(startIndex, endIndex);
+
+          searchResults.innerHTML = pageItems
+            .map((examen) => createExamenCard(examen, query))
+            .join("");
+
+          removeExistingPagination();
+
+          if (totalPages > 1) {
+            const pagination = createPaginationControls(page, totalPages);
+            searchResults.insertAdjacentHTML("afterend", pagination);
+          }
+        }
+
+        renderPage(1);
+      } else {
+        categorySections.forEach((section) => (section.style.display = "none"));
+        searchResults.style.display = "none";
+        noResults.classList.remove("hidden");
+        searchStats.classList.add("hidden");
+        generateSearchSuggestions();
+      }
+    }
+
+    function addToSearchHistory(query) {
+      if (!query || query.length < 2) return;
+      query = query.trim();
+
+      searchHistoryList = searchHistoryList.filter(
+        (item) => normalizeText(item) !== normalizeText(query)
+      );
+      searchHistoryList.unshift(query);
+      searchHistoryList = searchHistoryList.slice(0, 5);
+
+      localStorage.setItem("searchHistory", JSON.stringify(searchHistoryList));
+      updateSearchHistoryUI();
+    }
+
+    function updateSearchHistoryUI() {
+      if (searchHistoryList.length === 0) {
+        searchHistory.classList.add("hidden");
+        return;
+      }
+
+      searchHistory.classList.remove("hidden");
+      recentSearches.innerHTML = searchHistoryList
+        .map(
+          (query) =>
+            `<button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition duration-150" onclick="window.performSearch('${query}', true)">${query}</button>`
+        )
+        .join("");
+    }
+
+    function generateSearchSuggestions() {
+      const suggestions = [
+        ...categories.slice(0, 3),
+        ...tiposExamen.slice(0, 3),
+        "análisis",
+        "prueba",
+        "examen",
+        "laboratorio",
+      ].slice(0, 6);
+
+      suggestionsList.innerHTML = suggestions
+        .map(
+          (suggestion) =>
+            `<button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm hover:bg-blue-200 transition duration-150" onclick="window.performSearch('${suggestion}', true)">${suggestion}</button>`
+        )
+        .join("");
+
+      searchSuggestions.classList.remove("hidden");
+    }
+
+    function clearSearch() {
+      searchInput.value = "";
+      searchResults.style.display = "none";
+      noResults.classList.add("hidden");
+      searchSuggestions.classList.add("hidden");
+      searchStats.classList.add("hidden");
+      searchLoading.classList.add("hidden");
+      clearSearchBtn.classList.add("hidden");
+
+      removeExistingPagination();
+      categorySections.forEach((section) => (section.style.display = "block"));
+    }
+
+    function clearFilters() {
+      currentFilters = {
+        category: "",
+        type: "",
+        maxPrice: maxPrice,
+      };
+
+      categoryFilter.value = "";
+      typeFilter.value = "";
+      priceFilter.value = maxPrice;
+      priceDisplay.textContent = `$${maxPrice}`;
+
+      const currentQuery = searchInput.value.trim();
+      if (currentQuery) {
+        performSearch(currentQuery);
+      } else {
+        clearSearch();
+      }
+    }
+
+    function performSearch(query = "", updateInput = false) {
+      const trimmedQuery = query.trim();
+
+      if (
+        !trimmedQuery &&
+        !currentFilters.category &&
+        !currentFilters.type &&
+        currentFilters.maxPrice >= maxPrice
+      ) {
+        clearSearch();
+        return;
+      }
+
+      if (updateInput) {
+        searchInput.value = trimmedQuery;
+      }
+
+      searchLoading.classList.remove("hidden");
+
+      setTimeout(() => {
+        const filteredExamenes = filterExamenes(trimmedQuery, currentFilters);
+        displaySearchResults(filteredExamenes, trimmedQuery);
+
+        searchLoading.classList.add("hidden");
+
+        if (trimmedQuery && filteredExamenes.length > 0) {
+          addToSearchHistory(trimmedQuery);
+        }
+
+        clearSearchBtn.classList.toggle("hidden", !trimmedQuery);
+      }, 100);
+    }
+
+    function debounce(func, wait) {
+      return function executedFunction(...args) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          func(...args);
+        }, wait);
+      };
+    }
+
+    // ** (5) LISTENERS DE EVENTOS **
+
+    searchInput.removeEventListener("input", searchInput.handleInput);
+    clearSearchBtn.removeEventListener("click", clearSearch);
+    clearFiltersBtn.removeEventListener("click", clearFilters);
+    suggestSearchBtn.removeEventListener("click", generateSearchSuggestions);
+    clearHistoryBtn.removeEventListener("click", clearHistory);
+    toggleFiltersBtn.removeEventListener("click", toggleFilters);
+    categoryFilter.removeEventListener("change", handleFilterChange);
+    typeFilter.removeEventListener("change", handleFilterChange);
+    priceFilter.removeEventListener("input", handleFilterChange);
+
+    function handleInput(event) {
+      const query = event.target.value.trim();
+      if (!query) {
+        clearSearch();
+        return;
+      }
+      debounce(performSearch, 300)(query);
+    }
+    searchInput.handleInput = handleInput;
+    searchInput.addEventListener("input", handleInput);
+
+    clearSearchBtn.addEventListener("click", clearSearch);
+    clearFiltersBtn.addEventListener("click", clearFilters);
+    suggestSearchBtn.addEventListener("click", generateSearchSuggestions);
+    clearHistoryBtn.addEventListener("click", clearHistory);
+
+    function clearHistory() {
+      searchHistoryList = [];
+      localStorage.removeItem("searchHistory");
+      updateSearchHistoryUI();
+    }
+
+    function toggleFilters() {
+      filtersContent.classList.toggle("hidden");
+      const icon = toggleFiltersBtn.querySelector("svg");
+      icon.classList.toggle("rotate-180");
+    }
+    toggleFiltersBtn.addEventListener("click", toggleFilters);
+
+    function handleFilterChange(event) {
+      if (event.target.id === "category-filter") {
+        currentFilters.category = event.target.value;
+      } else if (event.target.id === "type-filter") {
+        currentFilters.type = event.target.value;
+      } else if (event.target.id === "price-filter") {
+        currentFilters.maxPrice = parseInt(event.target.value);
+        priceDisplay.textContent = `$${currentFilters.maxPrice}`;
+      }
+      performSearch(searchInput.value);
+    }
+
+    categoryFilter.addEventListener("change", handleFilterChange);
+    typeFilter.addEventListener("change", handleFilterChange);
+    priceFilter.addEventListener("input", handleFilterChange);
+
+    // ** (6) Inicialización Final **
+
+    updateSearchHistoryUI();
+    priceDisplay.textContent = `$${currentFilters.maxPrice}`;
+
+    window.goToPage = function (page) {
+      const query = searchInput.value.trim();
+      const filteredExamenes = filterExamenes(query, currentFilters);
+      const itemsPerPage = 12;
+      const totalPages = Math.ceil(filteredExamenes.length / itemsPerPage);
+
+      const startIndex = (page - 1) * itemsPerPage;
+      const endIndex = Math.min(
+        startIndex + itemsPerPage,
+        filteredExamenes.length
+      );
+      const pageItems = filteredExamenes.slice(startIndex, endIndex);
+
+      searchResults.innerHTML = pageItems
+        .map((examen) => createExamenCard(examen, query))
+        .join("");
+
+      removeExistingPagination();
+      if (totalPages > 1) {
+        const pagination = createPaginationControls(page, totalPages);
+        searchResults.insertAdjacentHTML("afterend", pagination);
+      }
+      window.scrollTo({ top: searchInput.offsetTop, behavior: "smooth" });
+    };
+
+    window.performSearch = performSearch;
+
+    if (
+      searchInput.value.trim() ||
+      currentFilters.category ||
+      currentFilters.type ||
+      currentFilters.maxPrice < maxPrice
+    ) {
+      performSearch(searchInput.value);
+    }
+  }
+
+  // Inicialización inicial
+  initializeSearch();
+
+  // Compatibilidad con ClientRouter (Astro View Transitions)
+  document.addEventListener("astro:after-swap", initializeSearch);
+</script>
