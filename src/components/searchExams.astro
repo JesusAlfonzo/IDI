@@ -395,7 +395,7 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
         // 1. FILTRO POR TEXTO (SOLO NOMBRE)
         if (query) {
           const normalizedQuery = normalizeText(query);
-          
+
           // MODIFICACIÓN: Solo buscamos en el título
           const searchFields = examen.title;
 
