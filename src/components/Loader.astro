@@ -1,0 +1,61 @@
+---
+// src/components/Loader.astro
+---
+
+<div id="loader" class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white">
+  
+  <svg class="h-16 w-16 text-blue-600 custom-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+  </svg>
+
+  <span class="mt-4 font-semibold text-gray-500">Cargando IDI...</span>
+</div>
+
+<style>
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .custom-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Clase para el efecto de desvanecimiento suave */
+  .fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+  }
+</style>
+
+<script>
+  // Usamos 'astro:page-load' para que funcione con el router
+  document.addEventListener('astro:page-load', () => {
+    const loader = document.getElementById('loader');
+    
+    if (!loader) return;
+
+    // 1. Preguntamos al navegador: "¿Ya mostramos el loader en esta sesión?"
+    const hasShownLoader = sessionStorage.getItem('idi-loader-shown');
+
+    if (hasShownLoader) {
+      // SI YA LO MOSTRAMOS: Lo ocultamos INMEDIATAMENTE (sin animación)
+      // Esto evita que el usuario lo vea al volver al Home desde otra sección.
+      loader.style.display = 'none';
+    } else {
+      // SI ES LA PRIMERA VEZ: 
+      // Dejamos que se vea un momento (ej. 800ms) para dar efecto de carga
+      setTimeout(() => {
+        // Agregamos la clase que baja la opacidad
+        loader.classList.add('fade-out');
+        
+        // Esperamos a que termine la transición y lo quitamos
+        setTimeout(() => {
+          loader.style.display = 'none';
+          
+          // GUARDAMOS LA MARCA: "Ya vi el loader"
+          sessionStorage.setItem('idi-loader-shown', 'true');
+        }, 500); // 500ms coincide con la transición CSS
+      }, 800); // Tiempo mínimo que el loader se queda en pantalla
+    }
+  });
+</script>

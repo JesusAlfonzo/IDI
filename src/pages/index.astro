@@ -5,11 +5,16 @@ import Slider from "@components/Slider.astro";
 import Divider from "@components/Divider.astro";
 import Card from "@components/Card.astro";
 import WelcomeModal from "@components/WelcomeModal.astro";
+import Loader from "@components/Loader.astro";
+
+
 // Si SearchExams usa una ruta relativa, deberías usar el alias de raíz si existe:
 // import SearchExams from '~/components/searchExams.astro';
 ---
 
 <Layout title="IDI - Bienvenido">
+		<Loader />
+
 
   <WelcomeModal />
   
