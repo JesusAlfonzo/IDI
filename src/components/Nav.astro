@@ -2,19 +2,25 @@
   <nav
     class="grid grid-cols-2 md:grid-cols-[1fr_auto_1fr] border-b-1 border-gray-300 shadow-lg h-20 items-center px-4 bg-white/95 backdrop-blur-3xl animate-fade-in"
   >
-    <div class="flex justify-start">
+    <div class="flex justify-start items-center">
       <a
-        class="group relative transition-colors duration-300 font-semibold"
         href="/"
+        class="flex items-center gap-2 transition-opacity hover:opacity-90"
       >
         <img
           src="/images/logo-idi-solo.webp"
           alt="Logo IDI"
-          class="h-8 w-auto transition-all duration-300"
+          class="h-8 w-auto"
         />
-        <span
-          class="absolute left-0 -bottom-1 h-0.5 w-0 bg-indigo-600 transition-all duration-300 group-hover:w-full"
-        ></span>
+        <div class="flex flex-col leading-tight border-l border-gray-300 pl-2">
+          <span
+            class="text-[9px] uppercase tracking-tighter text-gray-400 font-bold"
+            >Instituto de</span
+          >
+          <span class="text-sm font-bold text-blue-900 tracking-tight"
+            >Inmunología</span
+          >
+        </div>
       </a>
     </div>
 
@@ -23,19 +29,7 @@
       aria-controls="mobile-menu"
       aria-expanded="false"
     >
-      <svg
-        class="w-6 h-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4 6h16M4 12h16m-7 6h7"></path>
-      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" class="w-6 h-6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
     </button>
 
     <ul
@@ -211,19 +205,7 @@
         class="menu-toggle-close self-end text-gray-700 hover:text-indigo-600 transition-colors duration-300 mb-8"
         aria-label="Cerrar menú"
       >
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" class="w-6 h-6" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/></svg>
       </button>
 
       <ul class="flex flex-col gap-6 text-xl font-semibold">
@@ -237,7 +219,8 @@
         <li><a class="hover:text-indigo-600" href="/#contacto">Contacto</a></li>
         <li>
           <a class="hover:text-indigo-600" href="/quienes-somos"
-            >Quiénes Somos</a>
+            >Quiénes Somos</a
+          >
         </li>
       </ul>
 
