@@ -5,6 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 import vercel from '@astrojs/vercel';
 
+import sitemap from '@astrojs/sitemap';
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -16,5 +18,8 @@ export default defineConfig({
   //   port:3000
   // },
 
-  adapter: vercel()
+  adapter: vercel(),
+
+  site: 'https://idiucv.vercel.app/',
+  integrations: [sitemap()]
 });

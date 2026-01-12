@@ -1,0 +1,10 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Evita que se indexen archivos de configuración o carpetas privadas si las tuvieras
+Disallow: /admin/
+Disallow: /private/
+
+# Indica dónde está tu mapa del sitio (Cambia la IP/URL por la real)
+Sitemap: http://tu-ip-o-dominio.com/sitemap-index.xml
