@@ -16,7 +16,7 @@ Ayuda a predecir la **recaída de la enfermedad** o el rechazo del injerto si el
 
 Para solicitar una cita, contáctenos a través de nuestro **correo electrónico**:
 
-* **Correo Electrónico:** `inmunogenetica@gmail.com`
+* **Correo Electrónico:** inmunogenetica@gmail.com
 
 ### 2. Días y Horarios del Examen
 

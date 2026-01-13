@@ -18,7 +18,7 @@ Evaluación de la función fagocítica y de la respuesta inmune innata. Es esenc
 
 Para solicitar una cita, contáctenos a través de nuestro **correo electrónico** o llamando a nuestros **números de teléfono**:
 
-* **Correo Electrónico:** `laboratorio.idiucv@gmail.com`
+* **Correo Electrónico:** laboratorio.idiucv@gmail.com
 * **Teléfonos:** 0212-6053509 - 0212-6053508
 
 ### 2. Días y Horarios del Examen

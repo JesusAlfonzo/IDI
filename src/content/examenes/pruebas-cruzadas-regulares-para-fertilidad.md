@@ -16,7 +16,7 @@ Estudio inmunológico en el contexto de **infertilidad o pérdida gestacional re
 
 Para solicitar una cita, contáctenos a través de nuestro **correo electrónico**:
 
-* **Correo Electrónico:** `inmunogenetica@gmail.com`
+* **Correo Electrónico:** inmunogenetica@gmail.com
 
 ### 2. Días y Horarios del Examen
 

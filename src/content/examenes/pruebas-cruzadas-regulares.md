@@ -16,7 +16,7 @@ Determinación de la **compatibilidad inmediata** entre donante y receptor para 
 
 Para solicitar una cita, contáctenos a través de nuestro **correo electrónico**:
 
-* **Correo Electrónico:** `inmunogenetica@gmail.com`
+* **Correo Electrónico:** inmunogenetica@gmail.com
 
 ### 2. Días y Horarios del Examen
 
