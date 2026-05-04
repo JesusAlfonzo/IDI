@@ -5,6 +5,7 @@ pubDate: 2025-09-26
 category: Inmunodiagnóstico
 tipoExamen: Alergia Específica / Panel
 price: 48.00
+disabled: true
 ---
 
 ## Relevancia Clínica

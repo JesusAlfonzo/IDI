@@ -5,6 +5,7 @@ pubDate: 2025-09-26
 category: Pruebas Virales
 tipoExamen: Serología Viral
 price: 15.00
+disabled: true
 ---
 
 ## Relevancia Clínica

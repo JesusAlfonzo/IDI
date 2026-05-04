@@ -5,6 +5,7 @@ pubDate: 2025-09-26
 category: Citometría
 tipoExamen: Citometría de Flujo de Subpoblaciones
 price: 50.00
+disabled: true
 ---
 
 ## Relevancia Clínica

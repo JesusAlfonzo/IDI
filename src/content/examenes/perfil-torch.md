@@ -5,6 +5,7 @@ pubDate: 2025-09-26
 category: Pruebas Virales
 tipoExamen: Perfil Serológico
 price: 70.00
+disabled: true
 ---
 
 ## Relevancia Clínica

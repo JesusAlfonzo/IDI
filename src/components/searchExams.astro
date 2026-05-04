@@ -15,7 +15,7 @@ const examenesJson = JSON.stringify(
     category: examen.data.category,
     tipoExamen: examen.data.tipoExamen,
     price: examen.data.price,
-    slug: examen.slug,
+    slug: examen.id.replace(/\.md$/, ''),
   }))
 );
 
@@ -253,11 +253,7 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
   </div>
 </div>
 
-<script
-  define:vars={{ examenesJson, categories, tiposExamen, minPrice, maxPrice }}
->
-  let searchTimeout;
-
+<script define:vars={{ examenesJson, categories, tiposExamen, minPrice, maxPrice }}>
   /**
    * Función principal de inicialización.
    */
@@ -300,7 +296,9 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
 
     // ** (3) FUNCIONES DE UTILIDAD **
     function normalizeText(text) {
+      if (!text) return "";
       return text
+        .toString()
         .toLowerCase()
         .trim()
         .normalize("NFD")
@@ -321,16 +319,15 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
       const deliveryTime = getDeliveryTime(examen.tipoExamen);
 
       function highlightText(text, query) {
-        if (!query) return text;
-
+        if (!query) return text || "";
         const normalizedText = normalizeText(text);
         const normalizedQuery = normalizeText(query);
         const index = normalizedText.indexOf(normalizedQuery);
         if (index === -1) return text;
 
+        // Encontrar la posición original del texto resaltado
         let originalIndex = 0;
         let normalizedIndex = 0;
-
         while (normalizedIndex < index && originalIndex < text.length) {
           const char = text[originalIndex];
           const normalizedChar = normalizeText(char);
@@ -362,23 +359,20 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
         return `${before}<mark class="bg-yellow-200 px-1 rounded">${match}</mark>${after}`;
       }
 
-      // IMPORTANTE: Solo usamos highlightText en el título.
-      // La descripción y el tipo se muestran tal cual, sin resaltar.
       return `
         <a 
-            href="/examenes/${examen.slug}" 
+            href="/examenes/${examen.slug}"
             class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
         >
             <h3 class="text-xl font-bold text-gray-800 mb-2">${highlightText(examen.title, searchQuery)}</h3>
-            <p class="text-sm text-gray-600 mb-3 line-clamp-2">${examen.description}</p>
+            <p class="text-sm text-gray-600 mb-3 line-clamp-2">${examen.description || ""}</p>
             
             <div class="flex justify-between items-center pt-2 border-t border-gray-100">
-                <span class="text-sm font-semibold text-blue-600 uppercase">Tipo: ${examen.tipoExamen}</span>
-                
-                </div>
+                <span class="text-sm font-semibold text-blue-600 uppercase">Tipo: ${examen.tipoExamen || ""}</span>
+            </div>
             
             <div class="mt-2 flex justify-between items-center text-xs text-gray-500">
-                <span class="bg-gray-100 px-2 py-1 rounded">${examen.category}</span>
+                <span class="bg-gray-100 px-2 py-1 rounded">${examen.category || ""}</span>
                 <span class="flex items-center gap-1 text-sm font-medium text-indigo-600">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -392,16 +386,16 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
 
     function filterExamenes(query, filters) {
       return allExamenes.filter((examen) => {
-        // 1. FILTRO POR TEXTO (SOLO NOMBRE)
+        // 1. FILTRO POR TEXTO (buscar en título, descripción, categoría y tipo)
         if (query) {
           const normalizedQuery = normalizeText(query);
+          const searchableText = [
+            examen.title,
+            examen.category,
+            examen.tipoExamen
+          ].filter(Boolean).map(normalizeText).join(" ");
 
-          // MODIFICACIÓN: Solo buscamos en el título
-          const searchFields = examen.title;
-
-          const normalizedSearchFields = normalizeText(searchFields);
-
-          if (!normalizedSearchFields.includes(normalizedQuery)) {
+          if (!searchableText.includes(normalizedQuery)) {
             return false;
           }
         }
@@ -426,7 +420,7 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
     }
 
     // ** (4) FUNCIONES DE ACCIÓN **
-
+    
     function removeExistingPagination() {
       let nextElement = searchResults.nextElementSibling;
       while (
@@ -611,7 +605,8 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
 
       searchLoading.classList.remove("hidden");
 
-      setTimeout(() => {
+      // Usar requestAnimationFrame para no bloquear el hilo principal
+      requestAnimationFrame(() => {
         const filteredExamenes = filterExamenes(trimmedQuery, currentFilters);
         displaySearchResults(filteredExamenes, trimmedQuery);
 
@@ -622,58 +617,48 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
         }
 
         clearSearchBtn.classList.toggle("hidden", !trimmedQuery);
-      }, 100);
+      });
     }
 
-    function debounce(func, wait) {
-      return function executedFunction(...args) {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-          func(...args);
-        }, wait);
-      };
+    // ** (5) DEBOUNCE CORREGIDO **
+    let debounceTimer;
+    function debouncedSearch(query) {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        performSearch(query);
+      }, 300);
     }
 
-    // ** (5) LISTENERS DE EVENTOS **
-
-    searchInput.removeEventListener("input", searchInput.handleInput);
-    clearSearchBtn.removeEventListener("click", clearSearch);
-    clearFiltersBtn.removeEventListener("click", clearFilters);
-    suggestSearchBtn.removeEventListener("click", generateSearchSuggestions);
-    clearHistoryBtn.removeEventListener("click", clearHistory);
-    toggleFiltersBtn.removeEventListener("click", toggleFilters);
-    categoryFilter.removeEventListener("change", handleFilterChange);
-    typeFilter.removeEventListener("change", handleFilterChange);
-    priceFilter.removeEventListener("input", handleFilterChange);
-
-    function handleInput(event) {
+    // ** (6) LISTENERS DE EVENTOS **
+    
+    // Limpiar listeners anteriores para evitar duplicados
+    const newSearchInput = searchInput.cloneNode(true);
+    searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+    const refreshedSearchInput = document.getElementById("search-input");
+    
+    refreshedSearchInput.addEventListener("input", (event) => {
       const query = event.target.value.trim();
       if (!query) {
         clearSearch();
         return;
       }
-      debounce(performSearch, 300)(query);
-    }
-    searchInput.handleInput = handleInput;
-    searchInput.addEventListener("input", handleInput);
+      debouncedSearch(query);
+    });
 
     clearSearchBtn.addEventListener("click", clearSearch);
     clearFiltersBtn.addEventListener("click", clearFilters);
     suggestSearchBtn.addEventListener("click", generateSearchSuggestions);
-    clearHistoryBtn.addEventListener("click", clearHistory);
-
-    function clearHistory() {
+    clearHistoryBtn.addEventListener("click", () => {
       searchHistoryList = [];
       localStorage.removeItem("searchHistory");
       updateSearchHistoryUI();
-    }
+    });
 
-    function toggleFilters() {
+    toggleFiltersBtn.addEventListener("click", () => {
       filtersContent.classList.toggle("hidden");
       const icon = toggleFiltersBtn.querySelector("svg");
       icon.classList.toggle("rotate-180");
-    }
-    toggleFiltersBtn.addEventListener("click", toggleFilters);
+    });
 
     function handleFilterChange(event) {
       if (event.target.id === "category-filter") {
@@ -684,20 +669,20 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
         currentFilters.maxPrice = parseInt(event.target.value);
         priceDisplay.textContent = `$${currentFilters.maxPrice}`;
       }
-      performSearch(searchInput.value);
+      performSearch(refreshedSearchInput.value);
     }
 
     categoryFilter.addEventListener("change", handleFilterChange);
     typeFilter.addEventListener("change", handleFilterChange);
     priceFilter.addEventListener("input", handleFilterChange);
 
-    // ** (6) Inicialización Final **
-
+    // ** (7) Inicialización Final **
+    
     updateSearchHistoryUI();
     priceDisplay.textContent = `$${currentFilters.maxPrice}`;
 
     window.goToPage = function (page) {
-      const query = searchInput.value.trim();
+      const query = refreshedSearchInput.value.trim();
       const filteredExamenes = filterExamenes(query, currentFilters);
       const itemsPerPage = 12;
       const totalPages = Math.ceil(filteredExamenes.length / itemsPerPage);
@@ -718,18 +703,24 @@ const maxPrice = Math.max(...allExamenes.map((examen) => examen.data.price));
         const pagination = createPaginationControls(page, totalPages);
         searchResults.insertAdjacentHTML("afterend", pagination);
       }
-      window.scrollTo({ top: searchInput.offsetTop, behavior: "smooth" });
+      window.scrollTo({ top: refreshedSearchInput.offsetTop, behavior: "smooth" });
     };
 
     window.performSearch = performSearch;
 
-    if (
-      searchInput.value.trim() ||
+    // Ejecutar búsqueda inicial si hay parámetros en la URL o filtros activos
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get("search");
+    if (searchParam) {
+      refreshedSearchInput.value = searchParam;
+      performSearch(searchParam);
+    } else if (
+      refreshedSearchInput.value.trim() ||
       currentFilters.category ||
       currentFilters.type ||
       currentFilters.maxPrice < maxPrice
     ) {
-      performSearch(searchInput.value);
+      performSearch(refreshedSearchInput.value);
     }
   }
 

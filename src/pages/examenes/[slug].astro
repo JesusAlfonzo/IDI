@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { getCollection, getEntry, render, type CollectionEntry } from "astro:content";
 import ExamenLayout from "@layouts/ExamenLayout.astro";
 
 // Tipado seguro
@@ -10,14 +10,19 @@ export async function getStaticPaths() {
   const examenes = await getCollection("examenes");
 
   return examenes.map((examen) => ({
-    params: { slug: examen.slug },
+    params: { slug: examen.id.replace(/\.md$/, '') },
     props: { examen },
   }));
 }
 
 // 2. Componente de la página
 const { examen } = Astro.props as { examen: ExamenEntry };
-const { Content } = await examen.render();
+
+if (examen.data.disabled) {
+  return Astro.redirect('/examenes?mensaje=examen-desactivado');
+}
+
+const { Content } = await render(examen);
 
 // 3. Lógica para requisitos específicos
 // ¡IMPORTANTE! Se usan las categorías en minúsculas que SÍ requieren ayunas.

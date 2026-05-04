@@ -5,6 +5,7 @@ pubDate: 2025-09-26
 category: Pruebas Virales
 tipoExamen: Perfil / Biología Molecular
 price: 72.00
+disabled: true
 ---
 
 ## Relevancia Clínica

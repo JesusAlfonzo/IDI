@@ -5,6 +5,7 @@ pubDate: 2025-09-26
 category: Inmunogenética
 tipoExamen: Genética / Histocompatibilidad
 price: 45.00
+disabled: true
 ---
 
 ## Relevancia Clínica

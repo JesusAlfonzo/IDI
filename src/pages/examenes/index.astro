@@ -8,7 +8,7 @@ import SearchExams from "@components/searchExams.astro";
 type GroupedExamenes = Record<string, CollectionEntry<"examenes">[]>;
 
 // 1. Obtener y Agrupar Exámenes
-const allExamenes = await getCollection("examenes");
+const allExamenes = await getCollection("examenes", (examen) => !examen.data.disabled);
 
 const groupedExamenes: GroupedExamenes = allExamenes.reduce((acc, examen) => {
   // Usamos 'category' según la definición de tu config.ts
@@ -44,10 +44,29 @@ const getDeliveryTime = (tipoExamen: string): string => {
   // Todos los demás entregan en 10 días
   return "10 Días Hábiles";
 };
+
+// Verificar si hay mensaje de examen desactivado
+const url = new URL(Astro.request.url);
+const mensaje = url.searchParams.get("mensaje");
 ---
 
 <Layout title="IDI - Exámenes">
   <main class="container mx-auto px-4 pt-24 pb-16 animate-blurred-fade-in">
+    {/* Mensaje de examen desactivado */}
+    {mensaje === "examen-desactivado" && (
+      <div class="max-w-2xl mx-auto mb-8 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+        <div class="flex items-center">
+          <svg class="w-6 h-6 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <div>
+            <h3 class="text-lg font-semibold text-red-800">Examen no disponible</h3>
+            <p class="text-red-700">Este examen no está activo actualmente. Por favor, contacta al laboratorio para más información.</p>
+          </div>
+        </div>
+      </div>
+    )}
+
     {/* Seccion 1: Header */}
     <header class="text-center mb-12">
       <h1 class="text-6xl font-extrabold leading-tight text-gray-900 mb-4">
@@ -60,7 +79,7 @@ const getDeliveryTime = (tipoExamen: string): string => {
 
     <div class="max-w-6xl mx-auto">
       {/* Seccion 2: Integración del componente de búsqueda */}
-      <SearchExams allExamenes={allExamenes} client:load />
+      <SearchExams allExamenes={allExamenes} />
 
       {/* Seccion 3: Implementación de secciones colapsables */}
       {
@@ -89,11 +108,11 @@ const getDeliveryTime = (tipoExamen: string): string => {
             <div class="pt-6 pb-2 animate-opacity-fade-in">
               <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {groupedExamenes[category].map((examen) => (
-                  <a
-                    href={`/examenes/${examen.slug}`}
-                    class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
-                    key={examen.slug}
-                  >
+                    <a
+                      href={`/examenes/${examen.id.replace(/\.md$/, '')}`}
+                      class="block p-5 bg-white rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.01] transition duration-300 border-t-4 border-blue-500"
+                      key={examen.id.replace(/\.md$/, '')}
+                    >
                     <h3 class="text-xl font-bold text-gray-800 mb-2">
                       {examen.data.title}
                     </h3>

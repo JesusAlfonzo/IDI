@@ -5,6 +5,7 @@ pubDate: 2025-09-26
 category: Inmunodiagnóstico
 tipoExamen: Autoanticuerpos
 price: 15.00
+disabled: true
 ---
 
 ## Relevancia Clínica

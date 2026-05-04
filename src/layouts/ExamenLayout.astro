@@ -17,7 +17,13 @@ const {
     <main class="min-h-screen bg-slate-50 pt-30 pb-20 animate-blurred-fade-in">
         <article class="max-w-4xl mx-auto px-4">
             
-            <nav class="mb-6">
+            <nav class="mb-6 flex items-center justify-between">
+                <a href="/examenes" class="group flex items-center text-slate-500 font-bold hover:text-indigo-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Volver a Exámenes
+                </a>
                 <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase bg-indigo-100 text-indigo-700 border border-indigo-200">
                     {category}
                 </span>
@@ -32,7 +38,7 @@ const {
                 </p>
             </header>
 
-            <section class="mb-12">
+            <section class="mb-12" style="display: none;">
                 <div class="inline-flex items-center space-x-4 bg-white p-5 pr-10 rounded-2xl shadow-sm border border-slate-200">
                     <div class="bg-blue-50 p-3 rounded-xl">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -56,13 +62,7 @@ const {
                 </div>
             </div>
 
-            <footer class="mt-16 flex flex-col sm:flex-row items-center justify-between gap-8 border-t border-slate-200 pt-10">
-                <a href="/examenes" class="group flex items-center text-slate-500 font-bold hover:text-indigo-600 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    Volver a Exámenes
-                </a>
+            <footer class="mt-16 flex justify-end border-t border-slate-200 pt-10">
                 <a href="/#contacto">
                     <button class="w-full sm:w-auto px-10 py-4 bg-blue-600 text-white font-black rounded-2xl shadow-lg shadow-blue-200 hover:bg-blue-700 hover:-translate-y-1 transition-all active:scale-95">
                         AGENDAR CITA

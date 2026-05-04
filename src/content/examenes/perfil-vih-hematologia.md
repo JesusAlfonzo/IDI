@@ -5,6 +5,7 @@ pubDate: 2025-09-26
 category: Citometría
 tipoExamen: Perfil / Hematología
 price: 10.00
+disabled: true
 ---
 
 ## Relevancia Clínica
